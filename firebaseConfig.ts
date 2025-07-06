@@ -17,6 +17,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIRESTORE_APP_ID,
 };
 
+console.log('Config', firebaseConfig);
+
 const app = initializeApp(firebaseConfig);
 // For more information on how to access Firebase in your project,
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
