@@ -74,6 +74,31 @@ export default function OpenCloseRoomConfigModal({
     },
   ];
 
+  const onOpenerChange = (userId: string) => {
+    userService.getUserById(userId).then((user) => {
+      if (user === null) {
+        throw new Error('User not found : id=' + userId);
+      }
+      setModel((prev) => ({
+        ...prev,
+        opener: { id: userId, name: user?.name || '' },
+        closer: prev.closer ?? { id: userId, name: user?.name || '' },
+      }));
+    });
+  };
+
+  const onCloserChange = (userId: string) => {
+    userService.getUserById(userId).then((user) => {
+      if (user === null) {
+        throw new Error('User not found : id=' + userId);
+      }
+      setModel((prev) => ({
+        ...prev,
+        closer: { id: userId, name: user?.name || '' },
+      }));
+    });
+  };
+
   return (
     <ModalPage
       {...props}
@@ -115,13 +140,7 @@ export default function OpenCloseRoomConfigModal({
             size="lg"
             disabled={loading}
             value={model.opener?.id}
-            onChange={({ target: { value } }) =>
-              setModel((prev) => ({
-                ...prev,
-                opener: { id: value, name: value },
-                closer: prev.closer ?? { id: value, name: value },
-              }))
-            }
+            onChange={({ target: { value } }) => onOpenerChange(value)}
           >
             <option>-</option>
             {users.map((usr) => (
@@ -144,12 +163,7 @@ export default function OpenCloseRoomConfigModal({
             size="lg"
             disabled={loading}
             value={model.closer?.id}
-            onChange={({ target: { value } }) =>
-              setModel((prev) => ({
-                ...prev,
-                closer: { id: value, name: value },
-              }))
-            }
+            onChange={({ target: { value } }) => onCloserChange(value)}
           >
             <option>-</option>
             {users.map((usr) => (

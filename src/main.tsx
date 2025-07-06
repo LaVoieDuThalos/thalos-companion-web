@@ -3,13 +3,13 @@ import { createRoot } from 'react-dom/client';
 import { createBrowserRouter } from 'react-router';
 import { RouterProvider } from 'react-router-dom';
 import App from './App';
-import AgendaPage from './app/Agenda';
 import HomePage from './app/Home';
 import KeysPage from './app/Keys';
 
 import './index.css';
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AgendaPage from './app/Agenda';
 import EventDetailsPage from './app/events/EventDetails';
 import GameDayPage from './app/GameDayPage';
 import SettingsPage from './app/Settings';

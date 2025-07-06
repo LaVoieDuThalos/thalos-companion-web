@@ -1,6 +1,10 @@
 import { createContext } from 'react';
 import type { User } from '../model/User';
 
+export type ActionPayload = unknown;
+
+export type AppState = { [key: string]: unknown };
+
 export type AppContextProps = {
   user?: User;
   refreshs: { [key: string]: string };
