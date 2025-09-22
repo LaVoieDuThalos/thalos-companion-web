@@ -47,5 +47,3 @@ const apiMode = import.meta.env.VITE_API || 'firebase';
 
 export const API =
   apiMode.trim().toLowerCase() === 'mock_server' ? mockServerApi : firestoreApi;
-
-console.log('API=', API);
