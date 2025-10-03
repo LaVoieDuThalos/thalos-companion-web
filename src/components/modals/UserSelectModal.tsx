@@ -18,7 +18,7 @@ type Props = ModalPageProps & {
 function UserCard({ user }: { user: User }) {
   return (
     <Card>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View style={{}}>
         <Icon icon="person" color={Colors.gray} iconSize={30} />
         <span>
           {user.firstName} | {user.name}
@@ -63,7 +63,7 @@ export default function UserSelectModal({ onCancel, ...props }: Props) {
           <ActivityIndicator color={Colors.red} size={50} />
         </View>
       ) : null}
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{}}>
         {users.map((user) => (
           <button key={user.id} onClick={() => props.onSuccess(user)}>
             <UserCard user={user} />

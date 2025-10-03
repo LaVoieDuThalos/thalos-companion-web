@@ -5,7 +5,6 @@ import { AppContext } from '../contexts/AppContext';
 import Icon from './common/Icon';
 import IconButton from './common/IconButton/IconButton';
 import Row from './common/Row';
-import type { StyleSheet } from './common/Types';
 import EventFormModal from './modals/EventFormModal';
 import SettingsFormModal from './modals/SettingsFormModal';
 
@@ -15,8 +14,8 @@ export default function Header() {
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
 
   return (
-    <Navbar style={styles.navbar} className="justify-content-between">
-      <Navbar.Brand href="/" style={styles.brand}>
+    <Navbar style={{}} className="justify-content-between">
+      <Navbar.Brand href="/" style={{}}>
         <img
           alt="Logo"
           src={'/thalos-companion-web/icon100.png'}
@@ -27,16 +26,8 @@ export default function Header() {
         La Voie du Thalos
       </Navbar.Brand>
 
-      <Row style={{ gap: 10 }}>
-        <Button
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: Colors.red2,
-            borderColor: Colors.red,
-          }}
-          onClick={() => setEventFormModalVisible(true)}
-        >
+      <Row style={{}}>
+        <Button style={{}} onClick={() => setEventFormModalVisible(true)}>
           <Icon icon="add" iconSize={20} />
           Créer...
         </Button>
@@ -72,17 +63,3 @@ export default function Header() {
     </Navbar>
   );
 }
-
-const styles: StyleSheet = {
-  navbar: {
-    backgroundColor: Colors.red,
-    paddingLeft: '10px',
-    paddingRight: '10px',
-    height: 60,
-    boxShadow: '1px 3px 1px #9E9E9E',
-    zIndex: 10,
-  },
-  brand: {
-    color: 'white',
-  },
-};

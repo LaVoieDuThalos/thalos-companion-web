@@ -1,12 +1,10 @@
 import { Form } from 'react-bootstrap';
 import { ACTIVITIES } from '../../constants/Activities';
-import { Colors } from '../../constants/Colors';
 import { Durations } from '../../constants/Durations';
 import { ROOMS, TABLES, TOUTE_LA_SALLE } from '../../constants/Rooms';
 import { calendarService } from '../../services/CalendarService';
 import { hasError, type CustomFormProps } from '../../utils/FormUtils';
 import { printGameDay } from '../../utils/Utils';
-import type { StyleSheet } from '../common/Types';
 import type { FormData } from '../modals/EventFormModal';
 
 type Event = { target: { value: string } };
@@ -40,18 +38,18 @@ export default function EventForm({
           onChange={(e) => updateForm('title', e)}
         />
         {state?.submitted && hasError(errors, 'nameIsEmpty') ? (
-          <span style={styles.fieldError}>Le nom est obligatoire</span>
+          <span style={{}}>Le nom est obligatoire</span>
         ) : null}
         {state?.submitted &&
         (hasError(errors, 'nameIsLower') ||
           hasError(errors, 'nameIsHigher')) ? (
-          <span style={styles.fieldError}>
+          <span style={{}}>
             Le nom doit être entre 3 et 40 caractères (saisie{' '}
             {formData.title?.length} car.)
           </span>
         ) : null}
         {state?.submitted && hasError(errors, 'nameIsInvalid') ? (
-          <span style={styles.fieldError}>
+          <span style={{}}>
             Le nom doit être alphanumérique (caractères spéciaux autorisés : # @
             *)
           </span>
@@ -76,7 +74,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'dateIsEmpty') ? (
-          <span style={styles.fieldError}>La date est obligatoire</span>
+          <span style={{}}>La date est obligatoire</span>
         ) : null}
       </Form.Group>
 
@@ -97,9 +95,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'startHourIsEmpty') ? (
-          <span style={styles.fieldError}>
-            L&lsquo;heure de début est obligatoire
-          </span>
+          <span style={{}}>L&lsquo;heure de début est obligatoire</span>
         ) : null}
       </Form.Group>
 
@@ -120,7 +116,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'durationIsEmpty') ? (
-          <span style={styles.fieldError}>Le durée est obligatoire</span>
+          <span style={{}}>Le durée est obligatoire</span>
         ) : null}
       </Form.Group>
 
@@ -141,9 +137,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'activityIsEmpty') ? (
-          <span style={styles.fieldError}>
-            L&lsquo;activité principale est obligatoire
-          </span>
+          <span style={{}}>L&lsquo;activité principale est obligatoire</span>
         ) : null}
       </Form.Group>
 
@@ -164,7 +158,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'roomIsEmpty') ? (
-          <span style={styles.fieldError}>La salle est obligatoire</span>
+          <span style={{}}>La salle est obligatoire</span>
         ) : null}
       </Form.Group>
 
@@ -185,9 +179,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'tablesIsEmpty') ? (
-          <span style={styles.fieldError}>
-            Le nombre de tables est obligatoire
-          </span>
+          <span style={{}}>Le nombre de tables est obligatoire</span>
         ) : null}
       </Form.Group>
 
@@ -205,9 +197,3 @@ export default function EventForm({
     </Form>
   );
 }
-
-const styles: StyleSheet = {
-  fieldError: {
-    color: Colors.red,
-  },
-};

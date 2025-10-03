@@ -104,7 +104,7 @@ export default function SettingsFormModal({ onCancel, ...props }: Props) {
   return (
     <ModalPage {...props} options={{ title: 'Préférences', actions: ACTIONS }}>
       {loading || saving ? (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View style={{}}>
           <ActivityIndicator color={Colors.red} size={50} />
         </View>
       ) : null}

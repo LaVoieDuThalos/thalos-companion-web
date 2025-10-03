@@ -95,19 +95,19 @@ export default function CountingFormModal(props: Props) {
       options={{ title: props.title, actions: ACTIONS }}
     >
       {loading ? (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View style={{}}>
           <ActivityIndicator color={Colors.red} size={50} />
         </View>
       ) : null}
       {!loading ? (
-        <div style={{ flex: 1 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+        <div style={{}}>
+          <View style={{}}>
             <Icon icon="sunny" iconSize={30} />
             <span style={{ fontSize: 20 }}>Après-midi</span>
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{}}>
             {activities.map((act) => (
-              <Card key={act.id} style={{ flex: 1 }}>
+              <Card key={act.id} style={{}}>
                 <NumberInput
                   label={act.name}
                   value={
@@ -122,12 +122,12 @@ export default function CountingFormModal(props: Props) {
               </Card>
             ))}
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+          <View style={{}}>
             <Icon icon="nightlight" iconSize={30} />
-            <span style={{ fontSize: 20 }}>Soirée</span>
+            <span style={{}}>Soirée</span>
           </View>
           {activities.map((act) => (
-            <Card key={act.id} style={{ flex: 1 }}>
+            <Card key={act.id} style={{}}>
               <NumberInput
                 label={act.name}
                 value={

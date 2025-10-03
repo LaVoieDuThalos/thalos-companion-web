@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import './App.css';
+import './App.scss';
 import Alerts from './components/common/Alerts';
 import Backdrop from './components/common/Backdrop';
 import Footer from './components/Footer';
@@ -72,20 +72,14 @@ function App() {
     <>
       <AppContext.Provider value={appContext}>
         <AlertContext.Provider value={alertContext}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              maxWidth: '1280px',
-            }}
-          >
+          <div style={{}}>
             {loading ? <Backdrop /> : null}
 
             <Header />
 
             <Alerts />
 
-            <div style={{ height: size, overflowY: 'scroll' }}>
+            <div style={{}}>
               <Outlet />
             </div>
             <Footer />

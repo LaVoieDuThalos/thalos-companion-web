@@ -5,7 +5,6 @@ import AgendaEventCard from '../components/AgendaEventCard';
 import ActivityIndicator from '../components/common/ActivityIndicator';
 import Icon from '../components/common/Icon';
 import IconButton from '../components/common/IconButton/IconButton';
-import type { StyleSheet } from '../components/common/Types';
 import View from '../components/common/View';
 import CountingFormModal from '../components/modals/CountingFormModal';
 import EventFormModal from '../components/modals/EventFormModal';
@@ -73,7 +72,7 @@ export default function GameDayPage() {
   }, [day]);
 
   return (
-    <View style={{ flex: 1, padding: 10 }}>
+    <View style={{}}>
       <EventFormModal
         show={eventFormModalVisible}
         dayId={params.dayId}
@@ -107,34 +106,27 @@ export default function GameDayPage() {
         />
       ) : null}
 
-      <View
-        key="1"
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+      <View key="1" style={{}}>
         <IconButton
           icon="arrow_left"
           color="gray"
           onClick={() => goPrevious()}
         />
-        {day ? <span style={styles.dayText}>{printGameDay(day)}</span> : null}
+        {day ? <span style={{}}>{printGameDay(day)}</span> : null}
         <IconButton icon="arrow_right" color="gray" onClick={() => goNext()} />
       </View>
       {loading ? (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View style={{}}>
           <ActivityIndicator color={Colors.red} size={50} />
         </View>
       ) : (
         <>
-          <div style={{ flex: 1 / 2 }}>
+          <div style={{}}>
             <div onClick={() => setOpenCloseModalVisible(true)}>
               {day ? <OpenAndCloseRoom day={day} /> : null}
             </div>
             {events?.length === 0 ? (
-              <View style={{ padding: 50, alignItems: 'center' }}>
+              <View style={{}}>
                 <span>Rien de prévu pour l&lsquo;instant</span>
               </View>
             ) : (
@@ -146,15 +138,7 @@ export default function GameDayPage() {
                 />
               ))
             )}
-            <View
-              style={{
-                flexDirection: 'row',
-                padding: 10,
-                alignSelf: 'center',
-                backgroundColor: Colors.red,
-                borderRadius: 50,
-              }}
-            >
+            <View style={{}}>
               <IconButton
                 icon="add"
                 iconSize={50}
@@ -169,36 +153,22 @@ export default function GameDayPage() {
               />
             </View>
             <View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  paddingTop: 10,
-                }}
-              >
+              <View style={{}}>
                 <Icon icon="home" iconSize={20} color={Colors.gray} />
-                <span style={styles.subtitle}>Occupation des salles</span>
+                <span style={{}}>Occupation des salles</span>
               </View>
               {day ? <RoomPriorities day={day} /> : null}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  paddingTop: 10,
-                }}
-              >
+              <View style={{}}>
                 <Icon
                   icon="table_restaurant"
                   iconSize={20}
                   color={Colors.gray}
                 />
-                <span style={styles.subtitle}>Nombre de tables utilisées</span>
+                <span style={{}}>Nombre de tables utilisées</span>
               </View>
               {realRooms.map((r) => (
                 <Card key={r.id}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{}}>
                     <Icon icon="location_on" iconSize={20} />
                     <span>{r.name}</span>
                   </View>
@@ -213,17 +183,3 @@ export default function GameDayPage() {
     </View>
   );
 }
-
-const styles: StyleSheet = {
-  dayText: {
-    textTransform: 'uppercase',
-    fontWeight: 'bold',
-    fontSize: 20,
-    borderBottomWidth: 1,
-  },
-  subtitle: {
-    color: Colors.gray,
-    textTransform: 'uppercase',
-    fontWeight: 'bold',
-  },
-};

@@ -1,8 +1,6 @@
 import { Button, type ButtonProps } from 'react-bootstrap';
 
 import { useState } from 'react';
-import './IconButton.css';
-
 export type Icons = 'settings';
 
 type Props = ButtonProps & {
@@ -27,34 +25,14 @@ export default function IconButton({
   return (
     <Button
       {...rest}
-      className="Button"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      style={styles}
-      variant={variant ?? 'dark'}
       onClick={onClick}
     >
-      <span
-        className="material-symbols-outlined"
-        style={{
-          fontSize: iconSize || 20,
-          color,
-          borderColor: hover ? 'red' : 'white',
-        }}
-      >
+      <span className="material-symbols-outlined" style={{}}>
         {icon}
       </span>
       {label ? <span>{label}</span> : null}
     </Button>
   );
 }
-
-const styles: React.CSSProperties = {
-  padding: 0,
-  margin: 0,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderWidth: '3px',
-  borderRadius: '20%',
-};

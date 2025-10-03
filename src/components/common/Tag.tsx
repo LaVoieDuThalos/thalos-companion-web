@@ -1,4 +1,3 @@
-import { Colors } from '../../constants/Colors';
 import { concatStyles, type Styles } from './Types';
 import View, { type ViewProps } from './View';
 
@@ -23,12 +22,6 @@ export default function Tag({
     <View
       {...props}
       style={{
-        paddingLeft: '5px',
-        paddingRight: '5px',
-        borderRadius: '5px',
-        backgroundColor: color || Colors.gray,
-        color: textColor || Colors.black,
-        fontSize: `${size || defaultSizeInPx}px`,
         ...concatStyles(style),
       }}
     >

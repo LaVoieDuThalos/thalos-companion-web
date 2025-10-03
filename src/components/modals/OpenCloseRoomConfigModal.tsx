@@ -10,7 +10,6 @@ import { printGameDay } from '../../utils/Utils';
 import Icon from '../common/Icon';
 import type { ModalAction, ModalPageProps } from '../common/ModalPage';
 import ModalPage from '../common/ModalPage';
-import type { StyleSheet } from '../common/Types';
 import View from '../common/View';
 
 type Props = ModalPageProps & {
@@ -110,9 +109,9 @@ export default function OpenCloseRoomConfigModal({
     >
       <span>{printGameDay(day)}</span>
       <Card>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{}}>
           <Icon icon="lock_open" iconSize={20} />
-          <span style={styles.label}>Ouverture</span>
+          <span style={{}}>Ouverture</span>
         </View>
 
         <Form.Group className="mb-3" controlId="eventForm.DateInput">
@@ -152,9 +151,9 @@ export default function OpenCloseRoomConfigModal({
         </Form.Group>
       </Card>
       <Card>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{}}>
           <Icon icon="lock" iconSize={20} />
-          <span style={styles.label}>Fermeture</span>
+          <span style={{}}>Fermeture</span>
         </View>
 
         <Form.Group className="mb-3" controlId="eventForm.DateInput">
@@ -177,10 +176,3 @@ export default function OpenCloseRoomConfigModal({
     </ModalPage>
   );
 }
-
-const styles: StyleSheet = {
-  label: {
-    fontWeight: 'bold',
-    fontSize: 20,
-  },
-};

@@ -3,10 +3,8 @@ import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import Icon from '../components/common/Icon';
 import SectionList from '../components/common/SectionList';
-import type { StyleSheet } from '../components/common/Types';
 import View from '../components/common/View';
 import GameDayCard from '../components/GameDayCard';
-import { Colors } from '../constants/Colors';
 import { Months } from '../constants/Months';
 import type { GameDay } from '../model/GameDay';
 import { calendarService } from '../services/CalendarService';
@@ -47,13 +45,11 @@ export default function AgendaPage() {
     }, []);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{}}>
       <SectionList
         sections={sections}
         keyExtractor={({ id }) => id}
-        renderSectionHeader={(item) => (
-          <span style={styles.month}>{item.title}</span>
-        )}
+        renderSectionHeader={(item) => <span>{item.title}</span>}
         ListHeaderComponent={
           <View>
             <Button variant="secondary" onClick={() => daysBefore()}>
@@ -78,12 +74,3 @@ export default function AgendaPage() {
     </View>
   );
 }
-
-const styles: StyleSheet = {
-  month: {
-    fontSize: 24,
-    color: Colors.gray,
-    fontWeight: 'bold',
-    alignSelf: 'center',
-  },
-};

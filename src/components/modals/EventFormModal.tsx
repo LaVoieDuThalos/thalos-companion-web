@@ -165,7 +165,7 @@ export default function EventFormModal({
       options={{ title: props.title || 'Créer', actions: ACTIONS }}
     >
       {saving ? (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View style={{}}>
           <ActivityIndicator color={Colors.red} size={50} />
         </View>
       ) : null}

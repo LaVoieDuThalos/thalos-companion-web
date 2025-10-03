@@ -9,9 +9,7 @@ import { settingsService } from '../services/SettingsService';
 import { printGameDay } from '../utils/Utils';
 import ActivityIndicator from './common/ActivityIndicator';
 import Icon from './common/Icon';
-import type { StyleSheet } from './common/Types';
 import View from './common/View';
-import './GameDayCard.css';
 
 type Props = CardProps & {
   day: GameDay;
@@ -48,37 +46,20 @@ export default function GameDayCard({ day }: Props) {
   }, [day, needARefresh]);
 
   return (
-    <Card
-      style={day.date.getDay() === 5 ? styles.friday : {}}
-      className="game-day-card"
-    >
-      <View
-        style={{
-          padding: 5,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 3,
-        }}
-      >
+    <Card style={{}} className="game-day-card">
+      <View style={{}}>
         <Icon icon="today" color={'gray'} />
-        <span style={styles.day}>{printGameDay(day)}</span>
+        <span style={{}}>{printGameDay(day)}</span>
       </View>
 
       {loading ? <ActivityIndicator color={Colors.red} /> : null}
-      <View style={{ paddingTop: 10 }}>
+      <View style={{}}>
         {!events || events.length === 0 ? (
-          <span style={styles.emptyText}>Aucun évènement prévu</span>
+          <span style={{}}>Aucun évènement prévu</span>
         ) : null}
         {events &&
           events.map((e) => (
-            <span
-              style={{
-                ...styles.event,
-                backgroundColor: e.activity?.style.backgroundColor,
-                color: e.activity?.style.color,
-              }}
-              key={e.id}
-            >
+            <span style={{}} key={e.id}>
               {e.start} - {e.activity?.name} : {e.title}
             </span>
           ))}
@@ -86,25 +67,3 @@ export default function GameDayCard({ day }: Props) {
     </Card>
   );
 }
-
-const styles: StyleSheet = {
-  container: {},
-  day: {
-    textTransform: 'uppercase',
-    fontWeight: 'bold',
-    color: 'gray',
-  },
-  friday: {
-    marginTop: 10,
-    marginBottom: -1,
-  },
-  event: {
-    backgroundColor: 'gray',
-    borderRadius: 5,
-    padding: 5,
-    marginBottom: 5,
-  },
-  emptyText: {
-    color: 'gray',
-  },
-};

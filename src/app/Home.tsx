@@ -2,9 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import AgendaEventCard from '../components/AgendaEventCard';
 import type { SectionListItem } from '../components/common/SectionList';
 import SectionList from '../components/common/SectionList';
-import type { StyleSheet } from '../components/common/Types';
 import View from '../components/common/View';
-import { Colors } from '../constants/Colors';
 import { Months } from '../constants/Months';
 import { AppContext } from '../contexts/AppContext';
 import type { AgendaEvent } from '../model/AgendaEvent';
@@ -64,12 +62,11 @@ export default function HomePage() {
     <View>
       {!appContext.loading ? (
         <>
+          {sections.length === 0 ? <p>Aucun évènement prévu</p> : null}
           <SectionList
             sections={sections}
             keyExtractor={(it) => it.id}
-            renderSectionHeader={(it) => (
-              <span style={styles.month}>{it.title}</span>
-            )}
+            renderSectionHeader={(it) => <span style={{}}>{it.title}</span>}
             renderItem={(it) => <AgendaEventCard event={it} />}
           ></SectionList>
         </>
@@ -77,11 +74,3 @@ export default function HomePage() {
     </View>
   );
 }
-
-const styles: StyleSheet = {
-  month: {
-    fontSize: 24,
-    color: Colors.gray,
-    fontWeight: 'bold',
-  },
-};

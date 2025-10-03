@@ -10,7 +10,6 @@ import {
 import { hasError, type CustomFormProps } from '../../utils/FormUtils';
 import IconButton from '../common/IconButton/IconButton';
 import Radio from '../common/Radio';
-import type { StyleSheet } from '../common/Types';
 import View from '../common/View';
 
 type ActivityOption = {
@@ -61,7 +60,7 @@ export default function SettingsForm({
 
   return (
     <div>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View style={{}}>
         <span>ID: {props.formData.id}</span>
         <IconButton
           icon="delete"
@@ -84,7 +83,7 @@ export default function SettingsForm({
         />
         {props.state?.submitted &&
         hasError(props.errors, 'firstNameIsEmpty') ? (
-          <span style={styles.fieldError}>Le prénom est obligatoire</span>
+          <span style={{}}>Le prénom est obligatoire</span>
         ) : null}
       </Form.Group>
 
@@ -100,7 +99,7 @@ export default function SettingsForm({
           }
         />
         {props.state?.submitted && hasError(props.errors, 'nameIsEmpty') ? (
-          <span style={styles.fieldError}>Le pseudo est obligatoire</span>
+          <span style={{}}>Le pseudo est obligatoire</span>
         ) : null}
       </Form.Group>
 
@@ -126,9 +125,3 @@ export default function SettingsForm({
     </div>
   );
 }
-
-const styles: StyleSheet = {
-  fieldError: {
-    color: Colors.red,
-  },
-};

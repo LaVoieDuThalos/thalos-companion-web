@@ -1,5 +1,4 @@
 import { Button, Modal, type ModalProps } from 'react-bootstrap';
-import { Colors } from '../../constants/Colors';
 
 export type ModalAction = {
   name: string;
@@ -42,12 +41,7 @@ export default function ModalPage({
           options?.actions?.map((action: ModalAction) => (
             <Button
               key={action.name}
-              style={{
-                flexGrow: 1,
-                backgroundColor: action.color ?? Colors.red,
-                borderColor: action.color ?? Colors.red,
-                textTransform: 'uppercase',
-              }}
+              style={{}}
               disabled={action.disabled}
               onClick={action.onClick}
             >

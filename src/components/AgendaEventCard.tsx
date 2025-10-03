@@ -7,13 +7,11 @@ import { AlertActions, AlertContext } from '../contexts/AlertsContext';
 import type { AgendaEvent } from '../model/AgendaEvent';
 import { agendaService } from '../services/AgendaService';
 import { printGameDay } from '../utils/Utils';
-import './AgendaEventCard.css';
 import CustomCard from './common/CustomCard';
 import IconButton from './common/IconButton/IconButton';
 import Label from './common/Label';
 import Row from './common/Row';
 import Tag from './common/Tag';
-import type { StyleSheet } from './common/Types';
 import View from './common/View';
 type Props = {
   event: Partial<AgendaEvent>;
@@ -62,10 +60,7 @@ export default function AgendaEventCard({
     <CustomCard
       className="AgendaEventCard"
       onClick={() => navigate(`/events/${event.id}`)}
-      style={[
-        styles.container,
-        { borderLeftColor: event.activity?.style.backgroundColor },
-      ]}
+      style={{}}
     >
       {event.activity ? (
         <Row>
@@ -73,30 +68,25 @@ export default function AgendaEventCard({
             color={event.activity.style.backgroundColor}
             textColor={event.activity.style.color}
           >
-            <span style={styles.activityName}>{event.activity.name}</span>
+            <span style={{}}>{event.activity.name}</span>
           </Tag>
         </Row>
       ) : null}
 
       {/* Date  */}
       {event.day ? (
-        <View style={styles.cardItem}>
-          <span style={styles.eventDateText}>{printGameDay(event.day)}</span>
+        <View style={{}}>
+          <span style={{}}>{printGameDay(event.day)}</span>
         </View>
       ) : (
         <span>?</span>
       )}
       {/* Heure de début-fin */}
       {event.start ? (
-        <Row style={{ justifyContent: 'center' }}>
+        <Row style={{}}>
           <Label icon="schedule" color="gray" size={20}>
-            <span style={styles.eventHoursText}>{event.start}</span>
-            {duration ? (
-              <span style={styles.eventHoursText}>
-                {' '}
-                ({`${duration.label}`})
-              </span>
-            ) : null}
+            <span style={{}}>{event.start}</span>
+            {duration ? <span style={{}}> ({`${duration.label}`})</span> : null}
           </Label>
         </Row>
       ) : (
@@ -104,17 +94,17 @@ export default function AgendaEventCard({
       )}
 
       {/* Nom */}
-      <View style={styles.title}>
+      <View style={{}}>
         <span>{event.title}</span>
       </View>
 
       {/* Creator */}
       {complete ? (
-        <View style={styles.creator}>
+        <View style={{}}>
           {event.creator ? (
-            <View style={{ flexDirection: 'row', gap: 3 }}>
+            <View style={{}}>
               <span>Crée par</span>
-              <span style={{ fontStyle: 'italic' }}>{event.creator.name}</span>
+              <span style={{}}>{event.creator.name}</span>
             </View>
           ) : null}
         </View>
@@ -122,7 +112,7 @@ export default function AgendaEventCard({
 
       {/* Description */}
       {complete ? (
-        <View style={styles.description}>
+        <View style={{}}>
           {event.description ? (
             <span>{event.description}</span>
           ) : (
@@ -133,7 +123,7 @@ export default function AgendaEventCard({
 
       {/* Salle */}
       {event.room ? (
-        <Row style={styles.location}>
+        <Row style={{}}>
           <Label icon="location_on" color="gray" size={20}>
             <span>{event.room.name}</span>
           </Label>
@@ -149,7 +139,7 @@ export default function AgendaEventCard({
       ) : null}
 
       {showButtons ? (
-        <View style={styles.buttons}>
+        <View style={{}}>
           <IconButton
             icon="edit"
             color={Colors.white}
@@ -168,35 +158,3 @@ export default function AgendaEventCard({
     </CustomCard>
   );
 }
-
-const styles: StyleSheet = {
-  container: {
-    borderLeftWidth: '10px',
-  },
-  activity: {},
-  activityName: {},
-  cardItem: {
-    paddingTop: '5px',
-    fontSize: '18px',
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-  },
-  eventDateText: {},
-  hours: {},
-  eventHoursText: {},
-  title: {
-    fontSize: '24px',
-  },
-  creator: {},
-  description: {},
-  location: {
-    justifyContent: 'flex-end',
-    gap: 20,
-  },
-  buttons: {
-    display: 'flex',
-    gap: 5,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-};

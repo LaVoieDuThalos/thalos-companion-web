@@ -5,19 +5,15 @@ import Icon from './common/Icon';
 export default function Footer() {
   const navigate = useNavigate();
   return (
-    <div style={styles}>
-      <ButtonGroup style={buttonsStyle} aria-label="Basic example">
-        <Button
-          variant="secondary"
-          style={{ display: 'flex', flexDirection: 'column' }}
-          onClick={() => navigate('/')}
-        >
+    <div style={{}}>
+      <ButtonGroup style={{}} aria-label="Basic example">
+        <Button variant="secondary" style={{}} onClick={() => navigate('/')}>
           <Icon icon="home" iconSize={30} />
           Accueil
         </Button>
         <Button
           variant="secondary"
-          style={{ display: 'flex', flexDirection: 'column' }}
+          style={{}}
           onClick={() => navigate('/agenda')}
         >
           <Icon icon="calendar_month" iconSize={30} />
@@ -25,7 +21,7 @@ export default function Footer() {
         </Button>
         <Button
           variant="secondary"
-          style={{ display: 'flex', flexDirection: 'column' }}
+          style={{}}
           onClick={() => navigate('/keys')}
         >
           <Icon icon="key" iconSize={30} />
@@ -35,14 +31,3 @@ export default function Footer() {
     </div>
   );
 }
-
-const styles: React.CSSProperties = {
-  display: 'flex',
-  padding: 3,
-  minHeight: 40,
-  width: '100%',
-};
-
-const buttonsStyle: React.CSSProperties = {
-  width: '100%',
-};

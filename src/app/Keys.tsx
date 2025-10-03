@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import ActivityIndicator from '../components/common/ActivityIndicator';
-import type { StyleSheet } from '../components/common/Types';
 import View from '../components/common/View';
 import RoomKeyCard from '../components/RoomKeyCard';
 import { Colors } from '../constants/Colors';
@@ -45,11 +44,11 @@ export default function KeysPage() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <span style={styles.title}>Badges de la salle</span>
-      <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+    <View style={{}}>
+      <span style={{}}>Badges de la salle</span>
+      <View style={{}}>
         {loading ? (
-          <View style={{ flex: 1, justifyContent: 'center' }}>
+          <View style={{}}>
             <ActivityIndicator color={Colors.red} size={50} />
           </View>
         ) : null}
@@ -68,18 +67,3 @@ export default function KeysPage() {
     </View>
   );
 }
-
-const styles: StyleSheet = {
-  container: {
-    flex: 1,
-  },
-  title: {
-    alignSelf: 'center',
-    fontSize: 16,
-    textTransform: 'uppercase',
-    justifyContent: 'center',
-    fontWeight: 'bold',
-    color: Colors.gray,
-    padding: 10,
-  },
-};
