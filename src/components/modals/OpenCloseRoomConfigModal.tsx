@@ -8,8 +8,11 @@ import { roomService } from '../../services/RoomService';
 import { userService } from '../../services/UserService';
 import { printGameDay } from '../../utils/Utils';
 import Icon from '../common/Icon';
-import type { ModalAction, ModalPageProps } from '../common/ModalPage';
-import ModalPage from '../common/ModalPage';
+import type {
+  ModalAction,
+  ModalPageProps,
+} from '../common/ModalPage/ModalPage';
+import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
 
 type Props = ModalPageProps & {
@@ -52,7 +55,6 @@ export default function OpenCloseRoomConfigModal({
       name: 'cancel',
       label: 'Annuler',
       disabled: loading,
-      color: 'gray',
       onClick: () => onCancel(),
     },
     {
@@ -60,7 +62,6 @@ export default function OpenCloseRoomConfigModal({
       label: 'Enregistrer',
       disabled: loading,
       onClick: () => {
-        console.log('Save open/close configuration', model);
         setLoading(true);
         roomService
           .saveOpenCloseConfig(model)

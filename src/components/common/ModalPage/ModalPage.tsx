@@ -1,9 +1,11 @@
 import { Button, Modal, type ModalProps } from 'react-bootstrap';
 
+import './ModalPage.scss';
+
 export type ModalAction = {
   name: string;
   label?: string;
-  color?: string;
+  variant?: string;
   disabled?: boolean;
   onClick: () => void;
 };
@@ -36,13 +38,14 @@ export default function ModalPage({
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>{children}</Modal.Body>
-      <Modal.Footer style={{ justifyContent: 'space-between', padding: '0px' }}>
+      <Modal.Footer>
         {options?.actions?.length &&
           options?.actions?.map((action: ModalAction) => (
             <Button
               key={action.name}
-              style={{}}
+              className="modal-action"
               disabled={action.disabled}
+              variant={action.variant ?? 'primary'}
               onClick={action.onClick}
             >
               {action.label ?? action.name}

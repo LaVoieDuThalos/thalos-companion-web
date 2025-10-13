@@ -1,26 +1,17 @@
+import { useCallback } from 'react';
 import { Form } from 'react-bootstrap';
 import { ACTIVITIES } from '../../constants/Activities';
-import { Colors } from '../../constants/Colors';
-import type { Activity } from '../../model/Activity';
-import {
-  parseYesOrNo,
-  type UserPreferences,
-  type YesOrNo,
-} from '../../model/UserPreferences';
+import { ROLES } from '../../constants/Roles';
+import type { User } from '../../model/User';
 import { hasError, type CustomFormProps } from '../../utils/FormUtils';
 import IconButton from '../common/IconButton/IconButton';
-import Radio from '../common/Radio';
+import RadioGroup from '../common/RadioGroup';
 import View from '../common/View';
-
-type ActivityOption = {
-  value: YesOrNo;
-  label: string;
-};
 
 export default function SettingsForm({
   disabled,
   ...props
-}: CustomFormProps<UserPreferences>) {
+}: CustomFormProps<User>) {
   const clearLocalData = () => {
     /* Alert.alert(
       'Réinitialiser toutes les données',
@@ -44,19 +35,14 @@ export default function SettingsForm({
     window.alert('Réinitialiser toutes les données');
   };
 
-  const activityChange = (activity: Activity, value: YesOrNo | undefined) => {
-    props.onChange({
-      ...props.formData,
-      activities: {
-        ...props.formData.activities,
-        [activity.id]: value ?? 'yes',
-      },
-    });
-  };
-
   const activities = ACTIVITIES.filter((a) => a.filterable).sort((a, b) =>
     a.name.localeCompare(b.name)
   );
+
+  const formChange = useCallback((formData, source: string) => {
+    console.log('source ', source, formData);
+    props.onChange({ ...formData });
+  }, []);
 
   return (
     <div>
@@ -64,38 +50,27 @@ export default function SettingsForm({
         <span>ID: {props.formData.id}</span>
         <IconButton
           icon="delete"
-          color={Colors.black}
           iconSize={30}
+          variant="secondary"
           onClick={clearLocalData}
         />
       </View>
 
-      <Form.Group className="mb-3" controlId="eventForm.FirstNameInput">
-        <Form.Label>Prénom</Form.Label>
-        <Form.Control
-          type="Prénom"
-          placeholder=""
-          disabled={disabled}
-          value={props.formData?.firstName || ''}
-          onChange={(e) =>
-            props.onChange({ ...props.formData, firstName: e.target.value })
-          }
-        />
-        {props.state?.submitted &&
-        hasError(props.errors, 'firstNameIsEmpty') ? (
-          <span style={{}}>Le prénom est obligatoire</span>
-        ) : null}
-      </Form.Group>
-
       <Form.Group className="mb-3" controlId="eventForm.NameInput">
-        <Form.Label>Pseudo</Form.Label>
+        <Form.Label>Nom</Form.Label>
         <Form.Control
-          type="Pseudo"
-          placeholder=""
+          type="Nom"
+          placeholder="Prénom ou Pseudo"
           disabled={disabled}
           value={props.formData?.name || ''}
           onChange={(e) =>
-            props.onChange({ ...props.formData, name: e.target.value })
+            formChange(
+              {
+                ...props.formData,
+                name: e.target.value,
+              },
+              'name'
+            )
           }
         />
         {props.state?.submitted && hasError(props.errors, 'nameIsEmpty') ? (
@@ -103,25 +78,41 @@ export default function SettingsForm({
         ) : null}
       </Form.Group>
 
-      <View>
-        <span>Activités</span>
-        {activities.map((act) => (
-          <Radio
-            key={act.id}
-            label={act.name}
-            options={[
-              { value: 'yes', label: 'Oui' } as ActivityOption,
-              { value: 'no', label: 'Non' } as ActivityOption,
-            ]}
-            value={
-              props.formData.activities
-                ? props.formData.activities[act.id]
-                : 'yes'
-            }
-            onChange={(val) => activityChange(act, parseYesOrNo(val))}
-          />
-        ))}
-      </View>
+      <RadioGroup
+        label="Rôles additionnels"
+        value={props.formData.preferences?.roles || []}
+        onChange={(roles) => {
+          formChange(
+            {
+              ...props.formData,
+              preferences: { ...props.formData.preferences, roles },
+            },
+            'roles'
+          );
+        }}
+        options={ROLES.map((r) => ({
+          value: r.id,
+          label: r.label,
+        }))}
+      />
+
+      <RadioGroup
+        label="Activités"
+        value={props.formData.preferences?.activities || []}
+        onChange={(activities) => {
+          formChange(
+            {
+              ...props.formData,
+              preferences: { ...props.formData.preferences, activities },
+            },
+            'activities'
+          );
+        }}
+        options={activities.map((act) => ({
+          value: act.id,
+          label: act.name,
+        }))}
+      />
     </div>
   );
 }

@@ -20,7 +20,7 @@ export default function NumberInput(props: Props) {
     if (props.onChange) {
       props.onChange(numberValue);
     }
-  }, [numberValue]);
+  }, [numberValue, props]);
 
   return (
     <View style={{}}>

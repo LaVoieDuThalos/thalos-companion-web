@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Colors } from '../../constants/Colors';
 import { JUSQUA_LA_FERMETURE } from '../../constants/Durations';
 import { TOUTE_LA_SALLE } from '../../constants/Rooms';
-import { useUser } from '../../hooks/useUser';
 import type { AgendaEvent } from '../../model/AgendaEvent';
+import type { User } from '../../model/User';
 import { agendaService } from '../../services/AgendaService';
 import {
   isFormValid,
@@ -13,8 +13,11 @@ import {
 } from '../../utils/FormUtils';
 import { isEmpty, isZero } from '../../utils/Utils';
 import ActivityIndicator from '../common/ActivityIndicator';
-import type { ModalAction, ModalPageProps } from '../common/ModalPage';
-import ModalPage from '../common/ModalPage';
+import type {
+  ModalAction,
+  ModalPageProps,
+} from '../common/ModalPage/ModalPage';
+import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
 import EventForm from '../forms/EventForm';
 
@@ -96,7 +99,8 @@ export default function EventFormModal({
   const [formState, setFormState] = useState<FormState>({ submitted: false });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [saving, setSaving] = useState(false);
-  const user = useUser();
+  // TODO User
+  const user = {} as User;
 
   const resetForm = () => {
     setFormData(emptyForm());
@@ -127,7 +131,6 @@ export default function EventFormModal({
     if (formState.submitted) {
       setErrors(validateForm(formData));
     }
-    console.log('Form Data', formData);
   }, [formData, formState.submitted]);
 
   const ACTIONS: ModalAction[] = [
@@ -135,7 +138,7 @@ export default function EventFormModal({
       name: 'cancel',
       label: 'Annuler',
       disabled: saving,
-      color: 'gray',
+      variant: 'secondary',
       onClick: () => {
         if (onCancel) {
           onCancel();
@@ -162,7 +165,10 @@ export default function EventFormModal({
       {...props}
       onShow={resetForm}
       onHide={onCancel}
-      options={{ title: props.title || 'Créer', actions: ACTIONS }}
+      options={{
+        title: props.title || 'Créer un nouvel évènement',
+        actions: ACTIONS,
+      }}
     >
       {saving ? (
         <View style={{}}>

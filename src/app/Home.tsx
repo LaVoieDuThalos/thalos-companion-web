@@ -56,7 +56,7 @@ export default function HomePage() {
         console.error('Fail on findAllEvents', error);
         appContext.setLoading(false);
       });
-  }, [needARefresh]);
+  }, [needARefresh, appContext]);
 
   return (
     <View>

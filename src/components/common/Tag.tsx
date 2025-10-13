@@ -8,16 +8,10 @@ type Props = ViewProps & {
   textColor?: string;
 };
 
+// eslint-disable-next-line
 const defaultSizeInPx = 14;
 
-export default function Tag({
-  style,
-  size,
-  color,
-  textColor,
-  children,
-  ...props
-}: Props) {
+export default function Tag({ style, children, ...props }: Props) {
   return (
     <View
       {...props}

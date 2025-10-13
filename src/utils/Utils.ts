@@ -6,7 +6,10 @@ import type { AgendaEvent } from '../model/AgendaEvent';
 import type { GameDay } from '../model/GameDay';
 import type { Room } from '../model/Room';
 
-export function isEmpty(value: string | null, emptyValues = ['']): boolean {
+export function isEmpty(
+  value: string | null | undefined,
+  emptyValues = ['']
+): boolean {
   return !value || emptyValues.filter((v) => value.trim() === v).length > 0;
 }
 

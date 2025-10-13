@@ -1,0 +1,11 @@
+@import '../../scss/custom.scss';
+
+.footer {
+  .btn-group {
+    @include flex-horizontal-fill;
+
+    button.icon-button {
+      justify-content: center;
+    }
+  }
+}

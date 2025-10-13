@@ -2,7 +2,7 @@ import { API, type ApiService } from '../api/Api';
 import { StorageKeys } from '../constants/StorageKeys';
 import type { User } from '../model/User';
 import { uuid } from '../utils/Utils';
-import { StorageService } from './StorageService';
+import { AsyncStorageService } from './StorageService';
 
 class UserService {
   private api: ApiService;
@@ -12,13 +12,17 @@ class UserService {
   }
 
   getUserId(): Promise<string> {
-    return StorageService.getItem(StorageKeys.USER_ID).then((userId) => {
+    return AsyncStorageService.getItem(StorageKeys.USER_ID).then((userId) => {
       if (userId === null) {
         const newUserId = uuid();
-        return StorageService.setItem(StorageKeys.USER_ID, newUserId).then(() =>
-          Promise.resolve(newUserId)
+        return AsyncStorageService.setItem(StorageKeys.USER_ID, newUserId).then(
+          () => {
+            console.log('Create new UUID user', newUserId);
+            Promise.resolve(newUserId);
+          }
         );
       } else {
+        console.log('Use UUID', userId);
         return Promise.resolve(userId);
       }
     });
@@ -29,6 +33,13 @@ class UserService {
   }
 
   createUser(user: User): Promise<User> {
+    return this.api.saveOrUpdateUser(user);
+  }
+
+  updateUser(user: User): Promise<User> {
+    if (!user.id) {
+      throw Error('User id undefined. Cannot update');
+    }
     return this.api.saveOrUpdateUser(user);
   }
 

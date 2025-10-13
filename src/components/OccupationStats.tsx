@@ -32,6 +32,7 @@ export default function OccupationStats(props: Props) {
     }
   }, [props.dayId, props.room, props.events]);
 
+  // eslint-disable-next-line
   const colorByOccupationRate = (rate: number | undefined) => {
     if (rate === undefined) {
       return Colors.gray;

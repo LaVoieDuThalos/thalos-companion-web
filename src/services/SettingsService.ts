@@ -1,4 +1,5 @@
 import { API, type ApiService } from '../api/Api';
+import type { Role } from '../constants/Roles';
 import { StorageKeys } from '../constants/StorageKeys';
 import type { User } from '../model/User';
 import type { UserPreferences } from '../model/UserPreferences';
@@ -11,17 +12,14 @@ class SettingsService {
     this.api = api;
   }
 
-  async save(prefs: Partial<UserPreferences>): Promise<UserPreferences> {
+  async save(user: Partial<User>): Promise<User> {
     await this.api.saveOrUpdateUser({
-      id: prefs.id,
-      firstName: prefs.firstName,
-      name: prefs.name,
+      id: user.id,
+      name: user.name,
+      preferences: { ...user.preferences },
     } as User);
 
-    await StorageService.setItem(
-      StorageKeys.USER_PREFERENCES,
-      JSON.stringify(prefs)
-    );
+    StorageService.setItem(StorageKeys.USER_ID, user);
 
     const saved = await this.get();
     if (saved === null) {
@@ -31,10 +29,10 @@ class SettingsService {
     }
   }
 
-  async get(): Promise<UserPreferences | null> {
-    const saved = await StorageService.getItem(StorageKeys.USER_PREFERENCES);
+  async get(): Promise<User | null> {
+    const saved = StorageService.getItem(StorageKeys.USER_ID);
     if (saved) {
-      return Promise.resolve(JSON.parse(saved) as UserPreferences);
+      return Promise.resolve(saved as User);
     } else {
       return Promise.resolve(null);
     }
@@ -44,10 +42,14 @@ class SettingsService {
     if (prefs === null) {
       return true;
     }
-    return (
-      !!prefs.activities &&
-      (!prefs.activities[activityId] || prefs.activities[activityId] === 'yes')
-    );
+    return !!prefs.activities && prefs.activities.indexOf(activityId) >= 0;
+  }
+
+  hasRole(prefs: UserPreferences | null, role: Role): boolean {
+    if (prefs === null) {
+      return false;
+    }
+    return !!prefs.roles && prefs.roles?.indexOf(role.id) >= 0;
   }
 }
 

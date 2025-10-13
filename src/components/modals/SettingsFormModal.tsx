@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Colors } from '../../constants/Colors';
-import type { UserPreferences } from '../../model/UserPreferences';
+import { useUser } from '../../hooks/useUser';
+import type { User } from '../../model/User';
 import { settingsService } from '../../services/SettingsService';
-import { userService } from '../../services/UserService';
 import {
   isFormValid,
   type FormState,
@@ -10,68 +10,55 @@ import {
 } from '../../utils/FormUtils';
 import { isEmpty } from '../../utils/Utils';
 import ActivityIndicator from '../common/ActivityIndicator';
-import type { ModalAction, ModalPageProps } from '../common/ModalPage';
-import ModalPage from '../common/ModalPage';
+import type {
+  ModalAction,
+  ModalPageProps,
+} from '../common/ModalPage/ModalPage';
+import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
 import SettingsForm from '../forms/SettingsForm';
 
 type Props = ModalPageProps & {
+  onSuccess: (userData: User) => void;
   onCancel: () => void;
 };
 
-function validateForm(formData: UserPreferences): ValidationErrors {
+function validateForm(formData: User): ValidationErrors {
   return {
-    firstNameIsEmpty: isEmpty(formData.firstName),
     nameIsEmpty: isEmpty(formData.name),
   };
 }
 
-export default function SettingsFormModal({ onCancel, ...props }: Props) {
-  const [userPreferences, setUserPreferences] = useState<UserPreferences>({
-    id: '',
-    firstName: '',
-    name: '',
-    activities: {},
-    isNew: true,
-  });
+export default function SettingsFormModal({
+  onCancel,
+  onSuccess,
+  ...props
+}: Props) {
+  const [user] = useUser();
+  const [userData, setUserData] = useState<User>({ ...user });
   const [formState, setFormState] = useState<FormState>({ submitted: false });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [saving, setSaving] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
+
+  const onFormChange = useCallback(
+    (changes: User) => {
+      setUserData((prev) => ({ ...prev, ...changes }));
+    },
+    [userData]
+  );
 
   useEffect(() => {
-    setLoading(true);
-    userService
-      .getUserId()
-      .then((userId) => {
-        return settingsService.get().then((prefs) => {
-          if (prefs === null) {
-            setUserPreferences({
-              id: userId,
-              name: '',
-              firstName: '',
-              isNew: true,
-            } as UserPreferences);
-          } else {
-            setUserPreferences(prefs);
-          }
-          setLoading(false);
-        });
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    const errors = validateForm(userPreferences);
+    const errors = validateForm(userData);
     setErrors(errors);
-  }, [userPreferences]);
+  }, [userData]);
 
   const ACTIONS: ModalAction[] = [
     {
       name: 'cancel',
       label: 'Annuler',
       disabled: loading || saving,
-      color: 'gray',
+      variant: 'secondary',
       onClick: () => onCancel(),
     },
     {
@@ -84,18 +71,20 @@ export default function SettingsFormModal({ onCancel, ...props }: Props) {
           setSaving(true);
           settingsService
             .save({
-              ...userPreferences,
-            } as UserPreferences)
+              ...userData,
+            } as User)
             .then((res) => {
               setSaving(false);
-              if (props.onSuccess) {
+              if (onSuccess) {
                 try {
-                  props.onSuccess(res);
+                  onSuccess(res);
                 } catch (error) {
                   console.error('An error occured in success function', error);
                 }
               }
             });
+
+          setSaving(false);
         }
       },
     },
@@ -110,11 +99,11 @@ export default function SettingsFormModal({ onCancel, ...props }: Props) {
       ) : null}
       {!loading && !saving ? (
         <SettingsForm
-          formData={userPreferences}
+          formData={userData}
           state={formState}
           errors={errors}
           disabled={saving}
-          onChange={setUserPreferences}
+          onChange={onFormChange}
         />
       ) : null}
     </ModalPage>

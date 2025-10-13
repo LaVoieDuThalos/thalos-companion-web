@@ -6,8 +6,11 @@ import type { DayCounts } from '../../model/Counting';
 import { countingService } from '../../services/CountingService';
 import ActivityIndicator from '../common/ActivityIndicator';
 import Icon from '../common/Icon';
-import type { ModalAction, ModalPageProps } from '../common/ModalPage';
-import ModalPage from '../common/ModalPage';
+import type {
+  ModalAction,
+  ModalPageProps,
+} from '../common/ModalPage/ModalPage';
+import ModalPage from '../common/ModalPage/ModalPage';
 import NumberInput from '../common/NumberInput';
 import View from '../common/View';
 
@@ -42,7 +45,6 @@ export default function CountingFormModal(props: Props) {
       name: 'cancel',
       label: 'Annuler',
       disabled: loading,
-      color: 'gray',
       onClick: () => {
         if (props.onCancel) {
           props.onCancel();
@@ -54,7 +56,6 @@ export default function CountingFormModal(props: Props) {
       label: 'Enregistrer',
       disabled: loading,
       onClick: () => {
-        console.log('Save counts', counts);
         setLoading(true);
         countingService
           .saveOrUpdateCounting(counts)
@@ -84,7 +85,7 @@ export default function CountingFormModal(props: Props) {
 
   useEffect(() => {
     if (props.onChange) props.onChange(counts);
-  }, [counts]);
+  }, [counts, props]);
 
   const activities = ACTIVITIES.filter((a) => a.countable);
 

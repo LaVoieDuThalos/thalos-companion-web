@@ -1,5 +1,8 @@
+import type { UserPreferences } from './UserPreferences';
+
 export interface User {
   id: string;
-  firstName?: string;
   name?: string;
+  isNew?: boolean;
+  preferences?: UserPreferences;
 }

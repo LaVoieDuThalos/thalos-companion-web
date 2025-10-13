@@ -141,7 +141,6 @@ export default function GameDayPage() {
             <View style={{}}>
               <IconButton
                 icon="add"
-                iconSize={50}
                 color={'white'}
                 onClick={() => setEventFormModalVisible(true)}
               />

@@ -1,42 +1,24 @@
-import { useState } from 'react';
-import View from './View';
-
-type RadioOption = { value: string; label: string };
-
 type Props = {
   label: string;
   value: string;
-  options: RadioOption[];
-  onChange: (value: string) => void;
+  checked?: boolean;
+  onChange: (value: string, checked: boolean) => void;
 };
 
-export default function Radio({
-  label,
-  value,
-  options,
-  onChange,
-  ...props
-}: Props) {
-  const defaultValue = options ? options[0].value : '';
-  const [checkedValue, setCheckedValue] = useState(value || defaultValue);
-
-  const onCheck = (value: string) => {
-    setCheckedValue(value);
-    if (onChange) onChange(value);
-  };
-
+export default function Radio({ label, value, onChange, checked }: Props) {
   return (
-    <View style={{}} {...props}>
-      <span style={{}}>{label}</span>
-      <View style={{ flexDirection: 'row', gap: 5 }}>
-        {options.map((o) => (
-          <button key={o.value} onClick={() => onCheck(o.value)}>
-            <View style={{}}>
-              <span style={{}}>{o.label}</span>
-            </View>
-          </button>
-        ))}
-      </View>
-    </View>
+    <div className="form-check">
+      <input
+        className="form-check-input"
+        type="checkbox"
+        checked={!!checked}
+        value={value}
+        id={value}
+        onChange={() => onChange(value, !checked)}
+      />
+      <label className="form-check-label" htmlFor={value}>
+        {label}
+      </label>
+    </div>
   );
 }
