@@ -1,4 +1,4 @@
 export const StorageKeys = {
-  USER_ID: 'user.id',
+  USER: 'user',
   USER_PREFERENCES: 'user.preferences',
 };

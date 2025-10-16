@@ -1,5 +1,7 @@
 import { type ReactNode } from 'react';
 
+import './SectionList.scss';
+
 export type SectionListItem<T> = { title: string; data: T[] };
 
 type Props<T> = {
@@ -21,7 +23,7 @@ export default function SectionList<T>({
   ListFooterComponent,
 }: Props<T>) {
   return (
-    <div>
+    <div className="section-list">
       {ListHeaderComponent ? ListHeaderComponent : null}
       {sections.length > 0 &&
         sections.map((section) => (
@@ -29,7 +31,9 @@ export default function SectionList<T>({
             <div>{renderSectionHeader(section)}</div>
             <div>
               {section.data.map((it) => (
-                <div key={keyExtractor(it)}>{renderItem(it)}</div>
+                <div key={keyExtractor(it)} className="section-item">
+                  {renderItem(it)}
+                </div>
               ))}
             </div>
           </div>

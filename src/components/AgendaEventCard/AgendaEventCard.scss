@@ -1,0 +1,42 @@
+.agenda-event-card {
+  border-left-width: 10px !important;
+  padding-top: 5px !important;
+
+  .creator {
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    width: 100%;
+    justify-content: center;
+
+    .creator-name {
+      font-style: italic;
+    }
+  }
+
+  .description {
+    background-color: lightgray;
+    text-align: left;
+    min-height: 300px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .card-item {
+    padding-top: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 5;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+}

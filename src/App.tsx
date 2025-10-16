@@ -12,7 +12,7 @@ const headerHeight = 60;
 const footerHeight = 80;
 
 function App() {
-  const [, setSize] = useState(
+  const [size, setSize] = useState(
     window.innerHeight - headerHeight - footerHeight
   );
 
@@ -29,12 +29,12 @@ function App() {
       <AppContextProvider>
         <UserContextProvider>
           <AlertContextProvider>
-            <div>
+            <div className="content">
               <Header />
 
               <Alerts />
 
-              <div>
+              <div style={{ height: size, overflowY: 'auto' }}>
                 <Outlet />
               </div>
               <Footer />

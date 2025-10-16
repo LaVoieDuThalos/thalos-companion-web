@@ -1,18 +1,22 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router';
-import { Colors } from '../constants/Colors';
-import { durationToString } from '../constants/Durations';
-import { TOUTE_LA_SALLE } from '../constants/Rooms';
-import { AlertActions, AlertContext } from '../contexts/AlertsContext';
-import type { AgendaEvent } from '../model/AgendaEvent';
-import { agendaService } from '../services/AgendaService';
-import { printGameDay } from '../utils/Utils';
-import CustomCard from './common/CustomCard';
-import IconButton from './common/IconButton/IconButton';
-import Label from './common/Label';
-import Row from './common/Row';
-import Tag from './common/Tag';
-import View from './common/View';
+import { Colors } from '../../constants/Colors';
+import { durationToString } from '../../constants/Durations';
+import { TOUTE_LA_SALLE } from '../../constants/Rooms';
+import { AlertActions, AlertContext } from '../../contexts/AlertsContext';
+import type { AgendaEvent } from '../../model/AgendaEvent';
+import { agendaService } from '../../services/AgendaService';
+import { printGameDay } from '../../utils/Utils';
+import CustomCard from '../common/CustomCard/CustomCard';
+import IconButton from '../common/IconButton/IconButton';
+import Label from '../common/Label';
+import Row from '../common/Row';
+import Tag from '../common/Tag/Tag';
+import View from '../common/View';
+
+import type { StyleSheet } from '../common/Types';
+import './AgendaEventCard.scss';
+
 type Props = {
   event: Partial<AgendaEvent>;
   complete?: boolean;
@@ -58,9 +62,9 @@ export default function AgendaEventCard({
 
   return (
     <CustomCard
-      className="AgendaEventCard"
+      className="agenda-event-card"
       onClick={() => navigate(`/events/${event.id}`)}
-      style={{}}
+      style={{ borderLeftColor: event.activity?.style.backgroundColor }}
     >
       {event.activity ? (
         <Row>
@@ -68,25 +72,32 @@ export default function AgendaEventCard({
             color={event.activity.style.backgroundColor}
             textColor={event.activity.style.color}
           >
-            <span style={{}}>{event.activity.name}</span>
+            <span style={styles.activityName}>{event.activity.name}</span>
           </Tag>
         </Row>
       ) : null}
 
       {/* Date  */}
       {event.day ? (
-        <View style={{}}>
-          <span style={{}}>{printGameDay(event.day)}</span>
-        </View>
+        <div className="card-item">
+          <span className="test-date" style={styles.eventDateText}>
+            {printGameDay(event.day)}
+          </span>
+        </div>
       ) : (
         <span>?</span>
       )}
       {/* Heure de début-fin */}
       {event.start ? (
-        <Row style={{}}>
+        <Row style={{ justifyContent: 'center' }}>
           <Label icon="schedule" color="gray" size={20}>
-            <span style={{}}>{event.start}</span>
-            {duration ? <span style={{}}> ({`${duration.label}`})</span> : null}
+            <span style={styles.eventHoursText}>{event.start}</span>
+            {duration ? (
+              <span style={styles.eventHoursText}>
+                {' '}
+                ({`${duration.label}`})
+              </span>
+            ) : null}
           </Label>
         </Row>
       ) : (
@@ -94,36 +105,36 @@ export default function AgendaEventCard({
       )}
 
       {/* Nom */}
-      <View style={{}}>
+      <div className="title">
         <span>{event.title}</span>
-      </View>
+      </div>
 
       {/* Creator */}
       {complete ? (
-        <View style={{}}>
+        <View>
           {event.creator ? (
-            <View style={{}}>
+            <div className="creator">
               <span>Crée par</span>
-              <span style={{}}>{event.creator.name}</span>
-            </View>
+              <span className="creator-name">{event.creator.name}</span>
+            </div>
           ) : null}
         </View>
       ) : null}
 
       {/* Description */}
       {complete ? (
-        <View style={{}}>
+        <div className="description">
           {event.description ? (
-            <span>{event.description}</span>
+            <p>{event.description}</p>
           ) : (
-            <span>Pas de description</span>
+            <p>Pas de description</p>
           )}
-        </View>
+        </div>
       ) : null}
 
       {/* Salle */}
       {event.room ? (
-        <Row style={{}}>
+        <Row style={styles.location}>
           <Label icon="location_on" color="gray" size={20}>
             <span>{event.room.name}</span>
           </Label>
@@ -139,10 +150,11 @@ export default function AgendaEventCard({
       ) : null}
 
       {showButtons ? (
-        <View style={{}}>
+        <div className="buttons">
           <IconButton
             icon="edit"
             color={Colors.white}
+            variant="secondary"
             iconSize={32}
             onClick={() => (onEdit ? onEdit() : null)}
           />
@@ -153,8 +165,15 @@ export default function AgendaEventCard({
             iconSize={32}
             onClick={() => confirmDeleteEvent()}
           />
-        </View>
+        </div>
       ) : null}
     </CustomCard>
   );
 }
+
+const styles: StyleSheet = {
+  location: {
+    justifyContent: 'flex-end',
+    gap: 20,
+  },
+};

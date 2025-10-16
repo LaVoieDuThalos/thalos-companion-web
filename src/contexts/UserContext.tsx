@@ -25,14 +25,18 @@ export const UserContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [user, setUser] = useState(StorageService.getItem(StorageKeys.USER_ID));
+  const [user, setUser] = useState(StorageService.getItem(StorageKeys.USER));
   const [loading, setLoading] = useState(false);
 
   // Exécutée au lancement de l'application
   useEffect(() => {
     setLoading(true);
+
+    console.log('UserProvider', user);
+
     // Recherche le user local
     const getUserOrCreate = (userId: string): Promise<User> => {
+      console.log('getUserOrCreate', userId);
       if (!userId) {
         // Aucun user local, on en crée un avec un UUID
         return userService.createUser({ id: uuid() });
@@ -57,14 +61,15 @@ export const UserContextProvider = ({
       }
     };
 
-    AsyncStorageService.getItem(StorageKeys.USER_ID)
-      .then((userId) => getUserOrCreate(userId))
+    AsyncStorageService.getItem(StorageKeys.USER)
+      .then((user) => getUserOrCreate(user?.id))
       .then((user) => {
-        StorageService.setItem(StorageKeys.USER_ID, user);
+        StorageService.setItem(StorageKeys.USER, user);
         setUser(user);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error('Unable to find user', err);
         setLoading(false);
       });
   }, []);

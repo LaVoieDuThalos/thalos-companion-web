@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import AgendaEventCard from '../../components/AgendaEventCard';
+import AgendaEventCard from '../../components/AgendaEventCard/AgendaEventCard';
 import EventFormModal from '../../components/modals/EventFormModal';
 import { AppContext } from '../../contexts/AppContext';
 import type { AgendaEvent } from '../../model/AgendaEvent';
@@ -26,18 +26,16 @@ export default function EventDetailsPage() {
     if (eventId === undefined) {
       return;
     }
-    appContext.setLoading(true);
-    agendaService
-      .findEventById(eventId)
-      .then((e) => {
-        if (e === null) {
-          console.error('No event found with id ', eventId);
-        } else {
-          setEvent(e);
-        }
-        appContext.setLoading(false);
-      })
-      .catch(() => appContext.setLoading(false));
+    //appContext.setLoading(true);
+    agendaService.findEventById(eventId).then((e) => {
+      if (e === null) {
+        console.error('No event found with id ', eventId);
+      } else {
+        setEvent(e);
+      }
+      //appContext.setLoading(false);
+    });
+    //.catch(() => appContext.setLoading(false));
   }, [eventId, refresh]);
 
   return (
@@ -53,7 +51,7 @@ export default function EventDetailsPage() {
           setEventFormModalVisible(false);
         }}
       />
-      {event && !appContext.loading ? (
+      {event ? (
         <AgendaEventCard
           event={event}
           complete={true}

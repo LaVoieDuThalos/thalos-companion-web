@@ -1,8 +1,9 @@
-import ActivityIndicator from './ActivityIndicator';
+import ActivityIndicator from '../ActivityIndicator';
+import './Backdrop.scss';
 
 export default function Backdrop() {
   return (
-    <div style={{}}>
+    <div className="backdrop">
       <div>
         <ActivityIndicator size={150} />
         <img
@@ -11,7 +12,7 @@ export default function Backdrop() {
           width="100"
           height="100"
           className="d-inline-block align-top"
-          style={{}}
+          style={{ marginTop: '-120px' }}
         />
       </div>
     </div>

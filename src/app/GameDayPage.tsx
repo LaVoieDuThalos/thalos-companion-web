@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router';
-import AgendaEventCard from '../components/AgendaEventCard';
+import AgendaEventCard from '../components/AgendaEventCard/AgendaEventCard';
 import ActivityIndicator from '../components/common/ActivityIndicator';
 import Icon from '../components/common/Icon';
 import IconButton from '../components/common/IconButton/IconButton';

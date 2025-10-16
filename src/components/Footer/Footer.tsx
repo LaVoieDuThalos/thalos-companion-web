@@ -8,9 +8,12 @@ import './Footer.scss';
 
 export default function Footer() {
   const navigate = useNavigate();
-  const [user] = useUser();
+  const { user, loading } = useUser();
 
-  const isOuvreur = settingsService.hasRole(user.preferences!, ROLE_OUVREUR);
+  const isOuvreur =
+    user &&
+    user.preferences &&
+    settingsService.hasRole(user.preferences!, ROLE_OUVREUR);
 
   return (
     <div className="footer">
@@ -29,7 +32,7 @@ export default function Footer() {
           onClick={() => navigate('/agenda')}
         />
 
-        {isOuvreur ? (
+        {!loading && isOuvreur ? (
           <IconButton
             icon="key"
             label="Badges"

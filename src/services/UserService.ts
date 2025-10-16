@@ -12,10 +12,10 @@ class UserService {
   }
 
   getUserId(): Promise<string> {
-    return AsyncStorageService.getItem(StorageKeys.USER_ID).then((userId) => {
+    return AsyncStorageService.getItem(StorageKeys.USER).then((userId) => {
       if (userId === null) {
         const newUserId = uuid();
-        return AsyncStorageService.setItem(StorageKeys.USER_ID, newUserId).then(
+        return AsyncStorageService.setItem(StorageKeys.USER, newUserId).then(
           () => {
             console.log('Create new UUID user', newUserId);
             Promise.resolve(newUserId);

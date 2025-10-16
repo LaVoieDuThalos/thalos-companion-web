@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import Icon from '../components/common/Icon';
-import SectionList from '../components/common/SectionList';
+import SectionList from '../components/common/SectionList/SectionList';
 import View from '../components/common/View';
 import GameDayCard from '../components/GameDayCard';
 import { Months } from '../constants/Months';

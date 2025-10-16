@@ -1,34 +1,39 @@
 import { useContext, useEffect, useState } from 'react';
-import AgendaEventCard from '../components/AgendaEventCard';
-import type { SectionListItem } from '../components/common/SectionList';
-import SectionList from '../components/common/SectionList';
-import View from '../components/common/View';
-import { Months } from '../constants/Months';
-import { AppContext } from '../contexts/AppContext';
-import type { AgendaEvent } from '../model/AgendaEvent';
-import { agendaService } from '../services/AgendaService';
-import { settingsService } from '../services/SettingsService';
+import AgendaEventCard from '../../components/AgendaEventCard/AgendaEventCard';
+import type { SectionListItem } from '../../components/common/SectionList/SectionList';
+import SectionList from '../../components/common/SectionList/SectionList';
+import View from '../../components/common/View';
+import { Months } from '../../constants/Months';
+import { AppContext } from '../../contexts/AppContext';
+import type { AgendaEvent } from '../../model/AgendaEvent';
+import { agendaService } from '../../services/AgendaService';
+import { settingsService } from '../../services/SettingsService';
+
+import './Home.scss';
 
 export default function HomePage() {
   const appContext = useContext(AppContext);
 
+  const [loading, setLoading] = useState(false);
   const [sections, setSections] = useState<SectionListItem<AgendaEvent>[]>([]);
   const needARefresh = appContext.refreshs['home.events'];
 
   useEffect(() => {
-    appContext.setLoading(true);
+    setLoading(true);
     settingsService
       .get()
-      .then((prefs) =>
-        agendaService.findAllEvents().then((events) => ({ events, prefs }))
+      .then((user) =>
+        agendaService.findAllEvents().then((events) => ({ events, user }))
       )
-      .then(({ events, prefs }) => {
+      .then(({ events, user }) => {
         const eventsByMonth = events
-          .filter((e) =>
-            settingsService.activityVisible(
-              prefs,
-              e.activityId ?? e.activity?.id ?? ''
-            )
+          .filter(
+            (e) =>
+              user?.preferences &&
+              settingsService.activityVisible(
+                user?.preferences,
+                e.activityId ?? e.activity?.id ?? ''
+              )
           )
           .map((e) => ({
             title: Months[e.day.date.getMonth()].toUpperCase(),
@@ -50,27 +55,31 @@ export default function HomePage() {
             []
           );
         setSections(eventsByMonth);
-        appContext.setLoading(false);
+        setLoading(false);
       })
       .catch((error) => {
         console.error('Fail on findAllEvents', error);
-        appContext.setLoading(false);
+        setLoading(false);
       });
-  }, [needARefresh, appContext]);
+  }, [needARefresh]);
 
   return (
     <View>
-      {!appContext.loading ? (
+      {!loading ? (
         <>
           {sections.length === 0 ? <p>Aucun évènement prévu</p> : null}
           <SectionList
             sections={sections}
             keyExtractor={(it) => it.id}
-            renderSectionHeader={(it) => <span style={{}}>{it.title}</span>}
+            renderSectionHeader={(it) => (
+              <span className="section-title">{it.title}</span>
+            )}
             renderItem={(it) => <AgendaEventCard event={it} />}
           ></SectionList>
         </>
-      ) : null}
+      ) : (
+        'Chargement en cours ...'
+      )}
     </View>
   );
 }

@@ -34,7 +34,7 @@ export default function SettingsFormModal({
   onSuccess,
   ...props
 }: Props) {
-  const [user] = useUser();
+  const { user } = useUser();
   const [userData, setUserData] = useState<User>({ ...user });
   const [formState, setFormState] = useState<FormState>({ submitted: false });
   const [errors, setErrors] = useState<ValidationErrors>({});

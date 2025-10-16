@@ -14,7 +14,7 @@ export default function Header() {
   const appContext = useContext(AppContext);
   const [eventFormModalVisible, setEventFormModalVisible] = useState(false);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
-  const [user, setUser] = useUser();
+  const { setUser } = useUser();
 
   return (
     <>
@@ -71,7 +71,6 @@ export default function Header() {
           />
         ) : null}
       </Navbar>
-      <div>{JSON.stringify(user)}</div>
     </>
   );
 }

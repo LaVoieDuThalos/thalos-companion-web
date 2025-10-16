@@ -18,5 +18,5 @@ export interface AgendaEvent {
   activityId?: string;
   activity?: Activity;
   description?: string;
-  creator?: User;
+  creator?: Partial<User>;
 }

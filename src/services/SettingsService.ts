@@ -19,7 +19,7 @@ class SettingsService {
       preferences: { ...user.preferences },
     } as User);
 
-    StorageService.setItem(StorageKeys.USER_ID, user);
+    StorageService.setItem(StorageKeys.USER, user);
 
     const saved = await this.get();
     if (saved === null) {
@@ -30,7 +30,7 @@ class SettingsService {
   }
 
   async get(): Promise<User | null> {
-    const saved = StorageService.getItem(StorageKeys.USER_ID);
+    const saved = StorageService.getItem(StorageKeys.USER);
     if (saved) {
       return Promise.resolve(saved as User);
     } else {

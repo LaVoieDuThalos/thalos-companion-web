@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Colors } from '../../constants/Colors';
 import { JUSQUA_LA_FERMETURE } from '../../constants/Durations';
 import { TOUTE_LA_SALLE } from '../../constants/Rooms';
+import { useUser } from '../../hooks/useUser';
 import type { AgendaEvent } from '../../model/AgendaEvent';
-import type { User } from '../../model/User';
 import { agendaService } from '../../services/AgendaService';
 import {
   isFormValid,
@@ -99,8 +99,7 @@ export default function EventFormModal({
   const [formState, setFormState] = useState<FormState>({ submitted: false });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [saving, setSaving] = useState(false);
-  // TODO User
-  const user = {} as User;
+  const { user } = useUser();
 
   const resetForm = () => {
     setFormData(emptyForm());
@@ -113,7 +112,13 @@ export default function EventFormModal({
     agendaService
       .saveEvent({
         ...formData,
-        creator: user != null ? user : {},
+        creator:
+          user != null
+            ? {
+                id: user.id,
+                name: user.name,
+              }
+            : {},
       } as Partial<AgendaEvent>)
       .then((res) => {
         setSaving(false);
