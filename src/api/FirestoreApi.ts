@@ -147,9 +147,7 @@ class FirestoreApi implements ApiService {
     return getDocs(collection(FirebaseDb, Collections.USERS)).then((results) =>
       results.docs
         .map((doc) => mapDtoToUser(doc.id, doc.data()))
-        .sort((a, b) =>
-          `${a.firstName}${b.name}`.localeCompare(`${b.firstName}${b.name}`)
-        )
+        .sort((a, b) => `${a.name}`.localeCompare(`${b.name}`))
     );
   }
 

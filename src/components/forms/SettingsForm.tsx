@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { Form } from 'react-bootstrap';
 import { ACTIVITIES } from '../../constants/Activities';
 import { ROLES } from '../../constants/Roles';
@@ -39,11 +38,6 @@ export default function SettingsForm({
     a.name.localeCompare(b.name)
   );
 
-  const formChange = useCallback((formData, source: string) => {
-    console.log('source ', source, formData);
-    props.onChange({ ...formData });
-  }, []);
-
   return (
     <div>
       <View style={{}}>
@@ -64,13 +58,10 @@ export default function SettingsForm({
           disabled={disabled}
           value={props.formData?.name || ''}
           onChange={(e) =>
-            formChange(
-              {
-                ...props.formData,
-                name: e.target.value,
-              },
-              'name'
-            )
+            props.onChange({
+              ...props.formData,
+              name: e.target.value,
+            })
           }
         />
         {props.state?.submitted && hasError(props.errors, 'nameIsEmpty') ? (
@@ -82,13 +73,10 @@ export default function SettingsForm({
         label="Rôles additionnels"
         value={props.formData.preferences?.roles || []}
         onChange={(roles) => {
-          formChange(
-            {
-              ...props.formData,
-              preferences: { ...props.formData.preferences, roles },
-            },
-            'roles'
-          );
+          props.onChange({
+            ...props.formData,
+            preferences: { ...props.formData.preferences, roles },
+          });
         }}
         options={ROLES.map((r) => ({
           value: r.id,
@@ -100,13 +88,10 @@ export default function SettingsForm({
         label="Activités"
         value={props.formData.preferences?.activities || []}
         onChange={(activities) => {
-          formChange(
-            {
-              ...props.formData,
-              preferences: { ...props.formData.preferences, activities },
-            },
-            'activities'
-          );
+          props.onChange({
+            ...props.formData,
+            preferences: { ...props.formData.preferences, activities },
+          });
         }}
         options={activities.map((act) => ({
           value: act.id,

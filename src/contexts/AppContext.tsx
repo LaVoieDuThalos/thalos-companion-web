@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, type ReactNode } from 'react';
 import type { User } from '../model/User';
 
 export type ActionPayload = unknown;
@@ -17,7 +17,11 @@ export const AppContext = createContext<AppContextProps>({
   setUser: () => {},
 });
 
-export default function AppContextProvider({ children }) {
+export default function AppContextProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [appContext, setAppContext] = useState<AppContextProps>({
     refreshs: {},
     refresh: (key: string) => {

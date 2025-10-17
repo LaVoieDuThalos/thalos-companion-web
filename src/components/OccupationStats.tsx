@@ -32,22 +32,6 @@ export default function OccupationStats(props: Props) {
     }
   }, [props.dayId, props.room, props.events]);
 
-  // eslint-disable-next-line
-  const colorByOccupationRate = (rate: number | undefined) => {
-    if (rate === undefined) {
-      return Colors.gray;
-    }
-    if (rate >= 0.9) {
-      return Colors.red;
-    } else if (rate >= 0.75) {
-      return Colors.orange;
-    } else if (rate >= 0.5) {
-      return Colors.orange2;
-    } else {
-      return Colors.green;
-    }
-  };
-
   return (
     <>
       {!stats || stats.filter((s) => s.tables > 0).length === 0 ? (

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Button, type ButtonProps } from 'react-bootstrap';
 import './IconButton.scss';
 export type Icons = 'settings';
@@ -18,15 +17,10 @@ export default function IconButton({
   onClick,
   ...rest
 }: Props) {
-  // eslint-disable-next-line
-  const [hover, setHover] = useState(false);
-
   return (
     <Button
       {...rest}
       className="icon-button"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
       variant={rest.variant}
       onClick={onClick}
     >

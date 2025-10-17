@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, type ReactNode } from 'react';
 
 export type AlertDialogAction = {
   label: string;
@@ -49,7 +49,11 @@ export const AlertActions = {
   }),
 };
 
-export default function AlertContextProvider({ children }) {
+export default function AlertContextProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [alertContext, setAlertContext] = useState<AlertContextProps>({
     alert: (a: Alert) => {
       setAlertContext((prev) => ({ ...prev, currentAlert: a }));
