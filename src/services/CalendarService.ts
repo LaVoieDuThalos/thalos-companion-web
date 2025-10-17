@@ -15,6 +15,7 @@ class CalendarService {
 
   buildDaysFromDate(start: Date, limit = 30): GameDay[] {
     const current = start;
+    current.setHours(12);
     const result: GameDay[] = [];
     for (let i = 0; i < limit; i++) {
       if (this.gameDays.includes(start.getDay())) {
@@ -29,11 +30,14 @@ class CalendarService {
     return result;
   }
 
-  hours(startHour = 14, mins = [30]): string[] {
+  hours(startHour = 14, mins = [30], addMidnight = false): string[] {
     const results = [];
     for (let h = startHour; h < 24; h++) {
       results.push(`${h}h`);
       mins.forEach((m) => results.push(`${h}h${m}`));
+    }
+    if (addMidnight) {
+      results.push('Min.');
     }
     return results;
   }

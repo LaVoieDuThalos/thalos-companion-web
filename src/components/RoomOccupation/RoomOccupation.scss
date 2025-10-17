@@ -1,0 +1,17 @@
+.timeline {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.hour {
+  background-color: lightgray;
+  border-left: solid 1px black;
+  flex: 1;
+}
+
+.event {
+  background-color: lightblue;
+  border-radius: 10px;
+  border: solid 1px lightcyan;
+}

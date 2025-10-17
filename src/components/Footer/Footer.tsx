@@ -11,9 +11,7 @@ export default function Footer() {
   const { user, loading } = useUser();
 
   const isOuvreur =
-    user &&
-    user.preferences &&
-    settingsService.hasRole(user.preferences!, ROLE_OUVREUR);
+    user && user.preferences && settingsService.hasRole(user, ROLE_OUVREUR);
 
   return (
     <div className="footer">

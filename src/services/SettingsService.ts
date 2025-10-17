@@ -45,11 +45,14 @@ class SettingsService {
     return !!prefs.activities && prefs.activities.indexOf(activityId) >= 0;
   }
 
-  hasRole(prefs: UserPreferences | null, role: Role): boolean {
-    if (prefs === null) {
+  hasRole(user: User | null, role: Role): boolean {
+    if (user === null || user.preferences === null) {
       return false;
     }
-    return !!prefs.roles && prefs.roles?.indexOf(role.id) >= 0;
+    return (
+      !!user.preferences?.roles &&
+      user.preferences?.roles?.indexOf(role.id) >= 0
+    );
   }
 }
 

@@ -153,7 +153,7 @@ export default function EventForm({
           <option>-</option>
           {ROOMS.map((r) => (
             <option key={r.id} value={r.id}>
-              {r.name}
+              {r.name} - (Disponible)
             </option>
           ))}
         </Form.Select>

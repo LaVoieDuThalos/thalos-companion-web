@@ -1,0 +1,19 @@
+@import '../../scss/variables.scss';
+
+.day-selector {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.day-title {
+  font-size: 24px;
+  color: $secondary;
+  font-weight: bolder;
+  text-transform: uppercase;
+}
+
+.room-priorities {
+  align-self: center;
+}

@@ -1,30 +1,38 @@
 import { useContext, useEffect, useState } from 'react';
-import { Card } from 'react-bootstrap';
+import { Nav } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router';
-import AgendaEventCard from '../components/AgendaEventCard/AgendaEventCard';
-import ActivityIndicator from '../components/common/ActivityIndicator';
-import Icon from '../components/common/Icon';
-import IconButton from '../components/common/IconButton/IconButton';
-import View from '../components/common/View';
-import CountingFormModal from '../components/modals/CountingFormModal';
-import EventFormModal from '../components/modals/EventFormModal';
-import OpenCloseRoomConfigModal from '../components/modals/OpenCloseRoomConfigModal';
-import OccupationStats from '../components/OccupationStats';
-import OpenAndCloseRoom from '../components/OpenAndCloseRoom';
-import RoomPriorities from '../components/RoomPriorities';
-import { Colors } from '../constants/Colors';
-import { ROOMS } from '../constants/Rooms';
-import { AppContext } from '../contexts/AppContext';
-import type { AgendaEvent } from '../model/AgendaEvent';
-import type { GameDay } from '../model/GameDay';
-import { agendaService } from '../services/AgendaService';
-import { calendarService } from '../services/CalendarService';
-import { printGameDay } from '../utils/Utils';
+import AgendaEventCard from '../../components/AgendaEventCard/AgendaEventCard';
+import ActivityIndicator from '../../components/common/ActivityIndicator';
+import Icon from '../../components/common/Icon';
+import IconButton from '../../components/common/IconButton/IconButton';
+import View from '../../components/common/View';
+import CountingFormModal from '../../components/modals/CountingFormModal';
+import EventFormModal from '../../components/modals/EventFormModal';
+import OpenCloseRoomConfigModal from '../../components/modals/OpenCloseRoomConfigModal';
+import OpenAndCloseRoom from '../../components/OpenAndCloseRoom';
+import RoomPriorities from '../../components/RoomPriorities/RoomPriorities';
+import { Colors } from '../../constants/Colors';
+import { ROLE_BUREAU, ROLE_OUVREUR } from '../../constants/Roles';
+import { ROOMS } from '../../constants/Rooms';
+import { AppContext } from '../../contexts/AppContext';
+import { useUser } from '../../hooks/useUser';
+import type { AgendaEvent } from '../../model/AgendaEvent';
+import type { GameDay } from '../../model/GameDay';
+import { agendaService } from '../../services/AgendaService';
+import { calendarService } from '../../services/CalendarService';
+import { settingsService } from '../../services/SettingsService';
+import { printGameDay } from '../../utils/Utils';
+
+import Row from '../../components/common/Row';
+import RoomOccupation from '../../components/RoomOccupation/RoomOccupation';
+import './GameDayPage.scss';
 
 export default function GameDayPage() {
   const appContext = useContext(AppContext);
   const navigate = useNavigate();
   const params = useParams<{ dayId: string }>();
+
+  const { user } = useUser();
   const [day, setDay] = useState<GameDay | null>(null);
   const [previousDay, setPreviousDay] = useState<GameDay | null>(null);
   const [nextDay, setNextDay] = useState<GameDay | null>(null);
@@ -35,6 +43,8 @@ export default function GameDayPage() {
   const [countingFormModalVisible, setCountingFormModalVisible] =
     useState(false);
   const [openCloseModalVisible, setOpenCloseModalVisible] = useState(false);
+
+  const [currentRoom, setCurrentRoom] = useState(ROOMS[0]);
 
   const goPrevious = () => {
     navigate(`/agenda/${previousDay?.id}`);
@@ -84,7 +94,7 @@ export default function GameDayPage() {
         }}
       />
 
-      {day ? (
+      {day && settingsService.hasRole(user, ROLE_BUREAU) ? (
         <CountingFormModal
           dayId={day?.id}
           title={`Comptage : ${printGameDay(day)}`}
@@ -94,7 +104,7 @@ export default function GameDayPage() {
         />
       ) : null}
 
-      {day ? (
+      {day && settingsService.hasRole(user, ROLE_OUVREUR) ? (
         <OpenCloseRoomConfigModal
           day={day}
           show={openCloseModalVisible}
@@ -106,15 +116,14 @@ export default function GameDayPage() {
         />
       ) : null}
 
-      <View key="1" style={{}}>
-        <IconButton
-          icon="arrow_left"
-          color="gray"
-          onClick={() => goPrevious()}
-        />
-        {day ? <span style={{}}>{printGameDay(day)}</span> : null}
+      <div key="1" className="day-selector">
+        <IconButton icon="arrow_left" onClick={() => goPrevious()} />
+        {day ? <span className="day-title">{printGameDay(day)}</span> : null}
         <IconButton icon="arrow_right" color="gray" onClick={() => goNext()} />
-      </View>
+      </div>
+      <div className="room-priorities">
+        {day ? <RoomPriorities day={day} /> : null}
+      </div>
       {loading ? (
         <View style={{}}>
           <ActivityIndicator color={Colors.red} size={50} />
@@ -123,7 +132,9 @@ export default function GameDayPage() {
         <>
           <div style={{}}>
             <div onClick={() => setOpenCloseModalVisible(true)}>
-              {day ? <OpenAndCloseRoom day={day} /> : null}
+              {day && settingsService.hasRole(user, ROLE_OUVREUR) ? (
+                <OpenAndCloseRoom day={day} />
+              ) : null}
             </div>
             {events?.length === 0 ? (
               <View style={{}}>
@@ -139,42 +150,58 @@ export default function GameDayPage() {
               ))
             )}
             <View style={{}}>
-              <IconButton
+              {/*<IconButton
                 icon="add"
                 color={'white'}
                 onClick={() => setEventFormModalVisible(true)}
-              />
-              <IconButton
-                icon="pin"
-                iconSize={50}
-                color={'white'}
-                onClick={() => setCountingFormModalVisible(true)}
-              />
+              />*/}
+              {settingsService.hasRole(user, ROLE_BUREAU) && (
+                <IconButton
+                  icon="pin"
+                  iconSize={50}
+                  color={'white'}
+                  onClick={() => setCountingFormModalVisible(true)}
+                />
+              )}
             </View>
             <View>
-              <View style={{}}>
-                <Icon icon="home" iconSize={20} color={Colors.gray} />
-                <span style={{}}>Occupation des salles</span>
-              </View>
-              {day ? <RoomPriorities day={day} /> : null}
-              <View style={{}}>
+              <hr />
+              <Row>
                 <Icon
                   icon="table_restaurant"
                   iconSize={20}
                   color={Colors.gray}
                 />
-                <span style={{}}>Nombre de tables utilisées</span>
-              </View>
-              {realRooms.map((r) => (
-                <Card key={r.id}>
-                  <View style={{}}>
-                    <Icon icon="location_on" iconSize={20} />
-                    <span>{r.name}</span>
-                  </View>
+                <span>Occupation des salles</span>
+              </Row>
 
-                  {day && <OccupationStats room={r} events={events} />}
-                </Card>
-              ))}
+              <Nav justify variant="tabs" defaultActiveKey="main">
+                {realRooms.map((r) => (
+                  <Nav.Item>
+                    <Nav.Link
+                      eventKey={r.id}
+                      href="/home"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentRoom(r);
+                      }}
+                    >
+                      <Icon icon="location_on" iconSize={20} />
+                      {r.name}
+                    </Nav.Link>
+                  </Nav.Item>
+                ))}
+              </Nav>
+
+              {day && (
+                <>
+                  <RoomOccupation
+                    day={day}
+                    room={currentRoom}
+                    events={events.filter((e) => e.room?.id === currentRoom.id)}
+                  />
+                </>
+              )}
             </View>
           </div>
         </>

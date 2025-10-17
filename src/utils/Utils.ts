@@ -62,6 +62,11 @@ export function hourToNumber(hour: string): number {
   );
 }
 
+export function hourToHourNumber(hour: string): number {
+  const hh = hour.toUpperCase().split('H');
+  return parseInt(hh[0]) + (hh.length > 1 && hh[1] !== '' ? 0.5 : 0);
+}
+
 export function numberToHour(minutes: number): string {
   const hh = minutes / 60;
   let min = 0;
@@ -169,6 +174,10 @@ export function getWeekNumber(day: Date): number {
   // The week number is the number of weeks between the first Thursday of the year
   // and the Thursday in the target week (604800000 = 7 * 24 * 3600 * 1000)
   return 1 + Math.ceil((n1stThursday - date.getTime()) / 604800000);
+}
+
+export function firstDateOfMonth(date = new Date()) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
 }
 
 export function nowMinusDays(days: number): Date {

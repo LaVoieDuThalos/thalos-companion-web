@@ -10,7 +10,7 @@ import './index.scss';
 
 import AgendaPage from './app/Agenda';
 import EventDetailsPage from './app/events/EventDetails';
-import GameDayPage from './app/GameDayPage';
+import GameDayPage from './app/GameDayPage/GameDayPage';
 import SettingsPage from './app/Settings';
 
 const router = createBrowserRouter(
