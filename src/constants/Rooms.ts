@@ -43,4 +43,6 @@ export const ROOMS: Room[] = [
 
 export const TOUTE_LA_SALLE = 999;
 
-export const TABLES = [TOUTE_LA_SALLE, 1, 2, 3, 4, 5, 6, 8];
+export const TABLES = [TOUTE_LA_SALLE, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+export const ROOM_AUTRE = 'autre';

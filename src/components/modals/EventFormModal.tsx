@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Colors } from '../../constants/Colors';
 import { JUSQUA_LA_FERMETURE } from '../../constants/Durations';
 import { TOUTE_LA_SALLE } from '../../constants/Rooms';
+import { useAlert } from '../../hooks/useAlert';
 import { useUser } from '../../hooks/useUser';
 import type { AgendaEvent } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
@@ -19,7 +20,7 @@ import type {
 } from '../common/ModalPage/ModalPage';
 import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
-import EventForm from '../forms/EventForm';
+import EventForm from '../forms/EventForm/EventForm';
 
 export type FormData = {
   id?: string;
@@ -45,8 +46,8 @@ type Props = ModalPageProps & {
   onCancel?: () => void;
 };
 
-const EMPTY_OPTION = '';
-const HYPHEN_EMPTY_OPTION = '-';
+export const EMPTY_OPTION = '';
+export const HYPHEN_EMPTY_OPTION = '-';
 
 function validateForm(formData: FormData): ValidationErrors {
   return {
@@ -100,6 +101,7 @@ export default function EventFormModal({
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [saving, setSaving] = useState(false);
   const { user } = useUser();
+  const alerts = useAlert();
 
   const resetForm = () => {
     setFormData(emptyForm());
@@ -129,6 +131,10 @@ export default function EventFormModal({
             console.error('An error occured in success function', error);
           }
         }
+      })
+      .catch((err) => {
+        setSaving(false);
+        alerts.error(`${err}`);
       });
   };
 

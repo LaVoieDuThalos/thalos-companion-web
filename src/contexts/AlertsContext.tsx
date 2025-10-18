@@ -11,7 +11,7 @@ export type AlertContextProps = {
   alert: (a: Alert) => void;
   info?: (message: string) => void;
   warning?: (message: string) => void;
-  error?: (message: string) => void;
+  error: (message: string) => void;
   dialog: (
     title: string,
     message: string,
@@ -32,6 +32,7 @@ export const AlertContext = createContext<AlertContextProps>({
   alert: () => {},
   dialog: () => {},
   reset: () => {},
+  error: () => {},
 });
 
 export const AlertActions = {
@@ -68,6 +69,15 @@ export default function AlertContextProvider({
     },
     reset: () => {
       setAlertContext((prev) => ({ ...prev, currentAlert: undefined }));
+    },
+    error: (message) => {
+      const a: Alert = {
+        title: 'Erreur',
+        level: 'error',
+        message,
+        actions: [AlertActions.OK(() => Promise.resolve())],
+      };
+      setAlertContext((prev) => ({ ...prev, currentAlert: a }));
     },
   });
 

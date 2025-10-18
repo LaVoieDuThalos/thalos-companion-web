@@ -1,11 +1,26 @@
 import { Form } from 'react-bootstrap';
-import { ACTIVITIES } from '../../constants/Activities';
-import { Durations } from '../../constants/Durations';
-import { ROOMS, TABLES, TOUTE_LA_SALLE } from '../../constants/Rooms';
-import { calendarService } from '../../services/CalendarService';
-import { hasError, type CustomFormProps } from '../../utils/FormUtils';
-import { printGameDay } from '../../utils/Utils';
-import type { FormData } from '../modals/EventFormModal';
+import { ACTIVITIES } from '../../../constants/Activities';
+import { Durations } from '../../../constants/Durations';
+import { ROOMS, TABLES, TOUTE_LA_SALLE } from '../../../constants/Rooms';
+import { calendarService } from '../../../services/CalendarService';
+import { hasError, type CustomFormProps } from '../../../utils/FormUtils';
+import {
+  fromGameDayId,
+  getEndTime,
+  getStartTime,
+  printGameDay,
+} from '../../../utils/Utils';
+import {
+  HYPHEN_EMPTY_OPTION,
+  type FormData,
+} from '../../modals/EventFormModal';
+
+import { useState } from 'react';
+import {
+  bookingService,
+  type TablesAvailables,
+} from '../../../services/BookingService';
+import './EventForm.scss';
 
 type Event = { target: { value: string } };
 
@@ -20,8 +35,34 @@ export default function EventForm({
   const hours = calendarService.hours();
   const durations = Durations;
 
+  const [availablesTables, setAvailablesTables] = useState<TablesAvailables>(
+    {}
+  );
+
   const updateForm = (field: string, event: Event) => {
-    onChange({ ...formData, [field]: event.target.value });
+    const newFormData = { ...formData, [field]: event.target.value };
+    if (
+      newFormData.dayId &&
+      newFormData.start &&
+      newFormData.durationInMinutes
+    ) {
+      const gameDay = fromGameDayId(newFormData.dayId);
+      const startTime = gameDay ? getStartTime(gameDay, newFormData.start) : 0;
+      const endTime = gameDay
+        ? getEndTime(gameDay, newFormData.start, newFormData.durationInMinutes)
+        : 0;
+      console.log('Start', new Date(startTime), 'End', new Date(endTime));
+
+      bookingService
+        .availablesTablesByRooms(newFormData.dayId, startTime, endTime)
+        .then((availablesTablesByRooms) => {
+          console.log('Availables tables', availablesTables);
+          setAvailablesTables(availablesTablesByRooms);
+        });
+    } else {
+      setAvailablesTables({});
+    }
+    onChange(newFormData);
   };
 
   return (
@@ -38,21 +79,21 @@ export default function EventForm({
           onChange={(e) => updateForm('title', e)}
         />
         {state?.submitted && hasError(errors, 'nameIsEmpty') ? (
-          <span style={{}}>Le nom est obligatoire</span>
+          <p className="form-error">Le nom est obligatoire</p>
         ) : null}
         {state?.submitted &&
         (hasError(errors, 'nameIsLower') ||
           hasError(errors, 'nameIsHigher')) ? (
-          <span style={{}}>
+          <p className="form-error">
             Le nom doit être entre 3 et 40 caractères (saisie{' '}
             {formData.title?.length} car.)
-          </span>
+          </p>
         ) : null}
         {state?.submitted && hasError(errors, 'nameIsInvalid') ? (
-          <span style={{}}>
+          <p className="form-error">
             Le nom doit être alphanumérique (caractères spéciaux autorisés : # @
             *)
-          </span>
+          </p>
         ) : null}
       </Form.Group>
 
@@ -74,7 +115,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'dateIsEmpty') ? (
-          <span style={{}}>La date est obligatoire</span>
+          <p className="form-error">La date est obligatoire</p>
         ) : null}
       </Form.Group>
 
@@ -95,7 +136,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'startHourIsEmpty') ? (
-          <span style={{}}>L&lsquo;heure de début est obligatoire</span>
+          <p className="form-error">L&lsquo;heure de début est obligatoire</p>
         ) : null}
       </Form.Group>
 
@@ -116,7 +157,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'durationIsEmpty') ? (
-          <span style={{}}>Le durée est obligatoire</span>
+          <p className="form-error">Le durée est obligatoire</p>
         ) : null}
       </Form.Group>
 
@@ -137,7 +178,9 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'activityIsEmpty') ? (
-          <span style={{}}>L&lsquo;activité principale est obligatoire</span>
+          <p className="form-error">
+            L&lsquo;activité principale est obligatoire
+          </p>
         ) : null}
       </Form.Group>
 
@@ -146,19 +189,38 @@ export default function EventForm({
         <Form.Label>Salle</Form.Label>
         <Form.Select
           size="lg"
-          disabled={disabled}
+          disabled={
+            disabled ||
+            formData.dayId === HYPHEN_EMPTY_OPTION ||
+            formData.start === HYPHEN_EMPTY_OPTION
+          }
           value={formData.roomId}
           onChange={(e) => updateForm('roomId', e)}
         >
           <option>-</option>
-          {ROOMS.map((r) => (
-            <option key={r.id} value={r.id}>
-              {r.name} - (Disponible)
-            </option>
-          ))}
+          {ROOMS.map((r) => {
+            const tables = availablesTables[r.id];
+            return (
+              <option
+                key={r.id}
+                value={r.id}
+                disabled={tables === 0 && !r.virtual}
+              >
+                {r.name} - (
+                {tables === TOUTE_LA_SALLE
+                  ? 'Disponible'
+                  : tables === 0
+                    ? 'Complet'
+                    : tables === r.capacity
+                      ? 'Disponible'
+                      : `Reste ${tables} / ${r.capacity} tables`}
+                )
+              </option>
+            );
+          })}
         </Form.Select>
         {state?.submitted && hasError(errors, 'roomIsEmpty') ? (
-          <span style={{}}>La salle est obligatoire</span>
+          <p className="form-error">La salle est obligatoire</p>
         ) : null}
       </Form.Group>
 
@@ -173,13 +235,19 @@ export default function EventForm({
         >
           <option>-</option>
           {TABLES.map((t) => (
-            <option key={t} value={t}>
+            <option
+              key={t}
+              value={t}
+              disabled={
+                !!formData.roomId && t > availablesTables[formData.roomId]
+              }
+            >
               {t === TOUTE_LA_SALLE ? 'Toute la salle' : t + ' tables'}
             </option>
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'tablesIsEmpty') ? (
-          <span style={{}}>Le nombre de tables est obligatoire</span>
+          <p className="form-error">Le nombre de tables est obligatoire</p>
         ) : null}
       </Form.Group>
 

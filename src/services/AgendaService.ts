@@ -2,7 +2,7 @@ import { API, type ApiService } from '../api/Api';
 import type { AgendaEvent } from '../model/AgendaEvent';
 import { fromGameDayId, getEndTime, getStartTime } from '../utils/Utils';
 
-class AgendaService {
+export class AgendaService {
   private api: ApiService;
 
   constructor(api: ApiService) {
@@ -21,6 +21,13 @@ class AgendaService {
     return this.api.findEventsByDayId(dayId).then(this.sortEvents);
   }
 
+  findEventsOfDayAndRoom(
+    dayId: string,
+    roomId: string
+  ): Promise<AgendaEvent[]> {
+    return this.api.findEventsByDayIdAndRoomId(dayId, roomId);
+  }
+
   findAllEvents(): Promise<AgendaEvent[]> {
     return this.api.findAllEvents().then(this.sortEvents);
   }
@@ -30,6 +37,7 @@ class AgendaService {
     if (day === null || !event?.durationInMinutes) {
       throw new Error('Unable to save event : ' + event);
     }
+
     const enriched = {
       ...event,
       startTime: getStartTime(day!, event.start!),

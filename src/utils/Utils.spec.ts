@@ -1,12 +1,16 @@
+import type { Activity } from '../model/Activity';
 import type { AgendaEvent } from '../model/AgendaEvent';
 import type { GameDay } from '../model/GameDay';
 import {
   eventIsInTimeSlot,
+  fromActivityId,
+  fromGameDayId,
   getEndTime,
   getStartTime,
   getWeekNumber,
   isEmpty,
   isNotEmpty,
+  isZero,
 } from './Utils';
 
 describe('Utils.isEmpty() tests', () => {
@@ -34,6 +38,15 @@ describe('Utils.isNotEmpty() tests', () => {
 
   it('isNotEmpty should false true when empty string', () => {
     expect(isNotEmpty('')).toBeFalsy();
+  });
+});
+
+describe('isZero tests', () => {
+  it('Should return successfully', () => {
+    expect(isZero(0)).toBeTruthy();
+    expect(isZero(undefined)).toBeTruthy();
+    expect(isZero(null)).toBeTruthy();
+    expect(isZero(1)).toBeFalsy();
   });
 });
 
@@ -139,5 +152,27 @@ describe('getWeekNumber tests', () => {
   it('getWeekNumber', () => {
     expect(getWeekNumber(new Date('2025-11-04'))).toBe(45);
     expect(getWeekNumber(new Date('2025-04-11'))).toBe(15);
+  });
+});
+
+describe('From Id tests', () => {
+  it('fromActivityId', () => {
+    expect(fromActivityId('jdr')).toBeDefined();
+    expect(fromActivityId('jds')?.name).toBe('Jeu de société');
+    expect(fromActivityId('unknow')).toBeFalsy();
+    expect(fromActivityId('JDR')).toBeFalsy();
+    expect(
+      fromActivityId('test1', [{ id: 'test1', name: 'Test' } as Activity])
+    ).toBeTruthy();
+
+    expect(fromActivityId(undefined)).toBeNull();
+  });
+
+  it('fromGameDayId', () => {
+    expect(fromGameDayId('2025-11-11')).toBeTruthy();
+    expect(fromGameDayId('2025-11-11')?.date.toLocaleDateString()).toBe(
+      new Date(2025, 10, 11).toLocaleDateString()
+    );
+    expect(fromGameDayId(undefined)).toBeNull();
   });
 });

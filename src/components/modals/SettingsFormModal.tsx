@@ -41,12 +41,9 @@ export default function SettingsFormModal({
   const [saving, setSaving] = useState(false);
   const [loading] = useState(false);
 
-  const onFormChange = useCallback(
-    (changes: User) => {
-      setUserData((prev) => ({ ...prev, ...changes }));
-    },
-    [userData]
-  );
+  const onFormChange = useCallback((changes: User) => {
+    setUserData((prev) => ({ ...prev, ...changes }));
+  }, []);
 
   useEffect(() => {
     const errors = validateForm(userData);

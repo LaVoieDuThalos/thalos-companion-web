@@ -64,7 +64,7 @@ class FirestoreApi implements ApiService {
   }
 
   findEventsByDayId(dayId: string): Promise<AgendaEvent[]> {
-    console.log('findEventsByDayIdAndRoomId()', dayId);
+    console.log('findEventsByDayId()', dayId);
     const q = query(
       collection(FirebaseDb, Collections.EVENTS),
       where('dayId', '==', dayId)
