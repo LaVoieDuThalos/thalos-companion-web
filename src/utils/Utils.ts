@@ -52,22 +52,25 @@ export function printGameDay(gameDay: GameDay): string {
 
 export function parseHour(hour: string): string {
   const hh = hour.toUpperCase().split('H');
+  if (
+    parseInt(hh[0]) < 0 ||
+    parseInt(hh[0]) > 23 ||
+    parseInt(hh[1]) < 0 ||
+    parseInt(hh[1]) > 59
+  ) {
+    throw Error('Invalid data');
+  }
   return `${hh[0].padStart(2, '0')}:${hh.length > 1 ? hh[1].padStart(2, '0') : '00'}:00`;
 }
 
-export function hourToNumber(hour: string): number {
+export function hourToMinutes(hour: string): number {
   const hh = hour.toUpperCase().split('H');
   return (
     60 * parseInt(hh[0]) + (hh.length > 1 && hh[1] !== '' ? parseInt(hh[1]) : 0)
   );
 }
 
-export function hourToHourNumber(hour: string): number {
-  const hh = hour.toUpperCase().split('H');
-  return parseInt(hh[0]) + (hh.length > 1 && hh[1] !== '' ? 0.5 : 0);
-}
-
-export function numberToHour(minutes: number): string {
+export function minutesToHour(minutes: number): string {
   const hh = minutes / 60;
   let min = 0;
   if (minutes % 60 !== 0) {
@@ -77,7 +80,7 @@ export function numberToHour(minutes: number): string {
 }
 
 export function getStartTime(day: GameDay, start: string): number {
-  return day.date.getTime() + hourToNumber(start) * 60 * 1000;
+  return day.date.getTime() + hourToMinutes(start) * 60 * 1000;
 }
 
 export function getEndTime(
@@ -126,9 +129,9 @@ export function removeAll(arr: string[], value: string): string[] {
 export function eventIsActiveAt(event: AgendaEvent, hour: string): boolean {
   const hh = parseHour(hour);
   const startEvent = parseHour(event.start);
-  const hhMinutes = hourToNumber(event.start);
+  const hhMinutes = hourToMinutes(event.start);
   const endEventInMinutes = hhMinutes + event.durationInMinutes;
-  const endEvent = numberToHour(endEventInMinutes);
+  const endEvent = minutesToHour(endEventInMinutes);
 
   return startEvent.localeCompare(hh) <= 0 && endEvent.localeCompare(hh) > 0;
 }
@@ -149,8 +152,7 @@ export function uuid() {
 }
 
 export function getWeekNumber(day: Date): number {
-  let date = new Date(day);
-  if (!(date instanceof Date)) date = new Date();
+  const date = new Date(day);
 
   // ISO week date weeks start on Monday, so correct the day number
   const nDay = (date.getDay() + 6) % 7;
