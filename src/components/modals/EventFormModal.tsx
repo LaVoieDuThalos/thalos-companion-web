@@ -30,6 +30,7 @@ export type FormData = {
   end?: string;
   activityId: string;
   roomId: string;
+  roomIsAvailable: boolean;
   tables: number;
   durationInMinutes: number;
   description?: string;
@@ -63,6 +64,7 @@ function validateForm(formData: FormData): ValidationErrors {
     ]),
     durationIsEmpty: isZero(formData.durationInMinutes),
     roomIsEmpty: isEmpty(formData.roomId, [EMPTY_OPTION, HYPHEN_EMPTY_OPTION]),
+    roomIsOccupied: !formData.roomIsAvailable,
     activityIsEmpty: isEmpty(formData.activityId, [
       EMPTY_OPTION,
       HYPHEN_EMPTY_OPTION,
@@ -88,6 +90,7 @@ export default function EventFormModal({
         ? event.durationInMinutes
         : JUSQUA_LA_FERMETURE.valueInMinutes,
       roomId: event && event.room ? event.room?.id : HYPHEN_EMPTY_OPTION,
+      roomIsAvailable: false,
       activityId:
         event && event.activity ? event.activity?.id : HYPHEN_EMPTY_OPTION,
       tables: event && event.tables ? event.tables : TOUTE_LA_SALLE,

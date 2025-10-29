@@ -15,7 +15,7 @@ import {
   type FormData,
 } from '../../modals/EventFormModal';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   bookingService,
   type TablesAvailables,
@@ -39,34 +39,50 @@ export default function EventForm({
     {}
   );
 
+  const updateAvailablesTablesByRooms = (formData: FormData) => {
+    const gameDay = fromGameDayId(formData.dayId);
+    const startTime = gameDay ? getStartTime(gameDay, formData.start) : 0;
+    const endTime = gameDay
+      ? getEndTime(gameDay, formData.start, formData.durationInMinutes)
+      : 0;
+
+    bookingService
+      .availablesTablesByRooms(formData.dayId, startTime, endTime)
+      .then((availablesTablesByRooms) => {
+        setAvailablesTables(availablesTablesByRooms);
+        onChange({
+          ...formData,
+          roomIsAvailable:
+            formData.roomId !== undefined &&
+            availablesTablesByRooms[formData.roomId] > 0,
+        });
+      });
+  };
+
   const updateForm = (field: string, event: Event) => {
-    const newFormData = { ...formData, [field]: event.target.value };
+    const newFormData = {
+      ...formData,
+      [field]: event.target.value,
+    };
     if (
       newFormData.dayId &&
       newFormData.start &&
       newFormData.durationInMinutes
     ) {
-      const gameDay = fromGameDayId(newFormData.dayId);
-      const startTime = gameDay ? getStartTime(gameDay, newFormData.start) : 0;
-      const endTime = gameDay
-        ? getEndTime(gameDay, newFormData.start, newFormData.durationInMinutes)
-        : 0;
-      console.log('Start', new Date(startTime), 'End', new Date(endTime));
-
-      bookingService
-        .availablesTablesByRooms(newFormData.dayId, startTime, endTime)
-        .then((availablesTablesByRooms) => {
-          console.log('Availables tables', availablesTables);
-          setAvailablesTables(availablesTablesByRooms);
-        });
+      updateAvailablesTablesByRooms(newFormData);
     } else {
       setAvailablesTables({});
+      onChange(newFormData);
     }
-    onChange(newFormData);
   };
+
+  useEffect(() => {
+    updateAvailablesTablesByRooms(formData);
+  }, []);
 
   return (
     <Form>
+      {JSON.stringify(availablesTables)}
       {/* Nom ------------------------------------------------------------- */}
       <Form.Group className="mb-3" controlId="eventForm.NameInput">
         <Form.Label>Nom</Form.Label>
@@ -205,9 +221,10 @@ export default function EventForm({
                 key={r.id}
                 value={r.id}
                 disabled={tables === 0 && !r.virtual}
+                data-room-occupied={tables === 0}
               >
                 {r.name} - (
-                {tables === TOUTE_LA_SALLE
+                {tables === undefined || tables === TOUTE_LA_SALLE
                   ? 'Disponible'
                   : tables === 0
                     ? 'Complet'
@@ -221,6 +238,11 @@ export default function EventForm({
         </Form.Select>
         {state?.submitted && hasError(errors, 'roomIsEmpty') ? (
           <p className="form-error">La salle est obligatoire</p>
+        ) : null}
+        {state?.submitted && hasError(errors, 'roomIsOccupied') ? (
+          <p className="form-error">
+            La salle n'est pas disponible pour ce créneau
+          </p>
         ) : null}
       </Form.Group>
 

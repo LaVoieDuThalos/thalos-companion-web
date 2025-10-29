@@ -187,3 +187,12 @@ export function nowMinusDays(days: number): Date {
   now.setDate(now.getDate() - days);
   return now;
 }
+
+export function printDuration(durationInMinutes: number): string {
+  if (durationInMinutes < 60) {
+    return `${durationInMinutes} minutes`;
+  } else {
+    const minutes = durationInMinutes % 60;
+    return `${durationInMinutes / 60}h${minutes != 0 ? minutes + 'min' : ''}`;
+  }
+}
