@@ -1,0 +1,15 @@
+@import '../../scss/variables.scss';
+
+.game-day {
+  text-transform: uppercase;
+}
+
+.event {
+  border-radius: 5px;
+  text-align: left;
+  padding: 5px;
+
+  .event-start {
+    font-weight: bold;
+  }
+}

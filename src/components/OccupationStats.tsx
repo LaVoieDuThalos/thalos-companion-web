@@ -4,9 +4,7 @@ import type { Occupation } from '../constants/Rooms';
 import type { AgendaEvent } from '../model/AgendaEvent';
 import type { Room } from '../model/Room';
 import { roomService } from '../services/RoomService';
-import { clamp } from '../utils/Utils';
 import Icon from './common/Icon';
-import type { StyleSheet } from './common/Types';
 import View from './common/View';
 
 type Props = {
@@ -34,35 +32,15 @@ export default function OccupationStats(props: Props) {
     }
   }, [props.dayId, props.room, props.events]);
 
-  const colorByOccupationRate = (rate: number | undefined) => {
-    if (rate === undefined) {
-      return Colors.gray;
-    }
-    if (rate >= 0.9) {
-      return Colors.red;
-    } else if (rate >= 0.75) {
-      return Colors.orange;
-    } else if (rate >= 0.5) {
-      return Colors.orange2;
-    } else {
-      return Colors.green;
-    }
-  };
-
   return (
     <>
       {!stats || stats.filter((s) => s.tables > 0).length === 0 ? (
-        <span style={{ color: 'gray', alignSelf: 'center' }}>
-          Disponible toute la journée
-        </span>
+        <span style={{}}>Disponible toute la journée</span>
       ) : (
-        <div style={styles.container}>
+        <div style={{}}>
           {stats &&
             stats.map((st) => (
-              <View
-                key={st.hour}
-                style={{ display: 'flex', alignItems: 'center' }}
-              >
+              <View key={st.hour} style={{}}>
                 <span>
                   {st.tables > 0 && st.tables < st.roomCapacity ? (
                     st.tables
@@ -73,22 +51,8 @@ export default function OccupationStats(props: Props) {
                     />
                   )}
                 </span>
-                <View
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    width: 20,
-                  }}
-                >
-                  <View
-                    style={[
-                      styles.stat,
-                      {
-                        height: clamp(st.tables * 3, 0, 100),
-                        backgroundColor: colorByOccupationRate(st.rate),
-                      },
-                    ]}
-                  />
+                <View style={{}}>
+                  <View style={{}} />
                 </View>
                 {st.hour.endsWith('h') ? <span>{st.hour}</span> : <span />}
               </View>
@@ -98,14 +62,3 @@ export default function OccupationStats(props: Props) {
     </>
   );
 }
-
-const styles: StyleSheet = {
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  stat: {
-    margin: 0,
-    backgroundColor: 'green',
-  },
-};

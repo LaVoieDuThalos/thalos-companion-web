@@ -31,41 +31,18 @@ export default function RoomKeyCard({ roomKey, onChangeOwner }: Props) {
         />
       }
       <button onClick={() => setUserSelectModalVisible(true)}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <View
-            style={{
-              backgroundColor: Colors.gray,
-              borderRadius: 10,
-              padding: 3,
-            }}
-          >
+        <View style={{}}>
+          <View style={{}}>
             <Icon icon="key" color={Colors.white} iconSize={50} />
           </View>
-          <View
-            style={{
-              flex: 1,
-              paddingLeft: 10,
-              paddingRight: 10,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
+          <View style={{}}>
             <View>
               <span>{roomKey.name}</span>
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  padding: 5,
-                  borderRadius: 20,
-                }}
-              >
+              <View style={{}}>
                 <Icon icon="person" iconSize={30} />
                 {roomKey.owner ? (
-                  <span style={{ fontWeight: 'bold' }}>
-                    {roomKey.owner.name}
-                  </span>
+                  <span style={{}}>{roomKey.owner.name}</span>
                 ) : (
                   <span>?</span>
                 )}

@@ -64,7 +64,7 @@ class FirestoreApi implements ApiService {
   }
 
   findEventsByDayId(dayId: string): Promise<AgendaEvent[]> {
-    console.log('findEventsByDayIdAndRoomId()', dayId);
+    console.log('findEventsByDayId()', dayId);
     const q = query(
       collection(FirebaseDb, Collections.EVENTS),
       where('dayId', '==', dayId)
@@ -147,9 +147,7 @@ class FirestoreApi implements ApiService {
     return getDocs(collection(FirebaseDb, Collections.USERS)).then((results) =>
       results.docs
         .map((doc) => mapDtoToUser(doc.id, doc.data()))
-        .sort((a, b) =>
-          `${a.firstName}${b.name}`.localeCompare(`${b.firstName}${b.name}`)
-        )
+        .sort((a, b) => `${a.name}`.localeCompare(`${b.name}`))
     );
   }
 

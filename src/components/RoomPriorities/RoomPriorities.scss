@@ -1,0 +1,14 @@
+.room-priorities {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  font-size: small;
+  .room-priority {
+    padding-left: 3px;
+  }
+
+  .activity {
+    font-weight: bold;
+    padding-left: 5px;
+  }
+}

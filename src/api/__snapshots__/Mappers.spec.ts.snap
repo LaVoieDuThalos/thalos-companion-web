@@ -1,0 +1,55 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Mappers tests > mapAgendaEventToDto should map to dto 1`] = `
+{
+  "activityId": "activity2",
+  "creator": {
+    "id": "user1",
+  },
+  "dayId": "2025-01-02",
+  "description": "description",
+  "durationInMinutes": 100,
+  "endTime": 223456,
+  "roomId": "room1",
+  "start": "15H",
+  "startTime": 123456,
+  "tables": 4,
+  "title": "Test",
+}
+`;
+
+exports[`Mappers tests > mapDtoToAgendaEvent should map to event 1`] = `
+{
+  "activity": {
+    "id": "activity2",
+    "name": "Activity B",
+    "style": {
+      "backgroundColor": "red",
+      "color": "white",
+    },
+  },
+  "activityId": "activity2",
+  "creator": {
+    "id": "user1",
+  },
+  "day": {
+    "date": 2025-01-02T00:00:00.000Z,
+    "id": "2025-01-02",
+  },
+  "dayId": "2025-01-02",
+  "description": "description",
+  "durationInMinutes": 100,
+  "endTime": 223456,
+  "id": "id",
+  "room": {
+    "capacity": 10,
+    "id": "room1",
+    "name": "Room A",
+  },
+  "roomId": "room1",
+  "start": "15H",
+  "startTime": 123456,
+  "tables": 4,
+  "title": "Test",
+}
+`;

@@ -16,7 +16,7 @@ export function hasError(
   errors: ValidationErrors | undefined,
   error: string
 ): boolean {
-  return !!errors && errors && errors[error];
+  return !!errors && errors && !!errors[error];
 }
 
 export function isFormValid(errors: ValidationErrors): boolean {
@@ -33,7 +33,7 @@ export const Validators = {
   },
 
   min: (value: string, minValue: number) => {
-    return !!value && value.trim().length < minValue;
+    return !!value && value.trim().length <= minValue;
   },
 
   allowedCharacters: (

@@ -1,5 +1,4 @@
 import { ClipLoader } from 'react-spinners';
-import type { StyleSheet } from './Types';
 
 type Props = {
   color?: string;
@@ -9,7 +8,7 @@ type Props = {
 
 export default function ActivityIndicator({ color, size }: Props) {
   return (
-    <div style={styles.container}>
+    <div style={{}}>
       <ClipLoader
         color={color ?? '#aa0000'}
         cssOverride={{}}
@@ -20,13 +19,3 @@ export default function ActivityIndicator({ color, size }: Props) {
     </div>
   );
 }
-
-const styles: StyleSheet = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifySelf: 'center',
-    height: '100%',
-  },
-};

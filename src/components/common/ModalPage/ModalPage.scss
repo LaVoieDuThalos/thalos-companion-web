@@ -1,0 +1,10 @@
+@import '../../../scss/custom.scss';
+
+.modal-footer {
+  flex-direction: row;
+  flex-wrap: nowrap !important;
+  button {
+    width: 100%;
+    text-transform: uppercase;
+  }
+}

@@ -5,8 +5,11 @@ import type { User } from '../../model/User';
 import { userService } from '../../services/UserService';
 import ActivityIndicator from '../common/ActivityIndicator';
 import Icon from '../common/Icon';
-import type { ModalAction, ModalPageProps } from '../common/ModalPage';
-import ModalPage from '../common/ModalPage';
+import type {
+  ModalAction,
+  ModalPageProps,
+} from '../common/ModalPage/ModalPage';
+import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
 
 type Props = ModalPageProps & {
@@ -18,11 +21,9 @@ type Props = ModalPageProps & {
 function UserCard({ user }: { user: User }) {
   return (
     <Card>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View style={{}}>
         <Icon icon="person" color={Colors.gray} iconSize={30} />
-        <span>
-          {user.firstName} | {user.name}
-        </span>
+        <span>{user.name}</span>
       </View>
     </Card>
   );
@@ -47,7 +48,6 @@ export default function UserSelectModal({ onCancel, ...props }: Props) {
     {
       name: 'cancel',
       label: 'Annuler',
-      color: 'gray',
       onClick: () => onCancel(),
     },
   ];
@@ -63,7 +63,7 @@ export default function UserSelectModal({ onCancel, ...props }: Props) {
           <ActivityIndicator color={Colors.red} size={50} />
         </View>
       ) : null}
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{}}>
         {users.map((user) => (
           <button key={user.id} onClick={() => props.onSuccess(user)}>
             <UserCard user={user} />

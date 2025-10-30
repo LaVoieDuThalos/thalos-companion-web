@@ -1,0 +1,23 @@
+@import '../../scss/variables.scss';
+
+.agenda-main {
+  .month-selector {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px;
+
+    .month-label {
+      font-size: 24px;
+      color: $secondary;
+      font-weight: bolder;
+      text-transform: uppercase;
+    }
+  }
+
+  .month-days {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}

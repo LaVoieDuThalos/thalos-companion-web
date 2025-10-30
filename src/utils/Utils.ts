@@ -6,7 +6,10 @@ import type { AgendaEvent } from '../model/AgendaEvent';
 import type { GameDay } from '../model/GameDay';
 import type { Room } from '../model/Room';
 
-export function isEmpty(value: string | null, emptyValues = ['']): boolean {
+export function isEmpty(
+  value: string | null | undefined,
+  emptyValues = ['']
+): boolean {
   return !value || emptyValues.filter((v) => value.trim() === v).length > 0;
 }
 
@@ -49,17 +52,25 @@ export function printGameDay(gameDay: GameDay): string {
 
 export function parseHour(hour: string): string {
   const hh = hour.toUpperCase().split('H');
+  if (
+    parseInt(hh[0]) < 0 ||
+    parseInt(hh[0]) > 23 ||
+    parseInt(hh[1]) < 0 ||
+    parseInt(hh[1]) > 59
+  ) {
+    throw Error('Invalid data');
+  }
   return `${hh[0].padStart(2, '0')}:${hh.length > 1 ? hh[1].padStart(2, '0') : '00'}:00`;
 }
 
-export function hourToNumber(hour: string): number {
+export function hourToMinutes(hour: string): number {
   const hh = hour.toUpperCase().split('H');
   return (
     60 * parseInt(hh[0]) + (hh.length > 1 && hh[1] !== '' ? parseInt(hh[1]) : 0)
   );
 }
 
-export function numberToHour(minutes: number): string {
+export function minutesToHour(minutes: number): string {
   const hh = minutes / 60;
   let min = 0;
   if (minutes % 60 !== 0) {
@@ -69,7 +80,7 @@ export function numberToHour(minutes: number): string {
 }
 
 export function getStartTime(day: GameDay, start: string): number {
-  return day.date.getTime() + hourToNumber(start) * 60 * 1000;
+  return day.date.getTime() + hourToMinutes(start) * 60 * 1000;
 }
 
 export function getEndTime(
@@ -118,9 +129,9 @@ export function removeAll(arr: string[], value: string): string[] {
 export function eventIsActiveAt(event: AgendaEvent, hour: string): boolean {
   const hh = parseHour(hour);
   const startEvent = parseHour(event.start);
-  const hhMinutes = hourToNumber(event.start);
+  const hhMinutes = hourToMinutes(event.start);
   const endEventInMinutes = hhMinutes + event.durationInMinutes;
-  const endEvent = numberToHour(endEventInMinutes);
+  const endEvent = minutesToHour(endEventInMinutes);
 
   return startEvent.localeCompare(hh) <= 0 && endEvent.localeCompare(hh) > 0;
 }
@@ -141,8 +152,7 @@ export function uuid() {
 }
 
 export function getWeekNumber(day: Date): number {
-  let date = new Date(day);
-  if (!(date instanceof Date)) date = new Date();
+  const date = new Date(day);
 
   // ISO week date weeks start on Monday, so correct the day number
   const nDay = (date.getDay() + 6) % 7;
@@ -168,8 +178,21 @@ export function getWeekNumber(day: Date): number {
   return 1 + Math.ceil((n1stThursday - date.getTime()) / 604800000);
 }
 
+export function firstDateOfMonth(date = new Date()) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
 export function nowMinusDays(days: number): Date {
   const now = new Date();
   now.setDate(now.getDate() - days);
   return now;
+}
+
+export function printDuration(durationInMinutes: number): string {
+  if (durationInMinutes < 60) {
+    return `${durationInMinutes} minutes`;
+  } else {
+    const minutes = durationInMinutes % 60;
+    return `${durationInMinutes / 60}h${minutes != 0 ? minutes + 'min' : ''}`;
+  }
 }

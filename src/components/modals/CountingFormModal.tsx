@@ -6,8 +6,11 @@ import type { DayCounts } from '../../model/Counting';
 import { countingService } from '../../services/CountingService';
 import ActivityIndicator from '../common/ActivityIndicator';
 import Icon from '../common/Icon';
-import type { ModalAction, ModalPageProps } from '../common/ModalPage';
-import ModalPage from '../common/ModalPage';
+import type {
+  ModalAction,
+  ModalPageProps,
+} from '../common/ModalPage/ModalPage';
+import ModalPage from '../common/ModalPage/ModalPage';
 import NumberInput from '../common/NumberInput';
 import View from '../common/View';
 
@@ -42,7 +45,6 @@ export default function CountingFormModal(props: Props) {
       name: 'cancel',
       label: 'Annuler',
       disabled: loading,
-      color: 'gray',
       onClick: () => {
         if (props.onCancel) {
           props.onCancel();
@@ -54,7 +56,6 @@ export default function CountingFormModal(props: Props) {
       label: 'Enregistrer',
       disabled: loading,
       onClick: () => {
-        console.log('Save counts', counts);
         setLoading(true);
         countingService
           .saveOrUpdateCounting(counts)
@@ -84,7 +85,7 @@ export default function CountingFormModal(props: Props) {
 
   useEffect(() => {
     if (props.onChange) props.onChange(counts);
-  }, [counts]);
+  }, [counts, props]);
 
   const activities = ACTIVITIES.filter((a) => a.countable);
 
@@ -95,19 +96,19 @@ export default function CountingFormModal(props: Props) {
       options={{ title: props.title, actions: ACTIONS }}
     >
       {loading ? (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View style={{}}>
           <ActivityIndicator color={Colors.red} size={50} />
         </View>
       ) : null}
       {!loading ? (
-        <div style={{ flex: 1 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+        <div style={{}}>
+          <View style={{}}>
             <Icon icon="sunny" iconSize={30} />
             <span style={{ fontSize: 20 }}>Après-midi</span>
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{}}>
             {activities.map((act) => (
-              <Card key={act.id} style={{ flex: 1 }}>
+              <Card key={act.id} style={{}}>
                 <NumberInput
                   label={act.name}
                   value={
@@ -122,12 +123,12 @@ export default function CountingFormModal(props: Props) {
               </Card>
             ))}
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+          <View style={{}}>
             <Icon icon="nightlight" iconSize={30} />
-            <span style={{ fontSize: 20 }}>Soirée</span>
+            <span style={{}}>Soirée</span>
           </View>
           {activities.map((act) => (
-            <Card key={act.id} style={{ flex: 1 }}>
+            <Card key={act.id} style={{}}>
               <NumberInput
                 label={act.name}
                 value={

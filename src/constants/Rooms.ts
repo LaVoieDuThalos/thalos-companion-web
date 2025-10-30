@@ -12,27 +12,27 @@ export const ROOMS: Room[] = [
   {
     id: 'main',
     name: 'Grande Salle',
-    capacity: 100,
+    capacity: 10,
   },
   {
     id: 'jdr',
     name: 'Salle JDR',
-    capacity: 8,
+    capacity: 2,
   },
   {
     id: 'annexe',
     name: 'Salle Annexe',
-    capacity: 12,
+    capacity: 8,
   },
   {
     id: 'algeco',
     name: 'Algéco',
-    capacity: 14,
+    capacity: 10,
   },
   {
     id: 'sdl',
     name: 'Salle du Lac',
-    capacity: 100,
+    capacity: 90,
   },
   {
     id: 'autre',
@@ -43,4 +43,6 @@ export const ROOMS: Room[] = [
 
 export const TOUTE_LA_SALLE = 999;
 
-export const TABLES = [TOUTE_LA_SALLE, 1, 2, 3, 4, 5, 6, 8];
+export const TABLES = [TOUTE_LA_SALLE, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+export const ROOM_AUTRE = 'autre';
