@@ -12,27 +12,27 @@ export const ROOMS: Room[] = [
   {
     id: 'main',
     name: 'Grande Salle',
-    capacity: 100,
+    capacity: 10,
   },
   {
     id: 'jdr',
     name: 'Salle JDR',
-    capacity: 8,
+    capacity: 2,
   },
   {
     id: 'annexe',
     name: 'Salle Annexe',
-    capacity: 12,
+    capacity: 8,
   },
   {
     id: 'algeco',
     name: 'Algéco',
-    capacity: 14,
+    capacity: 10,
   },
   {
     id: 'sdl',
     name: 'Salle du Lac',
-    capacity: 100,
+    capacity: 90,
   },
   {
     id: 'autre',

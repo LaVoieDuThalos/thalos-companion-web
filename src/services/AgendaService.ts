@@ -17,8 +17,14 @@ export class AgendaService {
     return this.api.findEventById(eventId);
   }
 
-  findEventsOfDay(dayId: string): Promise<AgendaEvent[]> {
-    return this.api.findEventsByDayId(dayId).then(this.sortEvents);
+  findEventsOfDay(
+    dayId: string,
+    excludeEventIds: string[] = []
+  ): Promise<AgendaEvent[]> {
+    return this.api
+      .findEventsByDayId(dayId)
+      .then((events) => events.filter((e) => excludeEventIds.indexOf(e.id) < 0))
+      .then(this.sortEvents);
   }
 
   findEventsOfDayAndRoom(

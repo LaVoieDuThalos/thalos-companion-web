@@ -13,7 +13,7 @@ class CalendarService {
     return date.toJSON().slice(0, 10);
   }
 
-  buildDaysFromDate(start: Date, limit = 30): GameDay[] {
+  buildDaysFromDate(start: Date, limit = 31): GameDay[] {
     const current = start;
     current.setHours(12);
     const result: GameDay[] = [];

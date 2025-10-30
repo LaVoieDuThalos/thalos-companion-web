@@ -47,9 +47,21 @@ export default function EventForm({
       : 0;
 
     bookingService
-      .availablesTablesByRooms(formData.dayId, startTime, endTime)
+      .availablesTablesByRooms(
+        formData.dayId,
+        startTime,
+        endTime,
+        formData.id ? [formData.id] : []
+      )
       .then((availablesTablesByRooms) => {
         setAvailablesTables(availablesTablesByRooms);
+        if (
+          formData.roomId !== undefined &&
+          availablesTablesByRooms[formData.roomId] > 0 &&
+          formData.tables > availablesTablesByRooms[formData.roomId]
+        ) {
+          formData.tables = availablesTablesByRooms[formData.roomId];
+        }
         onChange({
           ...formData,
           roomIsAvailable:
@@ -59,10 +71,15 @@ export default function EventForm({
       });
   };
 
+  const integerFields = ['durationInMinutes', 'tables'];
+
   const updateForm = (field: string, event: Event) => {
     const newFormData = {
       ...formData,
-      [field]: event.target.value,
+      [field]:
+        integerFields.indexOf(field) >= 0
+          ? parseInt(event.target.value)
+          : event.target.value,
     };
     if (
       newFormData.dayId &&
@@ -77,8 +94,10 @@ export default function EventForm({
   };
 
   useEffect(() => {
-    updateAvailablesTablesByRooms(formData);
-  }, []);
+    if (formData.id) {
+      updateAvailablesTablesByRooms(formData);
+    }
+  }, [formData.id]);
 
   return (
     <Form>
@@ -264,7 +283,11 @@ export default function EventForm({
                 !!formData.roomId && t > availablesTables[formData.roomId]
               }
             >
-              {t === TOUTE_LA_SALLE ? 'Toute la salle' : t + ' tables'}
+              {t === TOUTE_LA_SALLE
+                ? 'Toute la salle'
+                : t === 1
+                  ? `1 table`
+                  : `${t} tables`}
             </option>
           ))}
         </Form.Select>

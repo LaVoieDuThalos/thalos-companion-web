@@ -6,7 +6,7 @@ import { TOUTE_LA_SALLE } from '../../constants/Rooms';
 import { AlertActions, AlertContext } from '../../contexts/AlertsContext';
 import type { AgendaEvent } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
-import { printDuration, printGameDay } from '../../utils/Utils';
+import { printGameDay } from '../../utils/Utils';
 import CustomCard from '../common/CustomCard/CustomCard';
 import IconButton from '../common/IconButton/IconButton';
 import Label from '../common/Label';
@@ -91,9 +91,7 @@ export default function AgendaEventCard({
       {event.start ? (
         <Row style={{ justifyContent: 'center' }}>
           <Label icon="schedule" color="gray" size={20}>
-            <span>
-              {event.start} ({printDuration(event.durationInMinutes || 0)})
-            </span>
+            <span>{event.start}</span>
             {duration ? <span> ({`${duration.label}`})</span> : null}
           </Label>
         </Row>
@@ -137,7 +135,7 @@ export default function AgendaEventCard({
           </Label>
           <Label icon="table_restaurant" color="gray" size={20}>
             <span>
-              :{' '}
+              x{' '}
               {event.tables !== TOUTE_LA_SALLE
                 ? `${event.tables}`
                 : 'Toute la salle'}

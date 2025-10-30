@@ -29,42 +29,48 @@ class BookingService {
   availablesTablesByRooms(
     dayId: string,
     startTime = 0,
-    endTime = 0
+    endTime = 0,
+    excludeEventIds: string[] = []
   ): Promise<TablesAvailables> {
-    return this.findRoomsOccupation(dayId, startTime, endTime).then(
-      (occupations) => {
-        return ROOMS.map((room) => {
-          const roomCapacity = room.capacity || 0;
-          const roomOccupation = occupations[room.id] || 0;
-          const count =
-            roomCapacity <= roomOccupation
-              ? 0
-              : roomOccupation > TOUTE_LA_SALLE
-                ? TOUTE_LA_SALLE
-                : roomCapacity - roomOccupation;
-          return {
-            [room.id]: count,
-          } as TablesAvailables;
-        }).reduce((acc, cur) => {
-          const roomId = Object.keys(cur)[0];
-          if (acc[roomId] !== undefined) {
-            acc[roomId] = acc[roomId] + cur[roomId];
-          } else {
-            acc[roomId] = cur[roomId];
-          }
-          return acc;
-        }, {} as TablesAvailables);
-      }
-    );
+    return this.findRoomsOccupation(
+      dayId,
+      startTime,
+      endTime,
+      excludeEventIds
+    ).then((occupations) => {
+      console.log('Occupations', occupations);
+      return ROOMS.map((room) => {
+        const roomCapacity = room.capacity || 0;
+        const roomOccupation = occupations[room.id] || 0;
+        const count =
+          roomCapacity <= roomOccupation
+            ? 0
+            : roomOccupation > TOUTE_LA_SALLE
+              ? TOUTE_LA_SALLE
+              : roomCapacity - roomOccupation;
+        return {
+          [room.id]: count,
+        } as TablesAvailables;
+      }).reduce((acc, cur) => {
+        const roomId = Object.keys(cur)[0];
+        if (acc[roomId] !== undefined) {
+          acc[roomId] = acc[roomId] + cur[roomId];
+        } else {
+          acc[roomId] = cur[roomId];
+        }
+        return acc;
+      }, {} as TablesAvailables);
+    });
   }
 
   findRoomsOccupation(
     dayId: string,
     startTime = 0,
-    endTime = 0
+    endTime = 0,
+    excludeEventIds: string[] = []
   ): Promise<RoomsOccupation> {
     return this.agendaService
-      .findEventsOfDay(dayId)
+      .findEventsOfDay(dayId, excludeEventIds)
       .then((events) => {
         const result = events
           .filter((e) =>
@@ -84,6 +90,7 @@ class BookingService {
         return result;
       })
       .then((eventsByRoom) => {
+        console.log('EventsByRoom', eventsByRoom);
         return Object.keys(eventsByRoom)
           .map(
             (roomId) =>

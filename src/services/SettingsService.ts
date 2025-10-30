@@ -3,6 +3,7 @@ import type { Role } from '../constants/Roles';
 import { StorageKeys } from '../constants/StorageKeys';
 import type { User } from '../model/User';
 import type { UserPreferences } from '../model/UserPreferences';
+import { fromActivityId } from '../utils/Utils';
 import { StorageService } from './StorageService';
 
 class SettingsService {
@@ -40,6 +41,10 @@ class SettingsService {
 
   activityVisible(prefs: UserPreferences | null, activityId: string): boolean {
     if (prefs === null) {
+      return true;
+    }
+    const activity = fromActivityId(activityId);
+    if (!activity?.filterable) {
       return true;
     }
     return !!prefs.activities && prefs.activities.indexOf(activityId) >= 0;
