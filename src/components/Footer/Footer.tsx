@@ -18,14 +18,14 @@ export default function Footer() {
       <ButtonGroup style={{}} aria-label="Basic example">
         <IconButton
           icon="home"
-          label="Accueil"
+          label=""
           variant="secondary"
           onClick={() => navigate('/')}
         />
 
         <IconButton
           icon="calendar_month"
-          label="Agenda"
+          label=""
           variant="secondary"
           onClick={() => navigate('/agenda')}
         />
@@ -33,7 +33,7 @@ export default function Footer() {
         {!loading && isOuvreur ? (
           <IconButton
             icon="key"
-            label="Badges"
+            label=""
             variant="secondary"
             onClick={() => navigate('/keys')}
           />

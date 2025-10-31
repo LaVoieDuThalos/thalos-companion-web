@@ -3,6 +3,10 @@
 .footer {
   .btn-group {
     @include flex-horizontal-fill;
+    button {
+      color: white;
+      text-transform: uppercase;
+    }
 
     button.icon-button {
       justify-content: center;
