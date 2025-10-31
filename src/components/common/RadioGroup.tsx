@@ -45,7 +45,6 @@ export default function RadioGroup({
   return (
     <View style={{}} {...props}>
       <span style={{}}>{label}</span>
-      <span>{JSON.stringify(checkedValue)}</span>
       <View
         style={{
           flexDirection: props.layout === 'horizontal' ? 'row' : 'column',

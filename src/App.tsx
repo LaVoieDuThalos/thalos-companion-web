@@ -8,8 +8,8 @@ import AlertContextProvider from './contexts/AlertsContext';
 import AppContextProvider from './contexts/AppContext';
 import { UserContextProvider } from './contexts/UserContext';
 
-const headerHeight = 60;
-const footerHeight = 80;
+const headerHeight = 54;
+const footerHeight = 38;
 
 function App() {
   const [size, setSize] = useState(
@@ -34,10 +34,17 @@ function App() {
 
               <Alerts />
 
-              <div style={{ height: size, overflowY: 'auto' }}>
+              <div
+                className="outlet"
+                style={{
+                  height: size,
+                }}
+              >
                 <Outlet />
               </div>
-              <Footer />
+              <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
+                <Footer />
+              </div>
             </div>
           </AlertContextProvider>
         </UserContextProvider>

@@ -30,9 +30,9 @@ class CalendarService {
     return result;
   }
 
-  hours(startHour = 14, mins = [30], addMidnight = false): string[] {
+  hours(startHour = 14, mins = [30], addMidnight = false, max = 24): string[] {
     const results = [];
-    for (let h = startHour; h < 24; h++) {
+    for (let h = startHour; h < max; h++) {
       results.push(`${h}h`);
       mins.forEach((m) => results.push(`${h}h${m}`));
     }

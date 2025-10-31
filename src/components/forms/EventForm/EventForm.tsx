@@ -101,7 +101,6 @@ export default function EventForm({
 
   return (
     <Form>
-      {JSON.stringify(availablesTables)}
       {/* Nom ------------------------------------------------------------- */}
       <Form.Group className="mb-3" controlId="eventForm.NameInput">
         <Form.Label>Nom</Form.Label>

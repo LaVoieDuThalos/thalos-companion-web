@@ -1,0 +1,68 @@
+@import '../../scss/variables.scss';
+
+.planning-container {
+  background-color: whitesmoke;
+  border-radius: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+
+  .time-window-selector {
+    .btn-group {
+      width: 100%;
+    }
+    button {
+      flex: 1;
+      color: gray;
+      background-color: lightgray;
+      &.selected {
+        background-color: $secondary;
+        color: white;
+      }
+    }
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .header {
+    display: flex;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    flex: 1;
+    flex-direction: row;
+
+    .cell {
+      flex: 1;
+      text-align: left;
+    }
+  }
+
+  .tables {
+    .planning-table {
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      position: relative;
+      border-bottom: solid 1px lightgray;
+      background-color: whitesmoke;
+    }
+  }
+
+  .events {
+    position: absolute;
+
+    .event {
+      position: absolute;
+      text-wrap: nowrap;
+      border-left-width: 10px !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      background-color: whitesmoke;
+      overflow: hidden;
+
+      -webkit-box-shadow: 0px 0px 9px 1px rgba(0, 0, 0, 0.14);
+      box-shadow: 0px 0px 9px 1px rgba(0, 0, 0, 0.14);
+    }
+  }
+}
