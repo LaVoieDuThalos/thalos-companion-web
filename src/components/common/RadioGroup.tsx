@@ -8,6 +8,7 @@ type Layout = 'horizontal' | 'vertical';
 
 type Props = {
   label: string;
+  informations?: string;
   value: string[];
   layout?: Layout;
   options: RadioOption[];
@@ -45,6 +46,11 @@ export default function RadioGroup({
   return (
     <View style={{}} {...props}>
       <span style={{}}>{label}</span>
+      {props.informations && (
+        <div className="alert alert-secondary" role="alert">
+          {props.informations}
+        </div>
+      )}
       <View
         style={{
           flexDirection: props.layout === 'horizontal' ? 'row' : 'column',

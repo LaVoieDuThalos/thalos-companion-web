@@ -1,14 +1,7 @@
-import { useEffect, useState } from 'react';
-import ActivityIndicator from '../components/common/ActivityIndicator';
 import View from '../components/common/View';
-import RoomKeyCard from '../components/RoomKeyCard';
-import { Colors } from '../constants/Colors';
-import type { RoomKey } from '../model/RoomKey';
-import type { User } from '../model/User';
-import { keyService } from '../services/KeyService';
 
 export default function KeysPage() {
-  const [keys, setKeys] = useState<RoomKey[]>([]);
+  /* const [keys, setKeys] = useState<RoomKey[]>([]);
   const [loading, setLoading] = useState(false);
 
   const changeKeyOwner = (user: User, key: RoomKey) => {
@@ -30,9 +23,9 @@ export default function KeysPage() {
         }
         setLoading(false);
       });
-  };
+  };*/
 
-  useEffect(() => {
+  /*useEffect(() => {
     setLoading(true);
     keyService
       .findAllKeys()
@@ -41,12 +34,13 @@ export default function KeysPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, []);*/
 
   return (
     <View style={{}}>
-      <span style={{}}>Badges de la salle</span>
-      <View style={{}}>
+      <span style={{}}>Gestion des badges de la salle</span>
+      <p>En cours de dév...</p>
+      {/*<View style={{}}>
         {loading ? (
           <View style={{}}>
             <ActivityIndicator color={Colors.red} size={50} />
@@ -63,7 +57,7 @@ export default function KeysPage() {
             ))}
           </div>
         ) : null}
-      </View>
+      </View>*/}
     </View>
   );
 }

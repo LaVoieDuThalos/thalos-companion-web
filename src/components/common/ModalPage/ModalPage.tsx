@@ -12,6 +12,7 @@ export type ModalAction = {
 
 type ModalPageOptions = {
   title?: string;
+  hideCloseButton?: boolean;
   fullscreen?: boolean;
   actions?: ModalAction[];
 };
@@ -32,7 +33,7 @@ export default function ModalPage({
       aria-labelledby="contained-modal-title-vcenter"
       fullscreen={true}
     >
-      <Modal.Header closeButton>
+      <Modal.Header closeButton={!options?.hideCloseButton}>
         <Modal.Title id="contained-modal-title-vcenter">
           {options?.title}
         </Modal.Title>

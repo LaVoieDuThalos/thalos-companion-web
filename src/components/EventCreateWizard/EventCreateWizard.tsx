@@ -20,6 +20,7 @@ export default function EventCreateWizard({ onSelect }: Props) {
       <div className="creation-modes">
         {CREATION_MODES.map((mode) => (
           <Button
+            key={mode.id}
             variant={mode.variant ?? 'secondary'}
             onClick={() => selectMode(mode)}
           >

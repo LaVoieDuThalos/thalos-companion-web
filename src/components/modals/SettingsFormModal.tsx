@@ -16,9 +16,10 @@ import type {
 } from '../common/ModalPage/ModalPage';
 import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
-import SettingsForm from '../forms/SettingsForm';
+import SettingsForm from '../forms/SettingsForm/SettingsForm';
 
 type Props = ModalPageProps & {
+  welcomeMode?: boolean;
   onSuccess: (userData: User) => void;
   onCancel: () => void;
 };
@@ -30,6 +31,7 @@ function validateForm(formData: User): ValidationErrors {
 }
 
 export default function SettingsFormModal({
+  welcomeMode,
   onCancel,
   onSuccess,
   ...props
@@ -54,13 +56,13 @@ export default function SettingsFormModal({
     {
       name: 'cancel',
       label: 'Annuler',
-      disabled: loading || saving,
+      disabled: loading || saving || welcomeMode,
       variant: 'secondary',
       onClick: () => onCancel(),
     },
     {
       name: 'save',
-      label: 'Enregistrer',
+      label: welcomeMode ? 'Continuer' : 'Enregistrer',
       disabled: loading || saving,
       onClick: () => {
         setFormState({ ...formState, submitted: true });
@@ -88,7 +90,30 @@ export default function SettingsFormModal({
   ];
 
   return (
-    <ModalPage {...props} options={{ title: 'Préférences', actions: ACTIONS }}>
+    <ModalPage
+      {...props}
+      options={{
+        hideCloseButton: welcomeMode,
+        title: welcomeMode ? 'Bienvenue' : 'Préférences',
+        actions: ACTIONS,
+      }}
+    >
+      {welcomeMode && (
+        <div className="alert alert-secondary" role="alert">
+          <p>
+            Bienvenue sur l'application <strong>La Voie du Thalos</strong> !
+          </p>
+          <p>
+            {' '}
+            Cette application permet de <strong>
+              gérer les réservations
+            </strong>{' '}
+            des salles et{' '}
+            <strong>suivre les évènements de l'association</strong> et peut-être
+            plus à l'avenir ...
+          </p>
+        </div>
+      )}
       {loading || saving ? (
         <View style={{}}>
           <ActivityIndicator color={Colors.red} size={50} />

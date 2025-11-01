@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Navbar } from 'react-bootstrap';
 import { Colors } from '../../constants/Colors';
 import { AppContext } from '../../contexts/AppContext';
@@ -12,9 +12,15 @@ import './Header.scss';
 
 export default function Header() {
   const appContext = useContext(AppContext);
+  const { user, setUser } = useUser();
   const [eventFormModalVisible, setEventFormModalVisible] = useState(false);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
-  const { setUser } = useUser();
+
+  useEffect(() => {
+    if (!user || !user.name) {
+      setSettingsModalVisible(true);
+    }
+  }, []);
 
   return (
     <>
@@ -60,6 +66,7 @@ export default function Header() {
         {settingsModalVisible ? (
           <SettingsFormModal
             show={true}
+            welcomeMode={!user || !user.name}
             onHide={() => setSettingsModalVisible(false)}
             onCancel={() => setSettingsModalVisible(false)}
             onSuccess={(newUser: User) => {

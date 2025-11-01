@@ -1,5 +1,13 @@
 @import '../../scss/variables.scss';
 
+.game-day-card {
+  .events {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+}
+
 .game-day {
   text-transform: uppercase;
 }

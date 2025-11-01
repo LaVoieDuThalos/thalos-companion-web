@@ -12,7 +12,6 @@ import ActivityIndicator from '../common/ActivityIndicator';
 import CustomCard from '../common/CustomCard/CustomCard';
 import Icon from '../common/Icon';
 import Row from '../common/Row';
-import View from '../common/View';
 
 import RoomPriorities from '../RoomPriorities/RoomPriorities';
 import './GameDayCard.scss';
@@ -49,7 +48,7 @@ export default function GameDayCard({ day }: Props) {
   }, [day, needARefresh]);
 
   return (
-    <CustomCard style={{}} className="game-day-card">
+    <CustomCard className="game-day-card">
       <Row>
         <Icon icon="today" color={'gray'} />
         <span className="game-day">{printGameDay(day)}</span>
@@ -58,7 +57,7 @@ export default function GameDayCard({ day }: Props) {
       <RoomPriorities day={day} />
 
       {loading ? <ActivityIndicator color={Colors.red} /> : null}
-      <View style={{}}>
+      <div className="events">
         {!events || events.length === 0 ? (
           <span style={{}}>Aucun évènement prévu</span>
         ) : null}
@@ -78,7 +77,7 @@ export default function GameDayCard({ day }: Props) {
               <span className="event-title">{e.title}</span>
             </div>
           ))}
-      </View>
+      </div>
     </CustomCard>
   );
 }
