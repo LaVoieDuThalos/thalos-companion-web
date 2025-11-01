@@ -1,8 +1,10 @@
 import { API, type ApiService } from '../api/Api';
-import type { Occupation } from '../constants/Rooms';
-import type { AgendaEvent } from '../model/AgendaEvent';
+import { ACTIVITIES } from '../constants/Activities';
+import { ROOMS } from '../constants/Rooms';
+import type { Activity } from '../model/Activity';
+import type { GameDay } from '../model/GameDay';
 import type { OpenCloseRoom, Room } from '../model/Room';
-import { clamp, eventIsActiveAt } from '../utils/Utils';
+import { fromGameDayId, getWeekNumber } from '../utils/Utils';
 
 class RoomService {
   private api: ApiService;
@@ -14,6 +16,40 @@ class RoomService {
       this.hours.push(`${i}h`);
       this.hours.push(`${i}h30`);
     }
+  }
+
+  getActivitiesPriorityOfDay(day: GameDay): Activity[] {
+    return getWeekNumber(day.date) % 2 === 0
+      ? ACTIVITIES.filter((act) => !act.figurines)
+      : ACTIVITIES.filter((act) => act.figurines);
+  }
+
+  chooseMeARoomForActivityAndDay(activityId: string, day: GameDay): Room {
+    const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day);
+    return roomsChosen[0];
+  }
+
+  getPrioritiesRoomsForActivity(activityId: string, day: GameDay): Room[] {
+    const activitiesInRoomsA = this.getActivitiesPriorityOfDay(day);
+    const roomsA = ROOMS.filter((r) => r.week === 'A');
+    const roomsB = ROOMS.filter((r) => r.week === 'B');
+    const activityFoundInRoomsA = activitiesInRoomsA.findIndex(
+      (act) => act.id === activityId
+    );
+    return activityFoundInRoomsA ? roomsA : roomsB;
+  }
+
+  isActivityAllowedInRoom(
+    activityId: string,
+    dayId: string,
+    roomId: string
+  ): boolean {
+    const day = fromGameDayId(dayId);
+    if (!day) {
+      return false;
+    }
+    const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day);
+    return roomsChosen.map((r) => r.id).indexOf(roomId) >= 0;
   }
 
   getOpenCloseConfig(dayId: string): Promise<OpenCloseRoom> {
@@ -31,56 +67,6 @@ class RoomService {
 
   saveOpenCloseConfig(config: OpenCloseRoom): Promise<void> {
     return this.api.saveOpenCloseConfiguration(config);
-  }
-
-  getRoomOccupationStatsFromEvents(
-    room: Room,
-    events: AgendaEvent[]
-  ): Promise<Occupation[]> {
-    const occupations = this.hours.map((hh) => {
-      const tables = events
-        .filter((e) => e.room?.id === room.id && eventIsActiveAt(e, hh))
-        .map((e) => e.tables)
-        .reduce((acc, cur) => {
-          if (acc !== undefined && cur !== undefined) {
-            return acc + cur;
-          } else {
-            return 0;
-          }
-        }, 0);
-
-      const availableTables = clamp(
-        (room.capacity || 0) - (tables || 0),
-        0,
-        room.capacity
-      );
-      return {
-        hour: hh,
-        tables: tables,
-        availableTables,
-        roomCapacity: room.capacity,
-        rate: room.capacity
-          ? (room.capacity - availableTables) / room.capacity
-          : undefined,
-      } as Occupation;
-    });
-
-    return Promise.resolve(occupations);
-  }
-
-  async getRoomOccupationStats(
-    room: Room,
-    dayId: string
-  ): Promise<Occupation[]> {
-    const events = await this.api.findEventsByDayIdAndRoomId(dayId, room.id);
-    return events.map(
-      (e) =>
-        ({
-          hour: e.start,
-          tables: e.tables,
-          availableTables: 10,
-        }) as Occupation
-    );
   }
 }
 export const roomService = new RoomService(API);

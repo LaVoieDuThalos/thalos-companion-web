@@ -3,5 +3,6 @@ export interface Activity {
   name: string;
   filterable?: boolean;
   countable?: boolean;
+  figurines?: boolean;
   style: { color: string; backgroundColor: string };
 }

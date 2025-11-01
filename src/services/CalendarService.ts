@@ -54,6 +54,28 @@ class CalendarService {
     } as GameDay;
   }
 
+  nextFridayGameDay(): GameDay {
+    const date = new Date();
+    while (date.getDay() != FRIDAY) {
+      date.setDate(date.getDate() + 1);
+    }
+    return {
+      id: this.buildDayId(date),
+      date: date,
+    } as GameDay;
+  }
+
+  nextSaturdayGameDay(): GameDay {
+    const date = new Date();
+    while (date.getDay() != SATURDAY) {
+      date.setDate(date.getDate() + 1);
+    }
+    return {
+      id: this.buildDayId(date),
+      date: date,
+    } as GameDay;
+  }
+
   previousGameDay(current: GameDay): GameDay {
     const date = new Date(current.id);
     date.setDate(current.date.getDate() - 1);
