@@ -21,6 +21,7 @@ export const ACTIVITIES: Activity[] = [
     name: 'Warhammer 40K',
     filterable: true,
     countable: true,
+    figurines: true,
     style: { color: 'white', backgroundColor: Colors.purple },
   },
   {
@@ -28,6 +29,7 @@ export const ACTIVITIES: Activity[] = [
     name: 'Age Of Sigmar',
     filterable: true,
     countable: true,
+    figurines: true,
     style: { color: 'white', backgroundColor: Colors.green },
   },
   {
@@ -35,6 +37,7 @@ export const ACTIVITIES: Activity[] = [
     name: 'Bloodbowl',
     filterable: true,
     countable: true,
+    figurines: true,
     style: { color: 'white', backgroundColor: Colors.red2 },
   },
   {

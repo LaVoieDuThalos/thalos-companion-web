@@ -2,6 +2,7 @@ export interface Room {
   id: string;
   name: string;
   capacity?: number;
+  week?: 'A' | 'B';
   virtual?: boolean;
 }
 

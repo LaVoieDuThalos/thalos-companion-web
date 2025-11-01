@@ -82,6 +82,7 @@ export default function EventForm({
           : event.target.value,
     };
     if (
+      ['dayId', 'start', 'durationInMinutes'].indexOf(field) >= 0 &&
       newFormData.dayId &&
       newFormData.start &&
       newFormData.durationInMinutes
@@ -94,9 +95,7 @@ export default function EventForm({
   };
 
   useEffect(() => {
-    if (formData.id) {
-      updateAvailablesTablesByRooms(formData);
-    }
+    updateAvailablesTablesByRooms(formData);
   }, [formData.id]);
 
   return (
@@ -260,6 +259,11 @@ export default function EventForm({
         {state?.submitted && hasError(errors, 'roomIsOccupied') ? (
           <p className="form-error">
             La salle n'est pas disponible pour ce créneau
+          </p>
+        ) : null}
+        {state?.submitted && hasError(errors, 'nonPriorityActivity') ? (
+          <p className="form-error">
+            L'activité choisie n'est pas prioritaire dans cette salle.
           </p>
         ) : null}
       </Form.Group>

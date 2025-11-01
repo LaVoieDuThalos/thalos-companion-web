@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { Colors } from '../../constants/Colors';
 import { JUSQUA_LA_FERMETURE } from '../../constants/Durations';
+import type { EventCreationMode } from '../../constants/EventCreationWizard';
 import { TOUTE_LA_SALLE } from '../../constants/Rooms';
 import { useAlert } from '../../hooks/useAlert';
 import { useUser } from '../../hooks/useUser';
 import type { AgendaEvent } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
+import { roomService } from '../../services/RoomService';
 import {
   isFormValid,
   Validators,
@@ -20,6 +23,7 @@ import type {
 } from '../common/ModalPage/ModalPage';
 import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
+import EventCreateWizard from '../EventCreateWizard/EventCreateWizard';
 import EventForm from '../forms/EventForm/EventForm';
 
 export type FormData = {
@@ -69,6 +73,11 @@ function validateForm(formData: FormData): ValidationErrors {
       EMPTY_OPTION,
       HYPHEN_EMPTY_OPTION,
     ]),
+    nonPriorityActivity: !roomService.isActivityAllowedInRoom(
+      formData.activityId,
+      formData.dayId,
+      formData.roomId
+    ),
     tablesIsEmpty: isZero(formData.tables),
   };
 }
@@ -103,6 +112,10 @@ export default function EventFormModal({
   const [formState, setFormState] = useState<FormState>({ submitted: false });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [saving, setSaving] = useState(false);
+  const [eventTemplate, setEventTemplate] = useState<
+    EventCreationMode | undefined
+  >(undefined);
+
   const { user } = useUser();
   const alerts = useAlert();
 
@@ -181,7 +194,7 @@ export default function EventFormModal({
       onHide={onCancel}
       options={{
         title: props.title || 'Créer un nouvel évènement',
-        actions: ACTIONS,
+        actions: eventTemplate || formData.id ? ACTIONS : [],
       }}
     >
       {saving ? (
@@ -191,13 +204,33 @@ export default function EventFormModal({
       ) : null}
       {!saving ? (
         <>
-          <EventForm
-            formData={formData}
-            errors={errors}
-            state={formState}
-            onChange={setFormData}
-            disabled={saving}
-          />
+          {eventTemplate === undefined && !formData.id && (
+            <EventCreateWizard
+              onSelect={(mode) => {
+                setEventTemplate(mode);
+                const initData = mode.formDataFn();
+                setFormData((prev) => ({ ...prev, ...initData }) as FormData);
+              }}
+            />
+          )}
+          {eventTemplate && (
+            <Button
+              style={{ width: '100%' }}
+              variant="secondary"
+              onClick={() => setEventTemplate(undefined)}
+            >
+              {eventTemplate.label}
+            </Button>
+          )}
+          {(eventTemplate || formData.id) && (
+            <EventForm
+              formData={formData}
+              errors={errors}
+              state={formState}
+              onChange={setFormData}
+              disabled={saving}
+            />
+          )}
         </>
       ) : null}
     </ModalPage>

@@ -13,6 +13,7 @@ export const ROOMS: Room[] = [
     id: 'main',
     name: 'Grande Salle',
     capacity: 10,
+    week: 'A',
   },
   {
     id: 'jdr',
@@ -23,11 +24,13 @@ export const ROOMS: Room[] = [
     id: 'annexe',
     name: 'Salle Annexe',
     capacity: 8,
+    week: 'A',
   },
   {
     id: 'algeco',
     name: 'Algéco',
     capacity: 10,
+    week: 'B',
   },
   {
     id: 'sdl',
