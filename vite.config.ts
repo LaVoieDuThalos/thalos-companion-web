@@ -13,7 +13,7 @@ export default defineConfig({
       },
       manifest: {
         name: 'La Voie du Thalos Companion',
-        short_name: 'LVdT App',
+        short_name: 'La Voie du Thalos',
         lang: 'fr',
         display: 'standalone',
         theme_color: '#aa0000',
