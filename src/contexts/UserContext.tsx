@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from 'react';
-import { ACTIVITIES } from '../constants/Activities';
 import { StorageKeys } from '../constants/StorageKeys';
 import type { User } from '../model/User';
 import {
@@ -38,7 +37,6 @@ export const UserContextProvider = ({
         // Aucun user local, on en crée un avec un UUID
         return userService.createUser({
           id: uuid(),
-          preferences: { activities: ACTIVITIES.map((a) => a.id) },
         });
       } else {
         // Synchro les infos du user local avec la bdd
@@ -49,7 +47,6 @@ export const UserContextProvider = ({
               if (user === null) {
                 return userService.createUser({
                   id: uuid(),
-                  preferences: { activities: ACTIVITIES.map((a) => a.id) },
                 });
               } else {
                 // Reprend les preferences locales

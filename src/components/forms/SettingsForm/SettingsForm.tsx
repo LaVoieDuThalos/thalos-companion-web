@@ -36,7 +36,6 @@ export default function SettingsForm({
           <span style={{}}>Le pseudo est obligatoire</span>
         ) : null}
       </Form.Group>
-
       <div className="settings-group">
         <RadioGroup
           label="Activités"
@@ -53,7 +52,6 @@ export default function SettingsForm({
           }))}
         />
       </div>
-
       <div className="settings-group">
         <RadioGroup
           label="Rôles additionnels"

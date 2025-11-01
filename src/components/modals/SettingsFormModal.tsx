@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Colors } from '../../constants/Colors';
 import { useUser } from '../../hooks/useUser';
 import type { User } from '../../model/User';
@@ -43,14 +43,19 @@ export default function SettingsFormModal({
   const [saving, setSaving] = useState(false);
   const [loading] = useState(false);
 
-  const onFormChange = useCallback((changes: User) => {
+  const onFormChange = (changes: User) => {
+    console.log('changes', changes);
     setUserData((prev) => ({ ...prev, ...changes }));
-  }, []);
+  };
 
   useEffect(() => {
     const errors = validateForm(userData);
     setErrors(errors);
   }, [userData]);
+
+  useEffect(() => {
+    setUserData((prev) => ({ ...prev, ...user }));
+  }, [user]);
 
   const ACTIONS: ModalAction[] = [
     {
