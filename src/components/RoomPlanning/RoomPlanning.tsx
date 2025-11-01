@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
+import { useNavigate } from 'react-router';
 import type { AgendaEvent } from '../../model/AgendaEvent';
 import type { GameDay } from '../../model/GameDay';
 import { calendarService } from '../../services/CalendarService';
@@ -55,6 +56,8 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
     eventIsInTimeSlot(event, timeWindow.startTimestamp, timeWindow.endTimestamp)
   );
 
+  const navigate = useNavigate();
+
   const hours = calendarService.hours(
     timeWindow.hourStart,
     [30],
@@ -109,12 +112,15 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
       (event.startTime! - timeWindow.startTimestamp) * pxDurationInMs
     );
     const layout = {
-      width: clamp(
-        event.durationInMinutes * 60 * 1000 * pxDurationInMs +
-          (left < 0 ? left : 0),
-        0,
-        dimensions.w - left
-      ),
+      width:
+        event.durationInMinutes === 999
+          ? dimensions.w
+          : clamp(
+              event.durationInMinutes * 60 * 1000 * pxDurationInMs +
+                (left < 0 ? left : 0),
+              0,
+              dimensions.w - left
+            ),
       height: LayoutConfig.rowHeight * (event.tables || 1),
       left: clamp(left, 0, dimensions.w),
       top: index * (LayoutConfig.rowHeight + LayoutConfig.gap),
@@ -193,6 +199,7 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
         {eventsVisibles.map((event) => (
           <CustomCard
             key={event.id}
+            onClick={() => navigate(`/events/${event.id}`)}
             className="event"
             style={layoutEvent(event, computeTop(event, eventsVisibles))}
           >
