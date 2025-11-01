@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
+import { ACTIVITIES } from '../constants/Activities';
 import { StorageKeys } from '../constants/StorageKeys';
 import type { User } from '../model/User';
 import {
@@ -31,15 +32,14 @@ export const UserContextProvider = ({
   // Exécutée au lancement de l'application
   useEffect(() => {
     setLoading(true);
-
-    console.log('UserProvider', user);
-
     // Recherche le user local
     const getUserOrCreate = (userId: string): Promise<User> => {
-      console.log('getUserOrCreate', userId);
       if (!userId) {
         // Aucun user local, on en crée un avec un UUID
-        return userService.createUser({ id: uuid() });
+        return userService.createUser({
+          id: uuid(),
+          preferences: { activities: ACTIVITIES.map((a) => a.id) },
+        });
       } else {
         // Synchro les infos du user local avec la bdd
         return userService.getUserById(userId).then((user) => {
@@ -47,7 +47,10 @@ export const UserContextProvider = ({
             // Pas de user remote, on le recrée depuis les données locales ?
             return AsyncStorageService.getItem(userId).then((user) => {
               if (user === null) {
-                return userService.createUser({ id: uuid() });
+                return userService.createUser({
+                  id: uuid(),
+                  preferences: { activities: ACTIVITIES.map((a) => a.id) },
+                });
               } else {
                 // Reprend les preferences locales
                 return userService.createUser({ ...user, id: uuid() });

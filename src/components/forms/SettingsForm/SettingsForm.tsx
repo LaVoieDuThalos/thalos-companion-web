@@ -40,11 +40,7 @@ export default function SettingsForm({
       <div className="settings-group">
         <RadioGroup
           label="Activités"
-          value={
-            props.formData.preferences?.activities || [
-              ...ACTIVITIES.map((a) => a.id),
-            ]
-          }
+          value={props.formData.preferences?.activities || []}
           onChange={(activities) => {
             props.onChange({
               ...props.formData,
