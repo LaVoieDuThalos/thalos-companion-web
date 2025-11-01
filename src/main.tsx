@@ -61,10 +61,6 @@ const router = createBrowserRouter(
   }
 );
 
-window.addEventListener('beforeinstallprompt', () => {
-  alert('INSTALL ?');
-});
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RouterProvider router={router} />
