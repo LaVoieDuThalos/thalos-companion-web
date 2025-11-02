@@ -48,6 +48,9 @@ class RoomService {
     if (!day) {
       return false;
     }
+    if (activityId === 'jdr' && roomId === 'jdr') {
+      return true;
+    }
     const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day);
     return roomsChosen.map((r) => r.id).indexOf(roomId) >= 0;
   }

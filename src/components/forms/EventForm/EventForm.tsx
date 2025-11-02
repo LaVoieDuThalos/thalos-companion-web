@@ -43,7 +43,7 @@ export default function EventForm({
     const gameDay = fromGameDayId(formData.dayId);
     const startTime = gameDay ? getStartTime(gameDay, formData.start) : 0;
     const endTime = gameDay
-      ? getEndTime(gameDay, formData.start, formData.durationInMinutes)
+      ? getEndTime(gameDay, formData.start, formData.durationInMinutes - 1)
       : 0;
 
     bookingService
@@ -82,7 +82,7 @@ export default function EventForm({
           : event.target.value,
     };
     if (
-      ['dayId', 'start', 'durationInMinutes'].indexOf(field) >= 0 &&
+      ['dayId', 'start', 'durationInMinutes', 'roomId'].indexOf(field) >= 0 &&
       newFormData.dayId &&
       newFormData.start &&
       newFormData.durationInMinutes

@@ -38,7 +38,6 @@ class BookingService {
       endTime,
       excludeEventIds
     ).then((occupations) => {
-      console.log('Occupations', occupations);
       return ROOMS.map((room) => {
         const roomCapacity = room.capacity || 0;
         const roomOccupation = occupations[room.id] || 0;

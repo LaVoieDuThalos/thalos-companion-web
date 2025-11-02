@@ -8,7 +8,6 @@ import { useAlert } from '../../hooks/useAlert';
 import { useUser } from '../../hooks/useUser';
 import type { AgendaEvent } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
-import { roomService } from '../../services/RoomService';
 import {
   isFormValid,
   Validators,
@@ -73,11 +72,11 @@ function validateForm(formData: FormData): ValidationErrors {
       EMPTY_OPTION,
       HYPHEN_EMPTY_OPTION,
     ]),
-    nonPriorityActivity: !roomService.isActivityAllowedInRoom(
+    /*nonPriorityActivity: !roomService.isActivityAllowedInRoom(
       formData.activityId,
       formData.dayId,
       formData.roomId
-    ),
+    ),*/
     tablesIsEmpty: isZero(formData.tables),
   };
 }

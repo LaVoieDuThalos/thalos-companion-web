@@ -191,7 +191,7 @@ describe('From Id tests', () => {
     expect(fromRoomId(undefined)).toBeNull();
     expect(fromRoomId('JDR')).toBeDefined();
     expect(JSON.stringify(fromRoomId('main'))).toBe(
-      '{"id":"main","name":"Grande Salle","capacity":100}'
+      '{"id":"main","name":"Grande Salle","capacity":10,"week":"A"}'
     );
   });
 });

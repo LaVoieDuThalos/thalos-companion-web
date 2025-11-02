@@ -99,9 +99,8 @@ export function eventIsInTimeSlot(
   const eventStartTime = event.startTime || 0;
   const eventEndTime = event.endTime || 0;
   return (
-    (eventStartTime >= start && eventStartTime <= end) ||
-    (eventEndTime >= start && eventEndTime <= end) ||
-    (eventStartTime <= start && eventEndTime >= end)
+    (eventStartTime <= start && eventEndTime <= end && eventEndTime > start) ||
+    (eventStartTime >= start && eventStartTime < end && eventEndTime >= end)
   );
 }
 
