@@ -212,7 +212,9 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
               </Tag>
             </div>
             <div>
-              {event.title} - {event.startTime} - {event.durationInMinutes}
+              <strong>{event.start}</strong> - {event.title} - [
+              {event.room?.name}] ({event.tables} table
+              {event.tables || 0 > 1 ? 's' : ''})
             </div>
           </CustomCard>
         ))}
