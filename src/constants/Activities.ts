@@ -41,6 +41,14 @@ export const ACTIVITIES: Activity[] = [
     style: { color: 'white', backgroundColor: Colors.red2 },
   },
   {
+    id: 'shat',
+    name: 'Shatterpoint',
+    filterable: true,
+    countable: true,
+    figurines: true,
+    style: { color: 'white', backgroundColor: Colors.red2 },
+  },
+  {
     id: 'escape',
     name: 'Escape Game',
     filterable: true,

@@ -87,6 +87,12 @@ export default function AgendaEventCard({
       ) : (
         <span>?</span>
       )}
+
+      {/* Nom */}
+      <div className="title">
+        <span>{event.title}</span>
+      </div>
+
       {/* Heure de début-fin */}
       {event.start ? (
         <Row style={{ justifyContent: 'center' }}>
@@ -98,11 +104,6 @@ export default function AgendaEventCard({
       ) : (
         <span>?</span>
       )}
-
-      {/* Nom */}
-      <div className="title">
-        <span>{event.title}</span>
-      </div>
 
       {/* Creator */}
       {complete ? (
