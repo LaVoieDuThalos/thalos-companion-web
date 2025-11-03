@@ -57,7 +57,7 @@ function validateForm(formData: FormData): ValidationErrors {
   return {
     nameIsEmpty: isEmpty(formData.title),
     nameIsLower: Validators.min(formData.title, 3),
-    nameIsHigher: Validators.max(formData.title, 40),
+    nameIsHigher: Validators.max(formData.title, 120),
     nameIsInvalid: !Validators.allowedCharacters(formData.title),
     dateIsEmpty: isEmpty(formData.dayId, [EMPTY_OPTION, HYPHEN_EMPTY_OPTION]),
     dateIsPassed: Validators.dateIsPassed(new Date(formData.dayId)),
