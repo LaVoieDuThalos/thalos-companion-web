@@ -28,6 +28,8 @@ export interface ApiService {
 
   deleteEvent: (eventId: string) => Promise<void>;
 
+  findUserByName: (name: string) => Promise<User | null>;
+
   findAllUsers: () => Promise<User[]>;
 
   findAllKeys: () => Promise<RoomKey[]>;

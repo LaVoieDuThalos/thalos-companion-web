@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Colors } from '../../constants/Colors';
+import type { AlertDialogAction } from '../../contexts/AlertsContext';
+import { useAlert } from '../../hooks/useAlert';
 import { useUser } from '../../hooks/useUser';
 import type { User } from '../../model/User';
 import { settingsService } from '../../services/SettingsService';
+import { userService } from '../../services/UserService';
 import {
   isFormValid,
   type FormState,
@@ -44,9 +47,10 @@ export default function SettingsFormModal({
   const [loading] = useState(false);
 
   const onFormChange = (changes: User) => {
-    console.log('changes', changes);
     setUserData((prev) => ({ ...prev, ...changes }));
   };
+
+  const alerts = useAlert();
 
   useEffect(() => {
     const errors = validateForm(userData);
@@ -56,6 +60,23 @@ export default function SettingsFormModal({
   useEffect(() => {
     setUserData((prev) => ({ ...prev, ...user }));
   }, [user]);
+
+  const saveForm = (userData: User) => {
+    return settingsService
+      .save({
+        ...userData,
+      } as User)
+      .then((res) => {
+        setSaving(false);
+        if (onSuccess) {
+          try {
+            onSuccess(res);
+          } catch (error) {
+            console.error('An error occured in success function', error);
+          }
+        }
+      });
+  };
 
   const ACTIONS: ModalAction[] = [
     {
@@ -73,20 +94,35 @@ export default function SettingsFormModal({
         setFormState({ ...formState, submitted: true });
         if (isFormValid(errors)) {
           setSaving(true);
-          settingsService
-            .save({
-              ...userData,
-            } as User)
-            .then((res) => {
-              setSaving(false);
-              if (onSuccess) {
-                try {
-                  onSuccess(res);
-                } catch (error) {
-                  console.error('An error occured in success function', error);
-                }
-              }
-            });
+
+          userService.findUserByName(userData?.name).then((userFound) => {
+            if (!!userFound && userFound.id !== user.id) {
+              alerts.dialog(
+                'Utilisateur trouvé',
+                'Un autre utilisateur existe déjà avec ce nom "' +
+                  user.name +
+                  '". Est-ce que c\'est vous ?',
+                [
+                  {
+                    label: "Non ce n'est pas moi",
+                    onClick: (closeFn) => {
+                      saveForm(userData);
+                      closeFn();
+                    },
+                  } as AlertDialogAction,
+                  {
+                    label: 'Oui',
+                    onClick: (closeFn) => {
+                      saveForm(userFound);
+                      closeFn();
+                    },
+                  } as AlertDialogAction,
+                ]
+              );
+            } else {
+              return saveForm(userData);
+            }
+          });
 
           setSaving(false);
         }
