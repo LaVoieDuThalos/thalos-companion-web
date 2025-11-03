@@ -114,7 +114,7 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
     const layout = {
       width:
         event.durationInMinutes === 999
-          ? dimensions.w
+          ? dimensions.w - left
           : clamp(
               event.durationInMinutes * 60 * 1000 * pxDurationInMs +
                 (left < 0 ? left : 0),

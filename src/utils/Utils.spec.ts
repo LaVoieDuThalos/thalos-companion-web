@@ -155,6 +155,20 @@ describe('Event is in time slot tests', () => {
       )
     ).toBeTruthy();
   });
+
+  it('Event during the time slot', () => {
+    const event = {
+      startTime: new Date('2025-06-01T15:00:00Z').getTime(),
+      endTime: new Date('2025-06-01T17:00:00Z').getTime(),
+    } as AgendaEvent;
+    expect(
+      eventIsInTimeSlot(
+        event,
+        new Date('2025-06-01T16:00:00Z').getTime(),
+        new Date('2025-06-01T17:30:00Z').getTime()
+      )
+    ).toBeTruthy();
+  });
 });
 
 describe('getWeekNumber tests', () => {
