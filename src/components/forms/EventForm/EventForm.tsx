@@ -20,6 +20,7 @@ import {
   bookingService,
   type TablesAvailables,
 } from '../../../services/BookingService';
+import FormError from '../../common/FormError/FormError';
 import './EventForm.scss';
 
 type Event = { target: { value: string } };
@@ -106,27 +107,24 @@ export default function EventForm({
         <Form.Control
           type="title"
           placeholder=""
+          className="title"
           disabled={disabled}
           autoFocus
           value={formData.title}
           onChange={(e) => updateForm('title', e)}
         />
         {state?.submitted && hasError(errors, 'nameIsEmpty') ? (
-          <p className="form-error">Le nom est obligatoire</p>
+          <FormError error="Le nom est obligatoire" />
         ) : null}
         {state?.submitted &&
         (hasError(errors, 'nameIsLower') ||
           hasError(errors, 'nameIsHigher')) ? (
-          <p className="form-error">
-            Le nom doit être entre 3 et 40 caractères (saisie{' '}
-            {formData.title?.length} car.)
-          </p>
+          <FormError
+            error={`Le nom doit être entre 3 et 40 caractères (saisie ${formData.title?.length} car.)`}
+          />
         ) : null}
         {state?.submitted && hasError(errors, 'nameIsInvalid') ? (
-          <p className="form-error">
-            Le nom doit être alphanumérique (caractères spéciaux autorisés : # @
-            *)
-          </p>
+          <FormError error="Le nom doit être alphanumérique (caractères spéciaux autorisés : # @*)" />
         ) : null}
       </Form.Group>
 
@@ -148,7 +146,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'dateIsEmpty') ? (
-          <p className="form-error">La date est obligatoire</p>
+          <FormError error="La date est obligatoire" />
         ) : null}
       </Form.Group>
 
@@ -169,7 +167,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'startHourIsEmpty') ? (
-          <p className="form-error">L&lsquo;heure de début est obligatoire</p>
+          <FormError error="L&lsquo;heure de début est obligatoire" />
         ) : null}
       </Form.Group>
 
@@ -190,7 +188,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'durationIsEmpty') ? (
-          <p className="form-error">Le durée est obligatoire</p>
+          <FormError error="Le durée est obligatoire" />
         ) : null}
       </Form.Group>
 
@@ -211,9 +209,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'activityIsEmpty') ? (
-          <p className="form-error">
-            L&lsquo;activité principale est obligatoire
-          </p>
+          <FormError error="L&lsquo;activité principale est obligatoire" />
         ) : null}
       </Form.Group>
 
@@ -254,17 +250,13 @@ export default function EventForm({
           })}
         </Form.Select>
         {state?.submitted && hasError(errors, 'roomIsEmpty') ? (
-          <p className="form-error">La salle est obligatoire</p>
+          <FormError error="La salle est obligatoire" />
         ) : null}
         {state?.submitted && hasError(errors, 'roomIsOccupied') ? (
-          <p className="form-error">
-            La salle n'est pas disponible pour ce créneau
-          </p>
+          <FormError error="La salle n'est pas disponible pour ce créneau" />
         ) : null}
         {state?.submitted && hasError(errors, 'nonPriorityActivity') ? (
-          <p className="form-error">
-            L'activité choisie n'est pas prioritaire dans cette salle.
-          </p>
+          <FormError error="L'activité choisie n'est pas prioritaire dans cette salle." />
         ) : null}
       </Form.Group>
 
@@ -295,7 +287,7 @@ export default function EventForm({
           ))}
         </Form.Select>
         {state?.submitted && hasError(errors, 'tablesIsEmpty') ? (
-          <p className="form-error">Le nombre de tables est obligatoire</p>
+          <FormError error="Le nombre de tables est obligatoire" />
         ) : null}
       </Form.Group>
 

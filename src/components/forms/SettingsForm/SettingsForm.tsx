@@ -5,6 +5,7 @@ import type { User } from '../../../model/User';
 import { hasError, type CustomFormProps } from '../../../utils/FormUtils';
 import RadioGroup from '../../common/RadioGroup';
 
+import FormError from '../../common/FormError/FormError';
 import './SettingsForm.scss';
 
 export default function SettingsForm({
@@ -33,7 +34,7 @@ export default function SettingsForm({
           }
         />
         {props.state?.submitted && hasError(props.errors, 'nameIsEmpty') ? (
-          <span style={{}}>Le pseudo est obligatoire</span>
+          <FormError error="Veuillez indiquer votre nom ou pseudo (ou les deux)" />
         ) : null}
       </Form.Group>
       <div className="settings-group">
