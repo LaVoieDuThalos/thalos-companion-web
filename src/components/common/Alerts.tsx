@@ -18,7 +18,7 @@ function AlertComponent({ alert }: AlertComponentProps) {
   const [processing, setProcessing] = useState(false);
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose} backdrop>
       <Modal.Header closeButton>
         <Modal.Title>{alert.title}</Modal.Title>
       </Modal.Header>

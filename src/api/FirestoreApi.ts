@@ -44,18 +44,18 @@ class FirestoreApi implements ApiService {
     });
   }
 
-  findUserByName(name: string): Promise<User | null> {
-    console.log('FS findUserByName()', name);
+  findUserByName(name: string, excludeIds: string[] = []): Promise<User[]> {
+    console.log('FS findUserByName()', name, excludeIds);
     const q = query(
       collection(FirebaseDb, Collections.USERS),
-      where('name', '==', name)
+      where('name', '==', name),
+      where('id', 'not-in', excludeIds)
     );
     return getDocs(q).then((results) => {
-      console.log('Results', results);
       if (results.docs.length === 0) {
-        return null;
+        return [];
       } else {
-        return mapDtoToUser(results.docs[0].id, results.docs[0].data());
+        return results.docs.map((res) => mapDtoToUser(res.id, res.data()));
       }
     });
   }

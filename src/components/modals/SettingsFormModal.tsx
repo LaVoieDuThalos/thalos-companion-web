@@ -21,13 +21,15 @@ import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
 import SettingsForm from '../forms/SettingsForm/SettingsForm';
 
+type SettingsFormData = User;
+
 type Props = ModalPageProps & {
   welcomeMode?: boolean;
   onSuccess: (userData: User) => void;
   onCancel: () => void;
 };
 
-function validateForm(formData: User): ValidationErrors {
+function validateForm(formData: SettingsFormData): ValidationErrors {
   return {
     nameIsEmpty: isEmpty(formData.name),
   };
@@ -40,7 +42,7 @@ export default function SettingsFormModal({
   ...props
 }: Props) {
   const { user } = useUser();
-  const [userData, setUserData] = useState<User>({ ...user });
+  const [userData, setUserData] = useState<SettingsFormData>({ ...user });
   const [formState, setFormState] = useState<FormState>({ submitted: false });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [saving, setSaving] = useState(false);
@@ -61,11 +63,9 @@ export default function SettingsFormModal({
     setUserData((prev) => ({ ...prev, ...user }));
   }, [user]);
 
-  const saveForm = (userData: User) => {
+  const saveForm = (userData: SettingsFormData) => {
     return settingsService
-      .save({
-        ...userData,
-      } as User)
+      .save({ ...userData, name: userData.name?.trim() } as User)
       .then((res) => {
         setSaving(false);
         if (onSuccess) {
@@ -95,34 +95,35 @@ export default function SettingsFormModal({
         if (isFormValid(errors)) {
           setSaving(true);
 
-          userService.findUserByName(userData?.name).then((userFound) => {
-            if (!!userFound && userFound.id !== user.id) {
-              alerts.dialog(
-                'Utilisateur trouvé',
-                'Un autre utilisateur existe déjà avec ce nom "' +
-                  user.name +
-                  '". Est-ce que c\'est vous ?',
-                [
-                  {
-                    label: "Non ce n'est pas moi",
-                    onClick: (closeFn) => {
-                      saveForm(userData);
-                      closeFn();
-                    },
-                  } as AlertDialogAction,
-                  {
-                    label: 'Oui',
-                    onClick: (closeFn) => {
-                      saveForm(userFound);
-                      closeFn();
-                    },
-                  } as AlertDialogAction,
-                ]
-              );
-            } else {
-              return saveForm(userData);
-            }
-          });
+          userService
+            .findUserByName(userData?.name?.trim(), [user.id])
+            .then((usersFound) => {
+              if (usersFound && usersFound?.length > 0) {
+                alerts.dialog(
+                  'Utilisateur trouvé',
+                  'Un autre utilisateur existe déjà avec ce nom "' +
+                    userData?.name?.trim() +
+                    '".\nEst-ce que c\'est vous ?',
+                  [
+                    {
+                      label: "Non ce n'est pas moi",
+                      onClick: (closeFn) => {
+                        closeFn();
+                      },
+                    } as AlertDialogAction,
+                    {
+                      label: 'Oui',
+                      onClick: (closeFn) => {
+                        saveForm(usersFound[0]);
+                        closeFn();
+                      },
+                    } as AlertDialogAction,
+                  ]
+                );
+              } else {
+                return saveForm(userData);
+              }
+            });
 
           setSaving(false);
         }

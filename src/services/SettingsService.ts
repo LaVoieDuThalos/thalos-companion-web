@@ -16,7 +16,7 @@ class SettingsService {
   async save(user: Partial<User>): Promise<User> {
     await this.api.saveOrUpdateUser({
       id: user.id,
-      name: user.name,
+      name: user.name?.trim(),
       preferences: { ...user.preferences },
     } as User);
 

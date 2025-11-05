@@ -28,7 +28,7 @@ export interface ApiService {
 
   deleteEvent: (eventId: string) => Promise<void>;
 
-  findUserByName: (name: string) => Promise<User | null>;
+  findUserByName: (name: string, excludeUserIds: string[]) => Promise<User[]>;
 
   findAllUsers: () => Promise<User[]>;
 

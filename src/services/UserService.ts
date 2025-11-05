@@ -11,11 +11,14 @@ class UserService {
     this.api = api;
   }
 
-  findUserByName(name: string | undefined): Promise<User | null> {
+  findUserByName(
+    name: string | undefined,
+    excludeUserIds: string[] = []
+  ): Promise<User[]> {
     if (!name) {
       return Promise.reject('Name not provided');
     }
-    return this.api.findUserByName(name);
+    return this.api.findUserByName(name, excludeUserIds);
   }
 
   getUserId(): Promise<string> {
