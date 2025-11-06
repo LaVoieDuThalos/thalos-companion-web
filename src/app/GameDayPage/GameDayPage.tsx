@@ -150,6 +150,7 @@ export default function GameDayPage() {
             <AgendaEventCard
               key={e.id}
               event={e}
+              options={{ hideDate: true }}
               onPress={() => navigate(`/${e.id}`)}
             />
           ))

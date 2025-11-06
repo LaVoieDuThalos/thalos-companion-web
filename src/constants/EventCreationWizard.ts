@@ -1,5 +1,6 @@
 import { calendarService } from '../services/CalendarService';
 import { roomService } from '../services/RoomService';
+import { AOS, AUBERGE_ESPAGNOLE, JDR, WARHAMMER_40K } from './Activities';
 import { JUSQUA_LA_FERMETURE } from './Durations';
 
 type InitFormData = { [key: string]: unknown };
@@ -7,7 +8,8 @@ type InitFormData = { [key: string]: unknown };
 export type EventCreationMode = {
   id: string;
   label: string;
-  variant?: string;
+  color?: string;
+  backgroundColor?: string;
   formDataFn: () => InitFormData;
 };
 
@@ -15,7 +17,8 @@ export const CREATION_MODES: EventCreationMode[] = [
   {
     id: 'w40kNextFriday',
     label: 'Rencontre Warhammer 40K Vendredi prochain',
-    variant: 'primary',
+    color: WARHAMMER_40K.style.color,
+    backgroundColor: WARHAMMER_40K.style.backgroundColor,
     formDataFn: () => {
       const day = calendarService.nextFridayGameDay();
       const activityId = 'w40k';
@@ -24,7 +27,6 @@ export const CREATION_MODES: EventCreationMode[] = [
         day
       );
       return {
-        title: 'Rencontre W40K',
         activityId: activityId,
         dayId: day.id,
         start: '20h',
@@ -37,7 +39,8 @@ export const CREATION_MODES: EventCreationMode[] = [
   {
     id: 'w40kNextSaturday',
     label: 'Rencontre Warhammer 40K Samedi prochain',
-    variant: 'primary',
+    color: WARHAMMER_40K.style.color,
+    backgroundColor: WARHAMMER_40K.style.backgroundColor,
     formDataFn: () => {
       const day = calendarService.nextSaturdayGameDay();
       const activityId = 'w40k';
@@ -46,8 +49,49 @@ export const CREATION_MODES: EventCreationMode[] = [
         day
       );
       return {
-        title: 'Rencontre W40K ',
         activityId: activityId,
+        dayId: day.id,
+        start: '20h',
+        roomId: roomChosen.id,
+        durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
+        tables: 2,
+      };
+    },
+  },
+  {
+    id: 'figNextFriday',
+    label: 'Rencontre Figurines Vendredi prochain',
+    color: AOS.style.color,
+    backgroundColor: AOS.style.backgroundColor,
+    formDataFn: () => {
+      const day = calendarService.nextFridayGameDay();
+      const activityId = 'w40k';
+      const roomChosen = roomService.chooseMeARoomForActivityAndDay(
+        activityId,
+        day
+      );
+      return {
+        dayId: day.id,
+        start: '20h',
+        roomId: roomChosen.id,
+        durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
+        tables: 2,
+      };
+    },
+  },
+  {
+    id: 'figNextSaturday',
+    label: 'Rencontre Figurines Samedi prochain',
+    color: AOS.style.color,
+    backgroundColor: AOS.style.backgroundColor,
+    formDataFn: () => {
+      const day = calendarService.nextSaturdayGameDay();
+      const activityId = 'w40k';
+      const roomChosen = roomService.chooseMeARoomForActivityAndDay(
+        activityId,
+        day
+      );
+      return {
         dayId: day.id,
         start: '20h',
         roomId: roomChosen.id,
@@ -59,7 +103,8 @@ export const CREATION_MODES: EventCreationMode[] = [
   {
     id: 'jdr',
     label: 'Jeu de rôle standard',
-    variant: 'primary',
+    color: JDR.style.color,
+    backgroundColor: JDR.style.backgroundColor,
     formDataFn: () => {
       return {
         activityId: 'jdr',
@@ -73,10 +118,27 @@ export const CREATION_MODES: EventCreationMode[] = [
   {
     id: 'bigJdr',
     label: 'Grand jeu de rôle (>= 6 joueurs)',
-    variant: 'primary',
+    color: JDR.style.color,
+    backgroundColor: JDR.style.backgroundColor,
     formDataFn: () => {
       return {
         activityId: 'jdr',
+      };
+    },
+  },
+  {
+    id: 'aubergeEsp',
+    label: 'Auberge Espagnole',
+    color: AUBERGE_ESPAGNOLE.style.color,
+    backgroundColor: AUBERGE_ESPAGNOLE.style.backgroundColor,
+    formDataFn: () => {
+      return {
+        title: 'Auberge Espagnole',
+        activityId: 'ae',
+        roomId: 'main',
+        start: '19h',
+        durationInMinutes: 60,
+        description: 'Venez avec quelque chose à partager !',
       };
     },
   },

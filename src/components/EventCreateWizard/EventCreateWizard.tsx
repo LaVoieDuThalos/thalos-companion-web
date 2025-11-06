@@ -21,7 +21,11 @@ export default function EventCreateWizard({ onSelect }: Props) {
         {CREATION_MODES.map((mode) => (
           <Button
             key={mode.id}
-            variant={mode.variant ?? 'secondary'}
+            style={{
+              backgroundColor: mode.backgroundColor,
+              color: mode.color,
+              borderWidth: 0,
+            }}
             onClick={() => selectMode(mode)}
           >
             {mode.label}

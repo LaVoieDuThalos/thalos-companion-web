@@ -17,10 +17,15 @@ import View from '../common/View';
 import type { StyleSheet } from '../common/Types';
 import './AgendaEventCard.scss';
 
+export type Options = {
+  hideDate?: boolean;
+};
+
 type Props = {
   event: Partial<AgendaEvent>;
   complete?: boolean;
   showButtons?: boolean;
+  options?: Options;
   onPress?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -30,6 +35,7 @@ export default function AgendaEventCard({
   event,
   complete,
   showButtons,
+  options,
   onEdit,
   onDelete,
 }: Props) {
@@ -78,15 +84,13 @@ export default function AgendaEventCard({
       ) : null}
 
       {/* Date  */}
-      {event.day ? (
+      {event.day && !options?.hideDate ? (
         <div className="card-item">
           <span className="test-date" style={styles.eventDateText}>
             {printGameDay(event.day)}
           </span>
         </div>
-      ) : (
-        <span>?</span>
-      )}
+      ) : null}
 
       {/* Nom */}
       <div className="title">

@@ -3,12 +3,12 @@ import AgendaEventCard from '../../components/AgendaEventCard/AgendaEventCard';
 import type { SectionListItem } from '../../components/common/SectionList/SectionList';
 import SectionList from '../../components/common/SectionList/SectionList';
 import View from '../../components/common/View';
-import { Months } from '../../constants/Months';
 import { AppContext } from '../../contexts/AppContext';
 import type { AgendaEvent } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
 import { settingsService } from '../../services/SettingsService';
 
+import { printGameDay } from '../../utils/Utils';
 import './Home.scss';
 
 export default function HomePage() {
@@ -26,7 +26,7 @@ export default function HomePage() {
         agendaService.findAllEvents().then((events) => ({ events, user }))
       )
       .then(({ events, user }) => {
-        const eventsByMonth = events
+        const eventsByDate = events
           .filter(
             (e) =>
               user?.preferences &&
@@ -36,7 +36,8 @@ export default function HomePage() {
               )
           )
           .map((e) => ({
-            title: Months[e.day.date.getMonth()].toUpperCase(),
+            //title: Months[e.day.date.getMonth()].toUpperCase(),
+            title: printGameDay(e.day).toUpperCase(),
             data: [e],
           }))
           .reduce(
@@ -54,7 +55,7 @@ export default function HomePage() {
             },
             []
           );
-        setSections(eventsByMonth);
+        setSections(eventsByDate);
         setLoading(false);
       })
       .catch((error) => {
@@ -74,7 +75,9 @@ export default function HomePage() {
             renderSectionHeader={(it) => (
               <span className="section-title">{it.title}</span>
             )}
-            renderItem={(it) => <AgendaEventCard event={it} />}
+            renderItem={(it) => (
+              <AgendaEventCard event={it} options={{ hideDate: true }} />
+            )}
           ></SectionList>
         </>
       ) : (
