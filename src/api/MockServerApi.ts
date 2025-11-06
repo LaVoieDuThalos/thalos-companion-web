@@ -61,9 +61,9 @@ class MockServerApi implements ApiService {
       });
   }
 
-  findUserByName(name: string): Promise<User | null> {
+  findUserByName(name: string): Promise<User[]> {
     console.error('Not implemented', name);
-    return Promise.resolve(null);
+    return Promise.resolve([]);
   }
 
   saveOrUpdateUser(user: User): Promise<User> {
