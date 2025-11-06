@@ -61,6 +61,11 @@ class MockServerApi implements ApiService {
       });
   }
 
+  findUserByName(name: string): Promise<User[]> {
+    console.error('Not implemented', name);
+    return Promise.resolve([]);
+  }
+
   saveOrUpdateUser(user: User): Promise<User> {
     if (!user.id) {
       return fetch(`${baseUrl}/users`, {
@@ -160,14 +165,10 @@ class MockServerApi implements ApiService {
   }
 
   findAllUsers(): Promise<User[]> {
-    console.log('findAllUsers()');    
-    return fetch(`${baseUrl}/users`, { method: 'GET'})
-      .then(resp => resp.json())
-      .then((json) =>
-        json.map((it: any) =>
-          userMapper(it)
-        )
-      );
+    console.log('findAllUsers()');
+    return fetch(`${baseUrl}/users`, { method: 'GET' })
+      .then((resp) => resp.json())
+      .then((json) => json.map((it: any) => userMapper(it)));
   }
 
   findAllKeys(): Promise<RoomKey[]> {

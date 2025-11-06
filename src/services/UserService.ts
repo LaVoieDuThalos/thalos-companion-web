@@ -11,18 +11,26 @@ class UserService {
     this.api = api;
   }
 
+  findUserByName(
+    name: string | undefined,
+    excludeUserIds: string[] = []
+  ): Promise<User[]> {
+    if (!name) {
+      return Promise.reject('Name not provided');
+    }
+    return this.api.findUserByName(name, excludeUserIds);
+  }
+
   getUserId(): Promise<string> {
     return AsyncStorageService.getItem(StorageKeys.USER).then((userId) => {
       if (userId === null) {
         const newUserId = uuid();
         return AsyncStorageService.setItem(StorageKeys.USER, newUserId).then(
           () => {
-            console.log('Create new UUID user', newUserId);
             Promise.resolve(newUserId);
           }
         );
       } else {
-        console.log('Use UUID', userId);
         return Promise.resolve(userId);
       }
     });

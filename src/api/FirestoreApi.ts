@@ -44,6 +44,22 @@ class FirestoreApi implements ApiService {
     });
   }
 
+  findUserByName(name: string, excludeIds: string[] = []): Promise<User[]> {
+    console.log('FS findUserByName()', name, excludeIds);
+    const q = query(
+      collection(FirebaseDb, Collections.USERS),
+      where('name', '==', name),
+      where('id', 'not-in', excludeIds)
+    );
+    return getDocs(q).then((results) => {
+      if (results.docs.length === 0) {
+        return [];
+      } else {
+        return results.docs.map((res) => mapDtoToUser(res.id, res.data()));
+      }
+    });
+  }
+
   saveOrUpdateUser(user: User): Promise<User> {
     console.log('saveOrUpdateUser()', user);
     return setDoc(doc(FirebaseDb, Collections.USERS, user.id), user)

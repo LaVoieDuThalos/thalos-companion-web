@@ -89,7 +89,6 @@ class BookingService {
         return result;
       })
       .then((eventsByRoom) => {
-        console.log('EventsByRoom', eventsByRoom);
         return Object.keys(eventsByRoom)
           .map(
             (roomId) =>
