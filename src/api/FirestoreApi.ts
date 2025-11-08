@@ -5,6 +5,8 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
+  orderBy,
   query,
   setDoc,
   where,
@@ -12,7 +14,11 @@ import {
 import type { AgendaEvent } from '../model/AgendaEvent';
 import type { DayCounts } from '../model/Counting';
 import type { OpenCloseRoom } from '../model/Room';
-import type { RoomKey } from '../model/RoomKey';
+import type {
+  RoomKey,
+  RoomKeyHistory,
+  RoomKeyHistoryEntry,
+} from '../model/RoomKey';
 import type { User } from '../model/User';
 import type { ApiService } from './Api';
 import {
@@ -28,6 +34,7 @@ const Collections = {
   USERS: 'users',
   EVENTS: 'events',
   KEYS: 'keys',
+  KEY_HISTORY: 'key-history',
   COUNTINGS: 'countings',
   DAYS: 'days',
 };
@@ -158,9 +165,17 @@ class FirestoreApi implements ApiService {
     return deleteDoc(doc(FirebaseDb, Collections.EVENTS, eventId));
   }
 
-  findAllUsers(): Promise<User[]> {
-    console.log('findAllUsers()');
-    return getDocs(collection(FirebaseDb, Collections.USERS)).then((results) =>
+  findAllUsers(withEmptyName: boolean): Promise<User[]> {
+    console.log('findAllUsers()', withEmptyName);
+
+    const q = query(
+      collection(FirebaseDb, Collections.USERS),
+      where('name', '!=', '')
+    );
+
+    return getDocs(
+      withEmptyName ? collection(FirebaseDb, Collections.USERS) : q
+    ).then((results) =>
       results.docs
         .map((doc) => mapDtoToUser(doc.id, doc.data()))
         .sort((a, b) => `${a.name}`.localeCompare(`${b.name}`))
@@ -191,6 +206,25 @@ class FirestoreApi implements ApiService {
         }
         return k;
       });
+  }
+
+  findKeyHistory(keyId: string): Promise<RoomKeyHistory> {
+    console.log('findKeyHistory()', keyId);
+    const q = query(
+      collection(FirebaseDb, Collections.KEY_HISTORY),
+      where('keyId', '==', keyId),
+      orderBy('date', 'desc'),
+      limit(10)
+    );
+    return getDocs(q).then((results) => {
+      return results.docs.map((doc) => doc.data() as RoomKeyHistoryEntry);
+    });
+  }
+
+  addToKeyHistory(entry: RoomKeyHistoryEntry): Promise<RoomKeyHistory> {
+    return addDoc(collection(FirebaseDb, Collections.KEY_HISTORY), entry).then(
+      () => this.findKeyHistory(entry.keyId)
+    );
   }
 
   saveCountings(counts: DayCounts): Promise<void> {

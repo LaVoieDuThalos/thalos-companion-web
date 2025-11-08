@@ -1,31 +1,17 @@
-import View from '../components/common/View';
+import { useEffect, useState } from 'react';
+import ActivityIndicator from '../../components/common/ActivityIndicator';
+import View from '../../components/common/View';
+import RoomKeyCard from '../../components/RoomKeyCard/RoomKeyCard';
+import { Colors } from '../../constants/Colors';
+import type { RoomKey } from '../../model/RoomKey';
+import { keyService } from '../../services/KeyService';
+import './Keys.scss';
 
 export default function KeysPage() {
-  /* const [keys, setKeys] = useState<RoomKey[]>([]);
+  const [keys, setKeys] = useState<RoomKey[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const changeKeyOwner = (user: User, key: RoomKey) => {
-    setLoading(true);
-    keyService
-      .updateKey({
-        ...key,
-        owner: {
-          id: user.id,
-          name: user.name ?? '',
-        },
-      })
-      .then((res) => {
-        const foundIndex = keys.findIndex((k) => k.id === res.id);
-        if (foundIndex >= 0) {
-          const newKeys = [...keys];
-          newKeys[foundIndex] = { ...res };
-          setKeys(newKeys);
-        }
-        setLoading(false);
-      });
-  };*/
-
-  /*useEffect(() => {
+  useEffect(() => {
     setLoading(true);
     keyService
       .findAllKeys()
@@ -34,12 +20,27 @@ export default function KeysPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);*/
+  }, []);
 
   return (
     <View style={{}}>
       <span style={{}}>Gestion des badges de la salle</span>
-      <p>En cours de dév...</p>
+
+      <div>
+        {loading ? (
+          <View style={{}}>
+            <ActivityIndicator color={Colors.red} size={50} />
+          </View>
+        ) : null}
+        {!loading ? (
+          <div className="keys">
+            {keys.map((k) => (
+              <RoomKeyCard key={k.id} roomKey={k} />
+            ))}
+          </div>
+        ) : null}
+      </div>
+
       {/*<View style={{}}>
         {loading ? (
           <View style={{}}>

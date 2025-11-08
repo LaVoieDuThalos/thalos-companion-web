@@ -5,7 +5,11 @@ import type { Activity } from '../model/Activity';
 import type { AgendaEvent } from '../model/AgendaEvent';
 import type { DayCounts } from '../model/Counting';
 import type { OpenCloseRoom, Room } from '../model/Room';
-import type { RoomKey } from '../model/RoomKey';
+import type {
+  RoomKey,
+  RoomKeyHistory,
+  RoomKeyHistoryEntry,
+} from '../model/RoomKey';
 import type { User } from '../model/User';
 import { fromActivityId, fromGameDayId, fromRoomId } from '../utils/Utils';
 import type { ApiService } from './Api';
@@ -164,11 +168,15 @@ class MockServerApi implements ApiService {
     return fetch(`${baseUrl}/events/${eventId}`, { method: 'DELETE' }).then();
   }
 
-  findAllUsers(): Promise<User[]> {
-    console.log('findAllUsers()');
+  findAllUsers(withEmptyName: boolean): Promise<User[]> {
+    console.log('findAllUsers()', withEmptyName);
     return fetch(`${baseUrl}/users`, { method: 'GET' })
       .then((resp) => resp.json())
       .then((json) => json.map((it: any) => userMapper(it)));
+  }
+
+  findKeyById(keyId: string): Promise<RoomKey | null> {
+    return Promise.reject('Not implemented for keyId' + keyId);
   }
 
   findAllKeys(): Promise<RoomKey[]> {
@@ -178,6 +186,16 @@ class MockServerApi implements ApiService {
 
   updateKey(key: RoomKey): Promise<RoomKey> {
     return Promise.resolve(key);
+  }
+
+  findKeyHistory(keyId: string): Promise<RoomKeyHistory> {
+    console.log('not implemented', keyId);
+    return Promise.resolve([]);
+  }
+
+  addToKeyHistory(entry: RoomKeyHistoryEntry): Promise<RoomKeyHistory> {
+    console.log('not implemented', entry);
+    return Promise.resolve([]);
   }
 
   saveCountings(counts: DayCounts): Promise<void> {

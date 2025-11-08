@@ -1,0 +1,15 @@
+.key {
+  display: flex;
+  flex-direction: row;
+
+  .key-owner {
+    display: flex;
+    align-items: center;
+  }
+
+  .key-details {
+    .key-name {
+      font-weight: bold;
+    }
+  }
+}

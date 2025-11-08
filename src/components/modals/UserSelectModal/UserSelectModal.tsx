@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Card } from 'react-bootstrap';
-import { Colors } from '../../constants/Colors';
-import type { User } from '../../model/User';
-import { userService } from '../../services/UserService';
-import ActivityIndicator from '../common/ActivityIndicator';
-import Icon from '../common/Icon';
+import { Colors } from '../../../constants/Colors';
+import type { User } from '../../../model/User';
+import { userService } from '../../../services/UserService';
+import ActivityIndicator from '../../common/ActivityIndicator';
+import CustomCard from '../../common/CustomCard/CustomCard';
+import Icon from '../../common/Icon';
 import type {
   ModalAction,
   ModalPageProps,
-} from '../common/ModalPage/ModalPage';
-import ModalPage from '../common/ModalPage/ModalPage';
-import View from '../common/View';
+} from '../../common/ModalPage/ModalPage';
+import ModalPage from '../../common/ModalPage/ModalPage';
+import View from '../../common/View';
+import './UserSelectModal.scss';
 
 type Props = ModalPageProps & {
   onSuccess: (user: User) => void;
@@ -20,23 +21,25 @@ type Props = ModalPageProps & {
 
 function UserCard({ user }: { user: User }) {
   return (
-    <Card>
-      <View style={{}}>
-        <Icon icon="person" color={Colors.gray} iconSize={30} />
-        <span>{user.name}</span>
-      </View>
-    </Card>
+    <div className="user">
+      <Icon icon="person" color={Colors.gray} iconSize={30} />
+      <span className="name">{user.name}</span>
+    </div>
   );
 }
 
-export default function UserSelectModal({ onCancel, ...props }: Props) {
+export default function UserSelectModal({
+  onCancel,
+  onSuccess,
+  ...props
+}: Props) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
     userService
-      .findAllUsers()
+      .findAllUsers(false)
       .then((users) => {
         setUsers(users);
         setLoading(false);
@@ -63,11 +66,11 @@ export default function UserSelectModal({ onCancel, ...props }: Props) {
           <ActivityIndicator color={Colors.red} size={50} />
         </View>
       ) : null}
-      <div style={{}}>
+      <div className="users">
         {users.map((user) => (
-          <button key={user.id} onClick={() => props.onSuccess(user)}>
+          <CustomCard onClick={() => onSuccess(user)}>
             <UserCard user={user} />
-          </button>
+          </CustomCard>
         ))}
       </div>
     </ModalPage>

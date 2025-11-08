@@ -1,7 +1,11 @@
 import type { AgendaEvent } from '../model/AgendaEvent';
 import type { DayCounts } from '../model/Counting';
 import type { OpenCloseRoom } from '../model/Room';
-import type { RoomKey } from '../model/RoomKey';
+import type {
+  RoomKey,
+  RoomKeyHistory,
+  RoomKeyHistoryEntry,
+} from '../model/RoomKey';
 import type { User } from '../model/User';
 import { firestoreApi } from './FirestoreApi';
 import { mockServerApi } from './MockServerApi';
@@ -30,11 +34,17 @@ export interface ApiService {
 
   findUserByName: (name: string, excludeUserIds: string[]) => Promise<User[]>;
 
-  findAllUsers: () => Promise<User[]>;
+  findAllUsers: (withEmptyName: boolean) => Promise<User[]>;
 
   findAllKeys: () => Promise<RoomKey[]>;
 
+  findKeyById: (keyId: string) => Promise<RoomKey | null>;
+
   updateKey: (key: RoomKey) => Promise<RoomKey>;
+
+  findKeyHistory: (keyId: string) => Promise<RoomKeyHistory>;
+
+  addToKeyHistory: (entry: RoomKeyHistoryEntry) => Promise<RoomKeyHistory>;
 
   saveCountings: (counts: DayCounts) => Promise<void>;
 

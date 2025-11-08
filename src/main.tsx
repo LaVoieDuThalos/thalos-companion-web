@@ -5,12 +5,13 @@ import { RouterProvider } from 'react-router-dom';
 
 import App from './App';
 import HomePage from './app/Home/Home';
-import KeysPage from './app/Keys';
+import KeysPage from './app/Keys/Keys';
 import './index.scss';
 
 import AgendaPage from './app/Agenda';
 import EventDetailsPage from './app/events/EventDetails';
 import GameDayPage from './app/GameDayPage/GameDayPage';
+import KeyPage from './app/KeyPage/KeyPage';
 import SettingsPage from './app/Settings';
 
 const router = createBrowserRouter(
@@ -38,7 +39,16 @@ const router = createBrowserRouter(
         },
         {
           path: '/keys',
-          element: <KeysPage />,
+          children: [
+            {
+              path: '/keys',
+              element: <KeysPage />,
+            },
+            {
+              path: '/keys/:keyId',
+              element: <KeyPage />,
+            },
+          ],
         },
         {
           path: '/settings',
