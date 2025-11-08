@@ -1,0 +1,14 @@
+.users {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+
+  .name {
+    font-size: 22px;
+  }
+}

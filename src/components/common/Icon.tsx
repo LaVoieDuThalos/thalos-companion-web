@@ -4,11 +4,11 @@ type Props = {
   icon: string;
 };
 
-export default function Icon({ icon, color }: Props) {
+export default function Icon({ icon, iconSize, color }: Props) {
   return (
     <span
       className="material-symbols-outlined"
-      style={color ? { color } : undefined}
+      style={{ color: color ?? undefined, fontSize: iconSize ?? 10 }}
     >
       {icon}
     </span>

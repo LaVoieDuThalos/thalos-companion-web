@@ -1,0 +1,35 @@
+.main-content {
+  display: flex;
+  flex-direction: column;
+
+  .key-details {
+    display: flex;
+
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-items: center;
+    justify-content: space-between;
+
+    .key-name {
+      font-weight: bold;
+    }
+
+    .key-owner {
+      flex: 1;
+    }
+  }
+
+  .history {
+    .entry {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      align-content: center;
+
+      .date {
+        color: gray;
+      }
+    }
+  }
+}

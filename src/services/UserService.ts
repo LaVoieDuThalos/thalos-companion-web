@@ -51,8 +51,8 @@ class UserService {
     return this.api.saveOrUpdateUser(user);
   }
 
-  findAllUsers(): Promise<User[]> {
-    return this.api.findAllUsers();
+  findAllUsers(withEmptyName = true): Promise<User[]> {
+    return this.api.findAllUsers(withEmptyName);
   }
 }
 
