@@ -5,10 +5,8 @@ import IconButton from '../../components/common/IconButton/IconButton';
 import View from '../../components/common/View';
 import CountingFormModal from '../../components/modals/CountingFormModal';
 import EventFormModal from '../../components/modals/EventFormModal';
-import OpenCloseRoomConfigModal from '../../components/modals/OpenCloseRoomConfigModal';
 import { Colors } from '../../constants/Colors';
-import { ROLE_BUREAU, ROLE_OUVREUR } from '../../constants/Roles';
-import { ROOMS } from '../../constants/Rooms';
+import { ROLE_BUREAU } from '../../constants/Roles';
 import { AppContext } from '../../contexts/AppContext';
 import { useUser } from '../../hooks/useUser';
 import type { AgendaEvent } from '../../model/AgendaEvent';
@@ -16,14 +14,13 @@ import type { GameDay } from '../../model/GameDay';
 import { agendaService } from '../../services/AgendaService';
 import { calendarService } from '../../services/CalendarService';
 import { settingsService } from '../../services/SettingsService';
-import { fromRoomId, printGameDay } from '../../utils/Utils';
+import { printGameDay } from '../../utils/Utils';
 
-import { Form, Nav } from 'react-bootstrap';
-import AgendaEventCard from '../../components/AgendaEventCard/AgendaEventCard';
-import RoomPlanning from '../../components/RoomPlanning/RoomPlanning';
-import RoomPriorities from '../../components/RoomPriorities/RoomPriorities';
+import { Nav } from 'react-bootstrap';
 import Icon from '../../components/common/Icon';
-import Row from '../../components/common/Row';
+import GameDayPlanning from '../../components/GameDayPlanning/GameDayPlanning';
+import GameDayRoomsOccupation from '../../components/GameDayRoomsOccupation/GameDayRoomsOccupation';
+import RoomPriorities from '../../components/RoomPriorities/RoomPriorities';
 import './GameDayPage.scss';
 
 export default function GameDayPage() {
@@ -41,9 +38,7 @@ export default function GameDayPage() {
   const [eventFormModalVisible, setEventFormModalVisible] = useState(false);
   const [countingFormModalVisible, setCountingFormModalVisible] =
     useState(false);
-  const [openCloseModalVisible, setOpenCloseModalVisible] = useState(false);
 
-  const [currentRoom, setCurrentRoom] = useState(ROOMS[0]);
   const [currentTab, setCurrentTab] = useState('programme');
 
   const goPrevious = () => {
@@ -102,18 +97,6 @@ export default function GameDayPage() {
         />
       ) : null}
 
-      {day && settingsService.hasRole(user, ROLE_OUVREUR) ? (
-        <OpenCloseRoomConfigModal
-          day={day}
-          show={openCloseModalVisible}
-          onCancel={() => setOpenCloseModalVisible(false)}
-          onSuccess={() => {
-            appContext.refresh(`agenda.${day.id}`);
-            setOpenCloseModalVisible(false);
-          }}
-        />
-      ) : null}
-
       <div key="1" className="day-selector">
         <IconButton icon="arrow_left" onClick={() => goPrevious()} />
         {day ? <span className="day-title">{printGameDay(day)}</span> : null}
@@ -131,69 +114,31 @@ export default function GameDayPage() {
         >
           <Nav.Item>
             <Nav.Link eventKey="programme" title="Programme">
+              <Icon icon="event_note" iconSize={20} />
               Programme
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link eventKey="occupation" title="Occupation des salles">
+              <Icon icon="room_preferences" iconSize={20} />
               Occupation des salles
             </Nav.Link>
           </Nav.Item>
         </Nav>
-        {events?.length === 0 ? (
-          <View style={{}}>
-            <span>Rien de prévu pour l&lsquo;instant</span>
-          </View>
-        ) : (
-          currentTab === 'programme' &&
-          events.map((e) => (
-            <AgendaEventCard
-              key={e.id}
-              event={e}
-              options={{ hideDate: true }}
-              onPress={() => navigate(`/${e.id}`)}
-            />
-          ))
-        )}
       </div>
 
       {loading ? (
         <View style={{}}>
           <ActivityIndicator color={Colors.red} size={50} />
         </View>
-      ) : (
-        currentTab === 'occupation' && (
-          <>
-            <hr />
-            <Row>
-              <Icon icon="table_restaurant" iconSize={20} color={Colors.gray} />
-              <span>Salle</span>
-              <Form.Select
-                onChange={(e) =>
-                  setCurrentRoom(() => {
-                    const newRoom = fromRoomId(e.target.value);
-                    if (!newRoom) {
-                      return ROOMS[0];
-                    }
-                    return newRoom;
-                  })
-                }
-              >
-                {ROOMS.map((r) => (
-                  <option value={r.id}>{r.name}</option>
-                ))}
-              </Form.Select>
-            </Row>
-            {day && (
-              <RoomPlanning
-                day={day}
-                roomId={currentRoom.id}
-                events={events.filter((e) => e.roomId === currentRoom.id)}
-              />
-            )}
-          </>
-        )
-      )}
+      ) : null}
+
+      {!loading && day && currentTab === 'programme' ? (
+        <GameDayPlanning events={events} day={day} />
+      ) : null}
+      {!loading && currentTab === 'occupation' && day ? (
+        <GameDayRoomsOccupation day={day} events={events} />
+      ) : null}
     </View>
   );
 }
