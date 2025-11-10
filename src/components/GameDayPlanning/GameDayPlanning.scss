@@ -1,0 +1,12 @@
+.planning-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  .open-close-room-infos {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -5,9 +5,8 @@ import IconButton from '../../components/common/IconButton/IconButton';
 import View from '../../components/common/View';
 import CountingFormModal from '../../components/modals/CountingFormModal';
 import EventFormModal from '../../components/modals/EventFormModal';
-import OpenCloseRoomConfigModal from '../../components/modals/OpenCloseRoomConfigModal';
 import { Colors } from '../../constants/Colors';
-import { ROLE_BUREAU, ROLE_OUVREUR } from '../../constants/Roles';
+import { ROLE_BUREAU } from '../../constants/Roles';
 import { AppContext } from '../../contexts/AppContext';
 import { useUser } from '../../hooks/useUser';
 import type { AgendaEvent } from '../../model/AgendaEvent';
@@ -18,6 +17,7 @@ import { settingsService } from '../../services/SettingsService';
 import { printGameDay } from '../../utils/Utils';
 
 import { Nav } from 'react-bootstrap';
+import Icon from '../../components/common/Icon';
 import GameDayPlanning from '../../components/GameDayPlanning/GameDayPlanning';
 import GameDayRoomsOccupation from '../../components/GameDayRoomsOccupation/GameDayRoomsOccupation';
 import RoomPriorities from '../../components/RoomPriorities/RoomPriorities';
@@ -38,7 +38,6 @@ export default function GameDayPage() {
   const [eventFormModalVisible, setEventFormModalVisible] = useState(false);
   const [countingFormModalVisible, setCountingFormModalVisible] =
     useState(false);
-  const [openCloseModalVisible, setOpenCloseModalVisible] = useState(false);
 
   const [currentTab, setCurrentTab] = useState('programme');
 
@@ -98,18 +97,6 @@ export default function GameDayPage() {
         />
       ) : null}
 
-      {day && settingsService.hasRole(user, ROLE_OUVREUR) ? (
-        <OpenCloseRoomConfigModal
-          day={day}
-          show={openCloseModalVisible}
-          onCancel={() => setOpenCloseModalVisible(false)}
-          onSuccess={() => {
-            appContext.refresh(`agenda.${day.id}`);
-            setOpenCloseModalVisible(false);
-          }}
-        />
-      ) : null}
-
       <div key="1" className="day-selector">
         <IconButton icon="arrow_left" onClick={() => goPrevious()} />
         {day ? <span className="day-title">{printGameDay(day)}</span> : null}
@@ -127,11 +114,13 @@ export default function GameDayPage() {
         >
           <Nav.Item>
             <Nav.Link eventKey="programme" title="Programme">
+              <Icon icon="event_note" iconSize={20} />
               Programme
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link eventKey="occupation" title="Occupation des salles">
+              <Icon icon="room_preferences" iconSize={20} />
               Occupation des salles
             </Nav.Link>
           </Nav.Item>
@@ -144,8 +133,8 @@ export default function GameDayPage() {
         </View>
       ) : null}
 
-      {!loading && currentTab === 'programme' ? (
-        <GameDayPlanning events={events} />
+      {!loading && day && currentTab === 'programme' ? (
+        <GameDayPlanning events={events} day={day} />
       ) : null}
       {!loading && currentTab === 'occupation' && day ? (
         <GameDayRoomsOccupation day={day} events={events} />

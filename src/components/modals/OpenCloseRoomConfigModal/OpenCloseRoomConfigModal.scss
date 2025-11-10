@@ -1,0 +1,20 @@
+@import '../../../scss/variables.scss';
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .block-title {
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+  }
+
+  .day {
+    font-weight: bold;
+    color: $secondary;
+    font-size: large;
+    text-transform: uppercase;
+  }
+}
