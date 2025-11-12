@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { Colors } from '../../constants/Colors';
 import { durationToString } from '../../constants/Durations';
@@ -40,6 +40,7 @@ export default function AgendaEventCard({
   onDelete,
 }: Props) {
   const navigate = useNavigate();
+  const parentRef = useRef<HTMLDivElement>(null);
 
   const duration = event.durationInMinutes
     ? durationToString(event.durationInMinutes)
@@ -93,7 +94,7 @@ export default function AgendaEventCard({
       ) : null}
 
       {/* Nom */}
-      <div className="title">
+      <div className="title" ref={parentRef}>
         <span>{event.title}</span>
       </div>
 
@@ -120,6 +121,12 @@ export default function AgendaEventCard({
           ) : null}
         </View>
       ) : null}
+
+      {complete && !!event.imageUrl && (
+        <div>
+          <img src={event.imageUrl} width={parentRef.current?.offsetWidth} />
+        </div>
+      )}
 
       {/* Description */}
       {complete ? (

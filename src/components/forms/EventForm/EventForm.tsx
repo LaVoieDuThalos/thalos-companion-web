@@ -1,5 +1,5 @@
 import { Form } from 'react-bootstrap';
-import { ACTIVITIES } from '../../../constants/Activities';
+import { ACTIVITIES, EVENEMENT } from '../../../constants/Activities';
 import { Durations } from '../../../constants/Durations';
 import { ROOMS, TABLES, TOUTE_LA_SALLE } from '../../../constants/Rooms';
 import { calendarService } from '../../../services/CalendarService';
@@ -289,6 +289,19 @@ export default function EventForm({
         {state?.submitted && hasError(errors, 'tablesIsEmpty') ? (
           <FormError error="Le nombre de tables est obligatoire" />
         ) : null}
+      </Form.Group>
+
+      {/* Image url*/}
+      <Form.Group className="mb-3" controlId="eventForm.ImageUrlInput">
+        <Form.Label>URL de l'image</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder=""
+          className="image-url"
+          disabled={disabled || formData.activityId === EVENEMENT.id}
+          value={formData.imageUrl}
+          onChange={(e) => updateForm('imageUrl', e)}
+        />
       </Form.Group>
 
       {/* Description ------------------------------------------------------------- */}

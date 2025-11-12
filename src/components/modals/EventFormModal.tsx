@@ -36,6 +36,7 @@ export type FormData = {
   roomIsAvailable: boolean;
   tables: number;
   durationInMinutes: number;
+  imageUrl?: string;
   description?: string;
   creatorId?: string;
 };
@@ -126,16 +127,23 @@ export default function EventFormModal({
 
   const saveForm = (formData: FormData) => {
     setSaving(true);
+
+    const modifier =
+      user != null
+        ? {
+            id: user.id,
+            name: user.name,
+          }
+        : {};
+
     agendaService
       .saveEvent({
         ...formData,
-        creator:
-          user != null
-            ? {
-                id: user.id,
-                name: user.name,
-              }
-            : {},
+        creator: formData.id !== null ? event?.creator : modifier,
+        lastModification: {
+          date: new Date().toISOString(),
+          user: modifier,
+        },
       } as Partial<AgendaEvent>)
       .then((res) => {
         setSaving(false);
