@@ -30,7 +30,6 @@ export default function GameDayPlanning({ day, events }: Props) {
 
   useEffect(() => {
     roomService.getOpenCloseConfig(day.id).then((openClose) => {
-      console.log('openCLose', openClose);
       setOpenClose(openClose);
     });
   }, []);

@@ -119,7 +119,7 @@ export default function EventFormModal({
   const alerts = useAlert();
 
   const resetForm = () => {
-    setFormData(emptyForm());
+    setFormData(() => emptyForm());
     setFormState({ submitted: false });
     setErrors({});
   };

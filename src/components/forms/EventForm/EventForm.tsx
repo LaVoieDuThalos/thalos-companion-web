@@ -1,11 +1,12 @@
 import { Form } from 'react-bootstrap';
 import { ACTIVITIES } from '../../../constants/Activities';
 import { Durations } from '../../../constants/Durations';
-import { ROOMS, TABLES, TOUTE_LA_SALLE } from '../../../constants/Rooms';
+import { ROOMS, TOUTE_LA_SALLE } from '../../../constants/Rooms';
 import { calendarService } from '../../../services/CalendarService';
 import { hasError, type CustomFormProps } from '../../../utils/FormUtils';
 import {
   fromGameDayId,
+  fromRoomId,
   getEndTime,
   getStartTime,
   printGameDay,
@@ -15,7 +16,8 @@ import {
   type FormData,
 } from '../../modals/EventFormModal';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import type { Room } from '../../../model/Room';
 import {
   bookingService,
   type TablesAvailables,
@@ -24,6 +26,24 @@ import FormError from '../../common/FormError/FormError';
 import './EventForm.scss';
 
 type Event = { target: { value: string } };
+
+function buildTables(room: Room | null, availableTables: number): number[] {
+  if (room == null) {
+    return [];
+  }
+
+  const res = [];
+  const fullOpen = availableTables === room.capacity;
+
+  for (let i = 1; i < availableTables; i++) {
+    res.push(i);
+  }
+  if (fullOpen) {
+    res.push(TOUTE_LA_SALLE);
+  }
+
+  return res;
+}
 
 export default function EventForm({
   disabled,
@@ -40,42 +60,52 @@ export default function EventForm({
     {}
   );
 
-  const updateAvailablesTablesByRooms = (formData: FormData) => {
-    const gameDay = fromGameDayId(formData.dayId);
-    const startTime = gameDay ? getStartTime(gameDay, formData.start) : 0;
-    const endTime = gameDay
-      ? getEndTime(gameDay, formData.start, formData.durationInMinutes - 1)
-      : 0;
+  const updateAvailablesTablesByRooms = useCallback(
+    (_formData: FormData, ignoreChangeEvent = false) => {
+      const gameDay = fromGameDayId(_formData.dayId);
+      const startTime = gameDay ? getStartTime(gameDay, _formData.start) : 0;
+      const endTime = gameDay
+        ? getEndTime(gameDay, _formData.start, _formData.durationInMinutes - 1)
+        : 0;
 
-    bookingService
-      .availablesTablesByRooms(
-        formData.dayId,
-        startTime,
-        endTime,
-        formData.id ? [formData.id] : []
-      )
-      .then((availablesTablesByRooms) => {
-        setAvailablesTables(availablesTablesByRooms);
-        console.log('Availables rooms', availablesTablesByRooms);
-        if (
-          formData.roomId !== undefined &&
-          availablesTablesByRooms[formData.roomId] > 0 &&
-          formData.tables > availablesTablesByRooms[formData.roomId]
-        ) {
-          formData.tables = availablesTablesByRooms[formData.roomId];
-        }
-        onChange({
-          ...formData,
-          roomIsAvailable:
-            formData.roomId !== undefined &&
-            availablesTablesByRooms[formData.roomId] > 0,
+      bookingService
+        .availablesTablesByRooms(
+          _formData.dayId,
+          startTime,
+          endTime,
+          _formData.id ? [_formData.id] : []
+        )
+        .then((availablesTablesByRooms) => {
+          setAvailablesTables(availablesTablesByRooms);
+          if (
+            _formData.roomId !== undefined &&
+            availablesTablesByRooms[_formData.roomId] > 0 &&
+            _formData.tables !== TOUTE_LA_SALLE &&
+            _formData.tables > availablesTablesByRooms[_formData.roomId]
+          ) {
+            formData.tables = availablesTablesByRooms[_formData.roomId];
+          }
+          if (!ignoreChangeEvent) {
+            onChange({
+              ..._formData,
+              roomIsAvailable:
+                formData.roomId !== undefined &&
+                availablesTablesByRooms[formData.roomId] > 0,
+            });
+          }
         });
-      });
-  };
+    },
+    []
+  );
 
   const integerFields = ['durationInMinutes', 'tables'];
 
   const updateForm = (field: string, event: Event) => {
+    if (field === 'roomId') {
+      // reset tables selection when room changes
+      formData.tables = TOUTE_LA_SALLE;
+    }
+
     const newFormData = {
       ...formData,
       [field]:
@@ -96,8 +126,8 @@ export default function EventForm({
   };
 
   useEffect(() => {
-    updateAvailablesTablesByRooms(formData);
-  }, [formData.id]);
+    updateAvailablesTablesByRooms(formData, true);
+  }, []);
 
   return (
     <Form>
@@ -270,12 +300,17 @@ export default function EventForm({
           onChange={(e) => updateForm('tables', e)}
         >
           <option>-</option>
-          {TABLES.map((t) => (
+          {buildTables(
+            fromRoomId(formData.roomId),
+            availablesTables[formData.roomId]
+          ).map((t) => (
             <option
               key={t}
               value={t}
               disabled={
-                !!formData.roomId && t > availablesTables[formData.roomId]
+                !!formData.roomId &&
+                t > availablesTables[formData.roomId] &&
+                t != TOUTE_LA_SALLE
               }
             >
               {t === TOUTE_LA_SALLE
