@@ -56,6 +56,7 @@ export default function EventForm({
       )
       .then((availablesTablesByRooms) => {
         setAvailablesTables(availablesTablesByRooms);
+        console.log('Availables rooms', availablesTablesByRooms);
         if (
           formData.roomId !== undefined &&
           availablesTablesByRooms[formData.roomId] > 0 &&
@@ -90,7 +91,6 @@ export default function EventForm({
     ) {
       updateAvailablesTablesByRooms(newFormData);
     } else {
-      setAvailablesTables({});
       onChange(newFormData);
     }
   };
