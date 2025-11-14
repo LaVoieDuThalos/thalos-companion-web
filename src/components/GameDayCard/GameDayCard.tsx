@@ -2,11 +2,9 @@ import { useContext, useEffect, useState } from 'react';
 import { type CardProps } from 'react-bootstrap';
 import { Colors } from '../../constants/Colors';
 import { AppContext } from '../../contexts/AppContext';
-import { useUser } from '../../hooks/useUser';
 import type { AgendaEvent } from '../../model/AgendaEvent';
 import type { GameDay } from '../../model/GameDay';
 import { agendaService } from '../../services/AgendaService';
-import { settingsService } from '../../services/SettingsService';
 import { printGameDay } from '../../utils/Utils';
 import ActivityIndicator from '../common/ActivityIndicator';
 import CustomCard from '../common/CustomCard/CustomCard';
@@ -24,7 +22,6 @@ export default function GameDayCard({ day }: Props) {
   const appContext = useContext(AppContext);
   const [events, setEvents] = useState<AgendaEvent[]>([]);
   const [loading, setLoading] = useState(false);
-  const { user } = useUser();
   const needARefresh =
     appContext.refreshs[`agenda`] || appContext.refreshs[`agenda.${day.id}`];
 
@@ -32,13 +29,8 @@ export default function GameDayCard({ day }: Props) {
     setLoading(true);
     agendaService
       .findEventsOfDay(day.id)
-      .then((events) => ({ events, prefs: user.preferences }))
-      .then(({ events, prefs }) => {
-        const filteredEvents = events.filter(
-          (e) =>
-            prefs && settingsService.activityVisible(prefs, e.activityId ?? '')
-        );
-        setEvents(filteredEvents);
+      .then((events) => {
+        setEvents(events);
         setLoading(false);
       })
       .catch((error) => {
