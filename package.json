@@ -26,6 +26,8 @@
     "react-router": "^7.6.0",
     "react-router-dom": "^7.6.0",
     "react-spinners": "^0.17.0",
+    "slate": "^0.118.1",
+    "slate-react": "^0.119.0",
     "thalos-companion-web": "file:"
   },
   "devDependencies": {
