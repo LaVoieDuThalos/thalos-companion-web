@@ -33,7 +33,7 @@ export const Validators = {
   },
 
   min: (value: string, minValue: number) => {
-    return !!value && value.trim().length <= minValue;
+    return !!value && value.trim().length < minValue;
   },
 
   allowedCharacters: (

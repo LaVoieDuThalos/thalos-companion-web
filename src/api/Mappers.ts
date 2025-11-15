@@ -31,6 +31,7 @@ export const mapAgendaEventToDto = (
     creator: json.creator,
     description: json.description,
     durationInMinutes: json.durationInMinutes,
+    gameMaster: json.gameMaster,
     start: json.start,
     title: json.title,
     tables: json.tables,

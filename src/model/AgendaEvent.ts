@@ -14,6 +14,7 @@ export interface AgendaEvent {
   endTime?: number;
   roomId?: string;
   room?: Room;
+  gameMaster?: string;
   tables?: number;
   activityId?: string;
   activity?: Activity;
