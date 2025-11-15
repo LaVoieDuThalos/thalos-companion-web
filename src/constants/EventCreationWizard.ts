@@ -2,6 +2,7 @@ import { calendarService } from '../services/CalendarService';
 import { roomService } from '../services/RoomService';
 import { AOS, AUBERGE_ESPAGNOLE, JDR, WARHAMMER_40K } from './Activities';
 import { JUSQUA_LA_FERMETURE } from './Durations';
+import { TOUTE_LA_SALLE } from './Rooms';
 
 type InitFormData = { [key: string]: unknown };
 
@@ -111,7 +112,7 @@ export const CREATION_MODES: EventCreationMode[] = [
         roomId: 'jdr',
         start: '20h',
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
-        tables: 2,
+        tables: TOUTE_LA_SALLE,
       };
     },
   },
@@ -138,6 +139,7 @@ export const CREATION_MODES: EventCreationMode[] = [
         roomId: 'main',
         start: '19h',
         durationInMinutes: 60,
+        tables: TOUTE_LA_SALLE,
         description: 'Venez avec quelque chose à partager !',
       };
     },

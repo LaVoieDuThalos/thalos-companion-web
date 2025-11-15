@@ -1,27 +1,17 @@
 import { Form } from 'react-bootstrap';
-import { ACTIVITIES } from '../../../constants/Activities';
+import { ACTIVITIES, JDR } from '../../../constants/Activities';
 import { Durations } from '../../../constants/Durations';
 import { ROOMS, TOUTE_LA_SALLE } from '../../../constants/Rooms';
 import { calendarService } from '../../../services/CalendarService';
 import { hasError, type CustomFormProps } from '../../../utils/FormUtils';
-import {
-  fromGameDayId,
-  fromRoomId,
-  getEndTime,
-  getStartTime,
-  printGameDay,
-} from '../../../utils/Utils';
+import { fromRoomId, printGameDay } from '../../../utils/Utils';
 import {
   HYPHEN_EMPTY_OPTION,
   type FormData,
 } from '../../modals/EventFormModal';
 
-import { useCallback, useEffect, useState } from 'react';
 import type { Room } from '../../../model/Room';
-import {
-  bookingService,
-  type TablesAvailables,
-} from '../../../services/BookingService';
+import type { TablesAvailables } from '../../../services/BookingService';
 import FormError from '../../common/FormError/FormError';
 import './EventForm.scss';
 
@@ -40,10 +30,16 @@ function buildTables(room: Room | null, availableTables: number): number[] {
   }
   if (fullOpen) {
     res.push(TOUTE_LA_SALLE);
+  } else if (availableTables > 0) {
+    res.push(availableTables);
   }
 
   return res;
 }
+
+type Props = CustomFormProps<FormData> & {
+  availableTables: TablesAvailables;
+};
 
 export default function EventForm({
   disabled,
@@ -51,52 +47,11 @@ export default function EventForm({
   onChange,
   errors,
   formData,
-}: CustomFormProps<FormData>) {
+  availableTables,
+}: Props) {
   const days = calendarService.buildDaysFromDate(new Date(), 60);
   const hours = calendarService.hours();
   const durations = Durations;
-
-  const [availablesTables, setAvailablesTables] = useState<TablesAvailables>(
-    {}
-  );
-
-  const updateAvailablesTablesByRooms = useCallback(
-    (_formData: FormData, ignoreChangeEvent = false) => {
-      const gameDay = fromGameDayId(_formData.dayId);
-      const startTime = gameDay ? getStartTime(gameDay, _formData.start) : 0;
-      const endTime = gameDay
-        ? getEndTime(gameDay, _formData.start, _formData.durationInMinutes - 1)
-        : 0;
-
-      bookingService
-        .availablesTablesByRooms(
-          _formData.dayId,
-          startTime,
-          endTime,
-          _formData.id ? [_formData.id] : []
-        )
-        .then((availablesTablesByRooms) => {
-          setAvailablesTables(availablesTablesByRooms);
-          if (
-            _formData.roomId !== undefined &&
-            availablesTablesByRooms[_formData.roomId] > 0 &&
-            _formData.tables !== TOUTE_LA_SALLE &&
-            _formData.tables > availablesTablesByRooms[_formData.roomId]
-          ) {
-            formData.tables = availablesTablesByRooms[_formData.roomId];
-          }
-          if (!ignoreChangeEvent) {
-            onChange({
-              ..._formData,
-              roomIsAvailable:
-                formData.roomId !== undefined &&
-                availablesTablesByRooms[formData.roomId] > 0,
-            });
-          }
-        });
-    },
-    []
-  );
 
   const integerFields = ['durationInMinutes', 'tables'];
 
@@ -113,21 +68,8 @@ export default function EventForm({
           ? parseInt(event.target.value)
           : event.target.value,
     };
-    if (
-      ['dayId', 'start', 'durationInMinutes', 'roomId'].indexOf(field) >= 0 &&
-      newFormData.dayId &&
-      newFormData.start &&
-      newFormData.durationInMinutes
-    ) {
-      updateAvailablesTablesByRooms(newFormData);
-    } else {
-      onChange(newFormData);
-    }
+    onChange(newFormData);
   };
-
-  useEffect(() => {
-    updateAvailablesTablesByRooms(formData, true);
-  }, []);
 
   return (
     <Form>
@@ -243,6 +185,35 @@ export default function EventForm({
         ) : null}
       </Form.Group>
 
+      {/* Game Master ------------------------------------------------------------- */}
+      {formData.activityId === JDR.id && (
+        <Form.Group className="mb-3" controlId="eventForm.GameMasterInput">
+          <Form.Label>Maître du Jeu (MJ)</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder=""
+            className="game-master"
+            disabled={disabled}
+            autoFocus
+            value={formData.gameMaster}
+            onChange={(e) => updateForm('gameMaster', e)}
+          />
+          {state?.submitted && hasError(errors, 'gameMasterIsEmpty') ? (
+            <FormError error="Le nom du M.J. est obligatoire pour le JDR" />
+          ) : null}
+          {state?.submitted &&
+          (hasError(errors, 'gameMasterIsLower') ||
+            hasError(errors, 'gameMasterIsHigher')) ? (
+            <FormError
+              error={`Le nom doit être entre 3 et 40 caractères (saisie ${formData.gameMaster?.length} car.)`}
+            />
+          ) : null}
+          {state?.submitted && hasError(errors, 'gameMasterIsInvalid') ? (
+            <FormError error="Le nom doit être alphanumérique (caractères spéciaux autorisés : # @*)" />
+          ) : null}
+        </Form.Group>
+      )}
+
       {/* Salle ------------------------------------------------------------- */}
       <Form.Group className="mb-3" controlId="eventForm.RoomInput">
         <Form.Label>Salle</Form.Label>
@@ -258,7 +229,7 @@ export default function EventForm({
         >
           <option>-</option>
           {ROOMS.map((r) => {
-            const tables = availablesTables[r.id];
+            const tables = availableTables[r.id];
             return (
               <option
                 key={r.id}
@@ -302,14 +273,14 @@ export default function EventForm({
           <option>-</option>
           {buildTables(
             fromRoomId(formData.roomId),
-            availablesTables[formData.roomId]
+            availableTables[formData.roomId]
           ).map((t) => (
             <option
               key={t}
               value={t}
               disabled={
                 !!formData.roomId &&
-                t > availablesTables[formData.roomId] &&
+                t > availableTables[formData.roomId] &&
                 t != TOUTE_LA_SALLE
               }
             >
