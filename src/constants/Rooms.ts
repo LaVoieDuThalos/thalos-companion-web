@@ -8,6 +8,18 @@ export type Occupation = {
   roomCapacity: number;
 };
 
+export const SALLE_DU_LAC: Room = {
+  id: 'sdl',
+  name: 'Salle du Lac',
+  capacity: 90,
+};
+
+export const AUTRE_SALLE: Room = {
+  id: 'autre',
+  name: 'Autre',
+  virtual: true,
+};
+
 export const ROOMS: Room[] = [
   {
     id: 'main',
@@ -32,16 +44,8 @@ export const ROOMS: Room[] = [
     capacity: 10,
     week: 'B',
   },
-  {
-    id: 'sdl',
-    name: 'Salle du Lac',
-    capacity: 90,
-  },
-  {
-    id: 'autre',
-    name: 'Autre',
-    virtual: true,
-  },
+  SALLE_DU_LAC,
+  AUTRE_SALLE,
 ];
 
 export const TOUTE_LA_SALLE = 999;

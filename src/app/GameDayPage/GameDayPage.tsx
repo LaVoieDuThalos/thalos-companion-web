@@ -87,7 +87,7 @@ export default function GameDayPage() {
         }}
       />
 
-      {day && settingsService.hasRole(user, ROLE_BUREAU) ? (
+      {day && settingsService.hasRole(user.preferences, ROLE_BUREAU) ? (
         <CountingFormModal
           dayId={day?.id}
           title={`Comptage : ${printGameDay(day)}`}

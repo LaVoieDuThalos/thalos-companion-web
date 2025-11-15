@@ -1,5 +1,6 @@
 import { API, type ApiService } from '../api/Api';
-import type { Role } from '../constants/Roles';
+import { EVENEMENT } from '../constants/Activities';
+import { ROLE_BUREAU, type Role } from '../constants/Roles';
 import { StorageKeys } from '../constants/StorageKeys';
 import type { User } from '../model/User';
 import type { UserPreferences } from '../model/UserPreferences';
@@ -44,20 +45,19 @@ class SettingsService {
       return true;
     }
     const activity = fromActivityId(activityId);
-    if (!activity?.filterable) {
+    if (activity?.id === EVENEMENT.id && this.hasRole(prefs, ROLE_BUREAU)) {
+      return true;
+    } else if (activity?.id !== EVENEMENT.id && !activity?.filterable) {
       return true;
     }
     return !!prefs.activities && prefs.activities.indexOf(activityId) >= 0;
   }
 
-  hasRole(user: User | null, role: Role): boolean {
-    if (user === null || user.preferences === null) {
+  hasRole(prefs: UserPreferences | undefined, role: Role): boolean {
+    if (prefs === null) {
       return false;
     }
-    return (
-      !!user.preferences?.roles &&
-      user.preferences?.roles?.indexOf(role.id) >= 0
-    );
+    return !!prefs?.roles && prefs?.roles?.indexOf(role.id) >= 0;
   }
 }
 

@@ -1,7 +1,7 @@
 import { Form } from 'react-bootstrap';
-import { ACTIVITIES, JDR } from '../../../constants/Activities';
+import { ACTIVITIES, EVENEMENT, JDR } from '../../../constants/Activities';
 import { Durations } from '../../../constants/Durations';
-import { ROOMS, TOUTE_LA_SALLE } from '../../../constants/Rooms';
+import { ROOMS, SALLE_DU_LAC, TOUTE_LA_SALLE } from '../../../constants/Rooms';
 import { calendarService } from '../../../services/CalendarService';
 import { hasError, type CustomFormProps } from '../../../utils/FormUtils';
 import { fromRoomId, printGameDay } from '../../../utils/Utils';
@@ -10,8 +10,10 @@ import {
   type FormData,
 } from '../../modals/EventFormModal';
 
+import { useUser } from '../../../hooks/useUser';
 import type { Room } from '../../../model/Room';
 import type { TablesAvailables } from '../../../services/BookingService';
+import { settingsService } from '../../../services/SettingsService';
 import FormError from '../../common/FormError/FormError';
 import './EventForm.scss';
 
@@ -52,6 +54,7 @@ export default function EventForm({
   const days = calendarService.buildDaysFromDate(new Date(), 60);
   const hours = calendarService.hours();
   const durations = Durations;
+  const { user } = useUser();
 
   const integerFields = ['durationInMinutes', 'tables'];
 
@@ -174,7 +177,9 @@ export default function EventForm({
           onChange={(e) => updateForm('activityId', e)}
         >
           <option>-</option>
-          {ACTIVITIES.map((act) => (
+          {ACTIVITIES.filter((act) =>
+            settingsService.activityVisible(user.preferences || {}, act.id)
+          ).map((act) => (
             <option key={act.id} value={act.id}>
               {act.name}
             </option>
@@ -228,7 +233,12 @@ export default function EventForm({
           onChange={(e) => updateForm('roomId', e)}
         >
           <option>-</option>
-          {ROOMS.map((r) => {
+          {ROOMS.filter(
+            (room) =>
+              (room.id !== SALLE_DU_LAC.id ||
+                formData.activityId === EVENEMENT.id) &&
+              !room.virtual
+          ).map((r) => {
             const tables = availableTables[r.id];
             return (
               <option

@@ -36,7 +36,7 @@ export default function GameDayPlanning({ day, events }: Props) {
 
   return (
     <>
-      {day && settingsService.hasRole(user.user, ROLE_OUVREUR) ? (
+      {day && settingsService.hasRole(user.user.preferences, ROLE_OUVREUR) ? (
         <OpenCloseRoomConfigModal
           day={day}
           show={openCloseModalVisible}
@@ -51,7 +51,7 @@ export default function GameDayPlanning({ day, events }: Props) {
         <CustomCard
           onClick={() =>
             setOpenCloseModalVisible(
-              settingsService.hasRole(user.user, ROLE_OUVREUR)
+              settingsService.hasRole(user.user.preferences, ROLE_OUVREUR)
             )
           }
         >
@@ -96,7 +96,7 @@ export default function GameDayPlanning({ day, events }: Props) {
           <CustomCard
             onClick={() =>
               setOpenCloseModalVisible(
-                settingsService.hasRole(user.user, ROLE_OUVREUR)
+                settingsService.hasRole(user.user.preferences, ROLE_OUVREUR)
               )
             }
           >
