@@ -40,6 +40,7 @@ export default function SettingsForm({
       <div className="settings-group">
         <RadioGroup
           label="Activités"
+          informations="Sélectionner ci-dessous les activités que vous soutaitez voir sur la page d'accueil."
           value={props.formData.preferences?.activities || []}
           onChange={(activities) => {
             props.onChange({
@@ -56,6 +57,7 @@ export default function SettingsForm({
       <div className="settings-group">
         <RadioGroup
           label="Rôles additionnels"
+          informations="Certaines fonctionnalités de l'application sont accessibles avec des rôles particuliers. Sélectionnez ci-dessous les vôtres."
           value={props.formData.preferences?.roles || []}
           onChange={(roles) => {
             props.onChange({
