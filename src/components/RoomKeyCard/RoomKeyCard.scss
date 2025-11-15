@@ -1,6 +1,7 @@
 .key {
   display: flex;
   flex-direction: row;
+  gap: 10px;
 
   .key-owner {
     display: flex;
@@ -8,8 +9,13 @@
   }
 
   .key-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
     .key-name {
       font-weight: bold;
+      font-size: 20px;
     }
   }
 }

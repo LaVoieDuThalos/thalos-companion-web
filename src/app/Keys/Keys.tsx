@@ -40,25 +40,6 @@ export default function KeysPage() {
           </div>
         ) : null}
       </div>
-
-      {/*<View style={{}}>
-        {loading ? (
-          <View style={{}}>
-            <ActivityIndicator color={Colors.red} size={50} />
-          </View>
-        ) : null}
-        {!loading ? (
-          <div>
-            {keys.map((k) => (
-              <RoomKeyCard
-                key={k.id}
-                roomKey={k}
-                onChangeOwner={(user) => changeKeyOwner(user, k)}
-              />
-            ))}
-          </div>
-        ) : null}
-      </View>*/}
     </View>
   );
 }
