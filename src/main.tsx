@@ -12,7 +12,6 @@ import AgendaPage from './app/Agenda';
 import EventDetailsPage from './app/events/EventDetails';
 import GameDayPage from './app/GameDayPage/GameDayPage';
 import KeyPage from './app/KeyPage/KeyPage';
-import SettingsPage from './app/Settings';
 
 const router = createBrowserRouter(
   [
@@ -49,10 +48,6 @@ const router = createBrowserRouter(
               element: <KeyPage />,
             },
           ],
-        },
-        {
-          path: '/settings',
-          element: <SettingsPage />,
         },
         {
           path: '/events',
