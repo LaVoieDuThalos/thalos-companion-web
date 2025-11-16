@@ -64,7 +64,8 @@ export default function GameDayPlanning({ day, events }: Props) {
             >
               {openClose?.openAt}
             </Label>
-            {openClose?.opener ? (
+            {openClose?.opener &&
+            settingsService.hasRole(user.user.preferences, ROLE_OUVREUR) ? (
               <>
                 par{' '}
                 <Label
@@ -92,26 +93,27 @@ export default function GameDayPlanning({ day, events }: Props) {
             />
           ))
         )}
-        {openClose?.closer && (
-          <CustomCard
-            onClick={() =>
-              setOpenCloseModalVisible(
-                settingsService.hasRole(user.user.preferences, ROLE_OUVREUR)
-              )
-            }
-          >
-            <div className="open-close-room-infos">
-              Fermeture par{' '}
-              <Label
-                icon="person"
-                size={20}
-                styles={{ fontWeight: 'bold', color: Colors.red }}
-              >
-                {openClose?.closer?.name}
-              </Label>
-            </div>
-          </CustomCard>
-        )}
+        {openClose?.closer &&
+          settingsService.hasRole(user.user.preferences, ROLE_OUVREUR) && (
+            <CustomCard
+              onClick={() =>
+                setOpenCloseModalVisible(
+                  settingsService.hasRole(user.user.preferences, ROLE_OUVREUR)
+                )
+              }
+            >
+              <div className="open-close-room-infos">
+                Fermeture par{' '}
+                <Label
+                  icon="person"
+                  size={20}
+                  styles={{ fontWeight: 'bold', color: Colors.red }}
+                >
+                  {openClose?.closer?.name}
+                </Label>
+              </div>
+            </CustomCard>
+          )}
       </div>
     </>
   );
