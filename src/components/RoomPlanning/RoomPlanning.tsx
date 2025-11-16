@@ -192,7 +192,7 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
                 height: LayoutConfig.rowHeight + LayoutConfig.gap,
               }}
             >
-              <Icon icon="table_restaurant" color="lightgray" />
+              <Icon icon="table_restaurant" color="lightgray" iconSize={30} />
             </div>
           )}
         </div>

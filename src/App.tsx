@@ -44,7 +44,10 @@ function App() {
               >
                 <Outlet />
               </div>
-              <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
+              <div
+                className="footer-root"
+                style={{ position: 'absolute', bottom: 0, width: '100%' }}
+              >
                 <Footer />
               </div>
             </div>

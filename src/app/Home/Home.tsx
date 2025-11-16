@@ -30,13 +30,13 @@ export default function HomePage() {
           .filter(
             (e) =>
               user?.preferences &&
-              settingsService.activityVisible(
+              (settingsService.activityVisible(
                 user?.preferences,
                 e.activityId ?? e.activity?.id ?? ''
-              )
+              ) ||
+                e.creator?.id === user.id)
           )
           .map((e) => ({
-            //title: Months[e.day.date.getMonth()].toUpperCase(),
             title: printGameDay(e.day).toUpperCase(),
             data: [e],
           }))

@@ -1,14 +1,29 @@
 @import '../node_modules/bootstrap/scss/mixins/color-scheme';
 
 #root {
-  //max-width: 1280px;
   margin: 0 auto;
   text-align: center;
 
   .outlet {
-    position: absolute;
-    overflow: auto;
     width: 100%;
     padding-bottom: 50px;
+  }
+
+  .footer-root {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+}
+
+$max-width: 1280px;
+
+@media (min-width: $max-width) {
+  #root {
+    max-width: $max-width;
+
+    .footer-root {
+      max-width: $max-width;
+    }
   }
 }
