@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
+import { TOUTE_LA_SALLE } from '../../constants/Rooms';
 import type { AgendaEvent } from '../../model/AgendaEvent';
 import type { GameDay } from '../../model/GameDay';
 import { calendarService } from '../../services/CalendarService';
@@ -121,7 +122,8 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
               0,
               dimensions.w - left
             ),
-      height: LayoutConfig.rowHeight * (event.tables || 1),
+      height:
+        LayoutConfig.rowHeight * (clamp(event.tables!, 1, room?.capacity) || 1),
       left: clamp(left, 0, dimensions.w),
       top: index * (LayoutConfig.rowHeight + LayoutConfig.gap),
       borderLeftColor: event.activity?.style.backgroundColor,
@@ -214,8 +216,11 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
             </div>
             <div>
               <strong>{event.start}</strong> - {event.title} - [
-              {event.room?.name}] ({event.tables} table
-              {event.tables || 0 > 1 ? 's' : ''})
+              {event.room?.name}] (
+              {event.tables !== TOUTE_LA_SALLE
+                ? `${event.tables} table${event.tables || 0 > 1 ? 's' : ''}`
+                : 'Toute la salle'}
+              )
             </div>
           </CustomCard>
         ))}
