@@ -44,7 +44,14 @@ function App() {
               >
                 <Outlet />
               </div>
-              <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  width: '100%',
+                  maxWidth: 1280,
+                }}
+              >
                 <Footer />
               </div>
             </div>

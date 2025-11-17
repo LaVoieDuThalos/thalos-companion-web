@@ -31,7 +31,7 @@ export default function ModalPage({
       {...props}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
-      fullscreen={true}
+      className="modal-fullscreen-xl-down"
     >
       <Modal.Header closeButton={!options?.hideCloseButton}>
         <Modal.Title id="contained-modal-title-vcenter">
