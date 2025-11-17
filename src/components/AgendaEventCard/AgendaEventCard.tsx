@@ -70,6 +70,7 @@ export default function AgendaEventCard({
     <CustomCard
       className="agenda-event-card"
       onClick={() => navigate(`/events/${event.id}`)}
+      clickable={!complete}
       style={{ borderLeftColor: event.activity?.style.backgroundColor }}
     >
       {event.activity ? (

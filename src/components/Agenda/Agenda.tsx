@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import IconButton from '../common/IconButton/IconButton';
 
-import { useNavigate } from 'react-router';
 import { Months } from '../../constants/Months';
 import { type GameDay } from '../../model/GameDay';
 import { calendarService } from '../../services/CalendarService';
@@ -12,7 +11,6 @@ import './Agenda.scss';
 export default function Agenda() {
   const [current, setCurrent] = useState(firstDateOfMonth());
   const [days, setDays] = useState<GameDay[]>([]);
-  const navigate = useNavigate();
 
   const incMonth = (inc: number) => {
     const month = current.getMonth() + inc;
@@ -44,9 +42,7 @@ export default function Agenda() {
       </div>
       <div className="month-days">
         {days.map((day) => (
-          <div onClick={() => navigate(`/agenda/${day.id}`)}>
-            <GameDayCard key={day.id} day={day} />
-          </div>
+          <GameDayCard key={day.id} day={day} />
         ))}
       </div>
     </div>

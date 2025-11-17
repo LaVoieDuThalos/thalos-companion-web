@@ -13,7 +13,7 @@ export default function RoomKeyCard({ roomKey }: Props) {
   const navigate = useNavigate();
 
   return (
-    <CustomCard onClick={() => navigate('/keys/' + roomKey.id)}>
+    <CustomCard clickable onClick={() => navigate('/keys/' + roomKey.id)}>
       <div className="key">
         <Icon icon="key" iconSize={50} />
         <div className="key-details">

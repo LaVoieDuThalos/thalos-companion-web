@@ -11,6 +11,7 @@ import CustomCard from '../common/CustomCard/CustomCard';
 import Icon from '../common/Icon';
 import Row from '../common/Row';
 
+import { useNavigate } from 'react-router';
 import RoomPriorities from '../RoomPriorities/RoomPriorities';
 import './GameDayCard.scss';
 
@@ -20,6 +21,7 @@ type Props = CardProps & {
 
 export default function GameDayCard({ day }: Props) {
   const appContext = useContext(AppContext);
+  const navigate = useNavigate();
   const [events, setEvents] = useState<AgendaEvent[]>([]);
   const [loading, setLoading] = useState(false);
   const needARefresh =
@@ -40,7 +42,11 @@ export default function GameDayCard({ day }: Props) {
   }, [day, needARefresh]);
 
   return (
-    <CustomCard className="game-day-card">
+    <CustomCard
+      className="game-day-card"
+      clickable
+      onClick={() => navigate(`/agenda/${day.id}`)}
+    >
       <Row>
         <Icon icon="today" color={'gray'} />
         <span className="game-day">{printGameDay(day)}</span>

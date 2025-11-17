@@ -74,7 +74,7 @@ export default function KeyPage() {
         onCancel={() => setUserSelectModalVisible(false)}
         onSuccess={(user) => updateOwner(user)}
       />
-      <CustomCard>
+      <CustomCard clickable>
         <div className="key-details">
           <Icon icon="key" iconSize={50} />
           <div className="key-name">{key?.name}</div>

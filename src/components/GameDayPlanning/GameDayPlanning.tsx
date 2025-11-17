@@ -49,6 +49,10 @@ export default function GameDayPlanning({ day, events }: Props) {
       ) : null}
       <div className="planning-content">
         <CustomCard
+          clickable={settingsService.hasRole(
+            user.user.preferences,
+            ROLE_OUVREUR
+          )}
           onClick={() =>
             setOpenCloseModalVisible(
               settingsService.hasRole(user.user.preferences, ROLE_OUVREUR)
@@ -96,6 +100,10 @@ export default function GameDayPlanning({ day, events }: Props) {
         {openClose?.closer &&
           settingsService.hasRole(user.user.preferences, ROLE_OUVREUR) && (
             <CustomCard
+              clickable={settingsService.hasRole(
+                user.user.preferences,
+                ROLE_OUVREUR
+              )}
               onClick={() =>
                 setOpenCloseModalVisible(
                   settingsService.hasRole(user.user.preferences, ROLE_OUVREUR)

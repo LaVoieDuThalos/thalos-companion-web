@@ -198,6 +198,7 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
         </div>
         {eventsVisibles.map((event) => (
           <CustomCard
+            clickable
             key={event.id}
             onClick={() => navigate(`/events/${event.id}`)}
             className="event"

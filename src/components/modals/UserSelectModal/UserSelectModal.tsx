@@ -68,7 +68,7 @@ export default function UserSelectModal({
       ) : null}
       <div className="users">
         {users.map((user) => (
-          <CustomCard onClick={() => onSuccess(user)}>
+          <CustomCard clickable onClick={() => onSuccess(user)}>
             <UserCard user={user} />
           </CustomCard>
         ))}
