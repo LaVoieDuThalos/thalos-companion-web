@@ -26,7 +26,7 @@ export default function EventDetailsPage() {
     if (eventId === undefined) {
       return;
     }
-    //appContext.setLoading(true);
+
     agendaService.findEventById(eventId).then((e) => {
       if (e === null) {
         console.error('No event found with id ', eventId);
@@ -37,20 +37,21 @@ export default function EventDetailsPage() {
     });
     //.catch(() => appContext.setLoading(false));
   }, [eventId, refresh]);
-
   return (
     <>
-      <EventFormModal
-        show={eventFormModalVisible}
-        onCancel={() => setEventFormModalVisible(false)}
-        event={event}
-        onSuccess={(event) => {
-          setRefresh(new Date().toISOString());
-          appContext.refresh(`home.events`);
-          appContext.refresh(`agenda.${event?.day.id}`);
-          setEventFormModalVisible(false);
-        }}
-      />
+      {eventFormModalVisible && (
+        <EventFormModal
+          show
+          onCancel={() => setEventFormModalVisible(false)}
+          event={event}
+          onSuccess={(event) => {
+            setEventFormModalVisible(false);
+            setRefresh(new Date().toISOString());
+            appContext.refresh(`home.events`);
+            appContext.refresh(`agenda.${event?.day.id}`);
+          }}
+        />
+      )}
       {event ? (
         <AgendaEventCard
           event={event}
