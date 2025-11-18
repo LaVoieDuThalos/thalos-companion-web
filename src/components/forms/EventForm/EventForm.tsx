@@ -15,6 +15,7 @@ import type { Room } from '../../../model/Room';
 import type { TablesAvailables } from '../../../services/BookingService';
 import { settingsService } from '../../../services/SettingsService';
 import FormError from '../../common/FormError/FormError';
+import RichEditor from '../../common/RichEditor/RichEditor';
 import './EventForm.scss';
 
 type Event = { target: { value: string } };
@@ -310,10 +311,7 @@ export default function EventForm({
       {/* Description ------------------------------------------------------------- */}
       <Form.Group className="mb-3" controlId="eventForm.DescriptionInput">
         <Form.Label>Description</Form.Label>
-        <Form.Control
-          as="textarea"
-          disabled={disabled}
-          rows={8}
+        <RichEditor
           value={formData.description}
           onChange={(e) => updateForm('description', e)}
         />
