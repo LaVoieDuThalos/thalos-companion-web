@@ -1,10 +1,10 @@
-import { Form } from 'react-bootstrap';
+import { Alert, Form } from 'react-bootstrap';
 import { ACTIVITIES, EVENEMENT, JDR } from '../../../constants/Activities';
 import { Durations } from '../../../constants/Durations';
 import { ROOMS, SALLE_DU_LAC, TOUTE_LA_SALLE } from '../../../constants/Rooms';
 import { calendarService } from '../../../services/CalendarService';
 import { hasError, type CustomFormProps } from '../../../utils/FormUtils';
-import { fromRoomId, printGameDay } from '../../../utils/Utils';
+import { fromGameDayId, fromRoomId, printGameDay } from '../../../utils/Utils';
 import {
   HYPHEN_EMPTY_OPTION,
   type FormData,
@@ -13,9 +13,12 @@ import {
 import { useUser } from '../../../hooks/useUser';
 import type { Room } from '../../../model/Room';
 import type { TablesAvailables } from '../../../services/BookingService';
+import { roomService } from '../../../services/RoomService';
 import { settingsService } from '../../../services/SettingsService';
 import FormError from '../../common/FormError/FormError';
+import Icon from '../../common/Icon';
 import RichEditor from '../../common/RichEditor/RichEditor';
+import RoomPriorities from '../../RoomPriorities/RoomPriorities';
 import './EventForm.scss';
 
 type Event = { target: { value: string } };
@@ -62,7 +65,7 @@ export default function EventForm({
   const updateForm = (field: string, event: Event) => {
     if (field === 'roomId') {
       // reset tables selection when room changes
-      formData.tables = TOUTE_LA_SALLE;
+      formData.tables = 0;
     }
 
     const newFormData = {
@@ -261,6 +264,18 @@ export default function EventForm({
             );
           })}
         </Form.Select>
+        {formData.roomId !== HYPHEN_EMPTY_OPTION &&
+        !roomService.isActivityAllowedInRoom(
+          formData.activityId,
+          formData.dayId,
+          formData.roomId
+        ) ? (
+          <Alert variant="warning">
+            <Icon icon="warning" iconSize={20} /> Attention, cette activité
+            n'est pas prioritaire dans cette salle cette semaine :{' '}
+            <RoomPriorities day={fromGameDayId(formData.dayId)!} />
+          </Alert>
+        ) : null}
         {state?.submitted && hasError(errors, 'roomIsEmpty') ? (
           <FormError error="La salle est obligatoire" />
         ) : null}

@@ -128,6 +128,14 @@ export default function AgendaEventCard({
               <span className="creator-name">{event.creator.name}</span>
             </div>
           ) : null}
+          {event.lastModification ? (
+            <div className="last-modification">
+              <span>Dernière modification par</span>
+              <span className="last-modifier-name">
+                {event.lastModification.user.name}
+              </span>
+            </div>
+          ) : null}
         </View>
       ) : null}
 
