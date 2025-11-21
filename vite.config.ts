@@ -472,4 +472,7 @@ export default defineConfig({
     }),
   ],
   base: '/thalos-companion-web/',
+  define: {
+    global: 'window',
+  },
 });

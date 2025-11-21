@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { Colors } from '../../constants/Colors';
 import { durationToString } from '../../constants/Durations';
 import { TOUTE_LA_SALLE } from '../../constants/Rooms';
@@ -14,6 +14,7 @@ import Row from '../common/Row';
 import Tag from '../common/Tag/Tag';
 import View from '../common/View';
 
+import RichEditor from '../common/RichEditor/RichEditor';
 import type { StyleSheet } from '../common/Types';
 import './AgendaEventCard.scss';
 
@@ -69,7 +70,11 @@ export default function AgendaEventCard({
   return (
     <CustomCard
       className="agenda-event-card"
-      onClick={() => navigate(`/events/${event.id}`)}
+      onClick={() => {
+        if (!complete) {
+          navigate(`/events/${event.id}`);
+        }
+      }}
       clickable={!complete}
       style={{ borderLeftColor: event.activity?.style.backgroundColor }}
     >
@@ -87,9 +92,13 @@ export default function AgendaEventCard({
       {/* Date  */}
       {event.day && !options?.hideDate ? (
         <div className="card-item">
-          <span className="test-date" style={styles.eventDateText}>
+          <Link
+            to={'/agenda/' + event.day.id}
+            className="test-date"
+            style={styles.eventDateText}
+          >
             {printGameDay(event.day)}
-          </span>
+          </Link>
         </div>
       ) : null}
 
@@ -126,7 +135,11 @@ export default function AgendaEventCard({
       {complete ? (
         <div className="description">
           {event.description ? (
-            <p>{event.description}</p>
+            <RichEditor
+              value={event.description}
+              readOnly
+              onChange={() => {}}
+            />
           ) : (
             <p>Pas de description</p>
           )}

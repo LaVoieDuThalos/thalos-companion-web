@@ -16,8 +16,10 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^11.0.0",
     "@firebase/firestore": "^4.7.14",
     "bootstrap": "^5.3.6",
+    "ckeditor5": "^47.2.0",
     "firebase": "^11.7.3",
     "gh-pages": "^6.3.0",
     "react": "^19.1.0",
@@ -30,6 +32,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@types/draft-js": "^0.11.20",
     "@types/jest": "^29.5.14",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",

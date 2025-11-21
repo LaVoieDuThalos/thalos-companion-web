@@ -1,0 +1,9 @@
+:root {
+  --ck-z-default: 100;
+  --ck-z-panel: calc(var(--ck-z-default) + 999);
+
+  .ck-rounded-corners .ck.ck-balloon-panel,
+  .ck.ck-balloon-panel.ck-rounded-corners {
+    z-index: 10055 !important;
+  }
+}
