@@ -7,7 +7,7 @@ import type { EventCreationMode } from '../../constants/EventCreationWizard';
 import { TOUTE_LA_SALLE } from '../../constants/Rooms';
 import { useAlert } from '../../hooks/useAlert';
 import { useUser } from '../../hooks/useUser';
-import type { AgendaEvent } from '../../model/AgendaEvent';
+import type { AgendaEvent, LastModification } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
 import {
   bookingService,
@@ -180,12 +180,22 @@ export default function EventFormModal({
       .saveEvent({
         ...formData,
         creator:
-          user != null
+          user != null && event?.id == null
             ? {
                 id: user.id,
                 name: user.name,
               }
-            : {},
+            : event?.creator,
+        lastModification:
+          user != null && event?.id !== null
+            ? ({
+                date: new Date().toISOString(),
+                user: {
+                  id: user.id,
+                  name: user.name,
+                },
+              } as LastModification)
+            : null,
       } as Partial<AgendaEvent>)
       .then((res) => {
         setSaving(false);

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { Navbar } from 'react-bootstrap';
+import { matchPath, useLocation, useNavigate } from 'react-router';
 import { Colors } from '../../constants/Colors';
 import { AppContext } from '../../contexts/AppContext';
 import { useUser } from '../../hooks/useUser';
@@ -15,6 +16,8 @@ export default function Header() {
   const { user, setUser } = useUser();
   const [eventFormModalVisible, setEventFormModalVisible] = useState(false);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user || !user.name) {
@@ -59,6 +62,10 @@ export default function Header() {
               setEventFormModalVisible(false);
               appContext.refresh(`home.events`);
               appContext.refresh(`agenda.${event?.day.id}`);
+
+              if (matchPath({ path: '/events/:eventId' }, location.pathname)) {
+                navigate(`/events/${event.id}`);
+              }
             }}
           />
         ) : null}

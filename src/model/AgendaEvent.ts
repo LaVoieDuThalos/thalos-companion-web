@@ -3,6 +3,11 @@ import type { GameDay } from './GameDay';
 import type { Room } from './Room';
 import type { User } from './User';
 
+export type LastModification = {
+  date: string;
+  user: Partial<User>;
+};
+
 export interface AgendaEvent {
   id: string;
   title: string;
@@ -20,4 +25,5 @@ export interface AgendaEvent {
   activity?: Activity;
   description?: string;
   creator?: Partial<User>;
+  lastModification?: LastModification;
 }

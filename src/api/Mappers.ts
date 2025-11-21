@@ -29,6 +29,7 @@ export const mapAgendaEventToDto = (
     activityId: json.activityId,
     roomId: json.roomId,
     creator: json.creator,
+    lastModification: json.lastModification,
     description: json.description,
     durationInMinutes: json.durationInMinutes,
     gameMaster: json.gameMaster,
