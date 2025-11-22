@@ -203,7 +203,6 @@ export default function EventForm({
             placeholder=""
             className="game-master"
             disabled={disabled}
-            autoFocus
             value={formData.gameMaster}
             onChange={(e) => updateForm('gameMaster', e)}
           />

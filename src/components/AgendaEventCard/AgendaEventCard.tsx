@@ -107,6 +107,12 @@ export default function AgendaEventCard({
         <span>{event.title}</span>
       </div>
 
+      {event.gameMaster && (
+        <div className="game-master">
+          Masterisé par <strong>{event.gameMaster}</strong>
+        </div>
+      )}
+
       {/* Heure de début-fin */}
       {event.start ? (
         <Row style={{ justifyContent: 'center' }}>
