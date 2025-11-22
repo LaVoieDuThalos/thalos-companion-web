@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router';
 import ActivityIndicator from '../../components/common/ActivityIndicator';
 import IconButton from '../../components/common/IconButton/IconButton';
 import View from '../../components/common/View';
-import CountingFormModal from '../../components/modals/CountingFormModal';
+import CountingFormModal from '../../components/modals/CountingFormModal/CountingFormModal';
 import EventFormModal from '../../components/modals/EventFormModal';
 import { Colors } from '../../constants/Colors';
 import { ROLE_BUREAU } from '../../constants/Roles';
@@ -14,13 +14,16 @@ import type { GameDay } from '../../model/GameDay';
 import { agendaService } from '../../services/AgendaService';
 import { calendarService } from '../../services/CalendarService';
 import { settingsService } from '../../services/SettingsService';
-import { printGameDay } from '../../utils/Utils';
+import { isPassed, printGameDay } from '../../utils/Utils';
 
 import { Nav } from 'react-bootstrap';
+import CustomCard from '../../components/common/CustomCard/CustomCard';
 import Icon from '../../components/common/Icon';
 import GameDayPlanning from '../../components/GameDayPlanning/GameDayPlanning';
 import GameDayRoomsOccupation from '../../components/GameDayRoomsOccupation/GameDayRoomsOccupation';
 import RoomPriorities from '../../components/RoomPriorities/RoomPriorities';
+import { type DayCounts } from '../../model/Counting';
+import { countingService } from '../../services/CountingService';
 import './GameDayPage.scss';
 
 export default function GameDayPage() {
@@ -40,6 +43,7 @@ export default function GameDayPage() {
     useState(false);
 
   const [currentTab, setCurrentTab] = useState('programme');
+  const [countings, setCountings] = useState<DayCounts | undefined>(undefined);
 
   const goPrevious = () => {
     navigate(`/agenda/${previousDay?.id}`);
@@ -65,6 +69,15 @@ export default function GameDayPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+
+    if (
+      params.dayId &&
+      settingsService.hasRole(user.preferences, ROLE_BUREAU)
+    ) {
+      countingService
+        .getCounting(params.dayId)
+        .then((countings) => setCountings(countings ?? undefined));
+    }
   }, [params.dayId, needARefresh]);
 
   useEffect(() => {
@@ -93,7 +106,10 @@ export default function GameDayPage() {
           title={`Comptage : ${printGameDay(day)}`}
           show={countingFormModalVisible}
           onCancel={() => setCountingFormModalVisible(false)}
-          onSuccess={() => setCountingFormModalVisible(false)}
+          onSuccess={() => {
+            setCountingFormModalVisible(false);
+            appContext.refresh(`agenda.${day.id}`);
+          }}
         />
       ) : null}
 
@@ -105,6 +121,23 @@ export default function GameDayPage() {
       <div className="room-priorities">
         {day ? <RoomPriorities day={day} /> : null}
       </div>
+      {day &&
+        isPassed(day?.id) &&
+        settingsService.hasRole(user.preferences, ROLE_BUREAU) && (
+          <CustomCard
+            clickable
+            onClick={() => setCountingFormModalVisible(true)}
+          >
+            {!!countings && (
+              <Icon icon="check_circle" iconSize={30} color={Colors.green} />
+            )}
+            <Icon
+              icon="123"
+              color={countings === undefined ? Colors.gray : Colors.green}
+              iconSize={40}
+            />
+          </CustomCard>
+        )}
       <div>
         <Nav
           fill

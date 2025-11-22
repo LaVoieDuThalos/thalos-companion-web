@@ -1,0 +1,19 @@
+.number-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .number-input-label {
+    font-size: large;
+    padding: 10px;
+  }
+
+  .input-buttons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    .input-value {
+      font-size: larger;
+      font-weight: bold;
+    }
+  }
+}

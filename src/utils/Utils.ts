@@ -42,6 +42,12 @@ export function fromGameDayId(id: string | undefined): GameDay | null {
   } as GameDay;
 }
 
+export function isPassed(day: string): boolean {
+  const d = new Date(day);
+  const now = new Date();
+  return now.getTime() - d.getTime() > 0;
+}
+
 export function printGameDay(gameDay: GameDay): string {
   const day = DaysOfWeek[gameDay.date.getDay()];
   const dom = gameDay.date.getDate();
