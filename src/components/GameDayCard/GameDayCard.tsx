@@ -1,12 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
 import { type CardProps } from 'react-bootstrap';
-import { Colors } from '../../constants/Colors';
-import { AppContext } from '../../contexts/AppContext';
 import type { AgendaEvent } from '../../model/AgendaEvent';
 import type { GameDay } from '../../model/GameDay';
-import { agendaService } from '../../services/AgendaService';
 import { printGameDay } from '../../utils/Utils';
-import ActivityIndicator from '../common/ActivityIndicator';
 import CustomCard from '../common/CustomCard/CustomCard';
 import Icon from '../common/Icon';
 import Row from '../common/Row';
@@ -17,30 +12,11 @@ import './GameDayCard.scss';
 
 type Props = CardProps & {
   day: GameDay;
+  events: AgendaEvent[];
 };
 
-export default function GameDayCard({ day }: Props) {
-  const appContext = useContext(AppContext);
+export default function GameDayCard({ day, events }: Props) {
   const navigate = useNavigate();
-  const [events, setEvents] = useState<AgendaEvent[]>([]);
-  const [loading, setLoading] = useState(false);
-  const needARefresh =
-    appContext.refreshs[`agenda`] || appContext.refreshs[`agenda.${day.id}`];
-
-  useEffect(() => {
-    setLoading(true);
-    agendaService
-      .findEventsOfDay(day.id)
-      .then((events) => {
-        setEvents(events);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-      });
-  }, [day, needARefresh]);
-
   return (
     <CustomCard
       className="game-day-card"
@@ -48,13 +24,12 @@ export default function GameDayCard({ day }: Props) {
       onClick={() => navigate(`/agenda/${day.id}`)}
     >
       <Row>
-        <Icon icon="today" color={'gray'} />
+        <Icon icon="today" iconSize={22} color={'gray'} />
         <span className="game-day">{printGameDay(day)}</span>
       </Row>
 
       <RoomPriorities day={day} />
 
-      {loading ? <ActivityIndicator color={Colors.red} /> : null}
       <div className="events">
         {!events || events.length === 0 ? (
           <span style={{}}>Aucun évènement prévu</span>

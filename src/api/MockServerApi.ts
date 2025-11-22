@@ -112,6 +112,10 @@ class MockServerApi implements ApiService {
       );
   }
 
+  findAllEventsOfMonth(month: number): Promise<AgendaEvent[]> {
+    return Promise.reject('Not implemented : ' + month);
+  }
+
   findEventsByDayIdAndRoomId(
     dayId: string,
     roomId: string

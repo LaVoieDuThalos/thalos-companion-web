@@ -2,15 +2,22 @@ import { useEffect, useState } from 'react';
 import IconButton from '../common/IconButton/IconButton';
 
 import { Months } from '../../constants/Months';
+import { type AgendaEvent } from '../../model/AgendaEvent';
 import { type GameDay } from '../../model/GameDay';
+import { agendaService } from '../../services/AgendaService';
 import { calendarService } from '../../services/CalendarService';
 import { firstDateOfMonth } from '../../utils/Utils';
 import GameDayCard from '../GameDayCard/GameDayCard';
 import './Agenda.scss';
 
+const getAllEventsOfDay = (dayId: string, events: AgendaEvent[]) => {
+  return events.filter((e) => e.day.id === dayId);
+};
+
 export default function Agenda() {
   const [current, setCurrent] = useState(firstDateOfMonth());
   const [days, setDays] = useState<GameDay[]>([]);
+  const [eventsOfMonth, setEventsOfMonth] = useState<AgendaEvent[]>([]);
 
   const incMonth = (inc: number) => {
     const month = current.getMonth() + inc;
@@ -29,6 +36,10 @@ export default function Agenda() {
         new Date(current.getFullYear(), current.getMonth(), current.getDate())
       )
     );
+
+    agendaService
+      .findEventsOfMonth(current.getFullYear(), current.getMonth() + 1)
+      .then((events) => setEventsOfMonth(events));
   }, [current]);
 
   return (
@@ -42,7 +53,11 @@ export default function Agenda() {
       </div>
       <div className="month-days">
         {days.map((day) => (
-          <GameDayCard key={day.id} day={day} />
+          <GameDayCard
+            key={day.id}
+            day={day}
+            events={getAllEventsOfDay(day.id, eventsOfMonth)}
+          />
         ))}
       </div>
     </div>

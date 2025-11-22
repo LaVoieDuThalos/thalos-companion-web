@@ -27,6 +27,10 @@ export class AgendaService {
       .then(this.sortEvents);
   }
 
+  findEventsOfMonth(year: number, month: number): Promise<AgendaEvent[]> {
+    return this.api.findAllEventsOfMonth(year, month).then(this.sortEvents);
+  }
+
   findEventsOfDayAndRoom(
     dayId: string,
     roomId: string

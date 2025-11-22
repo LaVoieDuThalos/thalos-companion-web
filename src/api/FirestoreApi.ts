@@ -1,5 +1,6 @@
 import {
   addDoc,
+  and,
   collection,
   deleteDoc,
   doc,
@@ -91,6 +92,20 @@ class FirestoreApi implements ApiService {
     const q = query(
       collection(FirebaseDb, Collections.EVENTS),
       where('dayId', '==', dayId)
+    );
+    return getDocs(q).then((results) => {
+      return results.docs.map((doc) => mapDtoToAgendaEvent(doc.id, doc.data()));
+    });
+  }
+
+  findAllEventsOfMonth(year: number, month: number): Promise<AgendaEvent[]> {
+    console.log('findAllEventsOfMonth()', month);
+    const q = query(
+      collection(FirebaseDb, Collections.EVENTS),
+      and(
+        where('dayId', '>=', `${year}-${month}-01`),
+        where('dayId', '<=', `${year}-${month}-31`)
+      )
     );
     return getDocs(q).then((results) => {
       return results.docs.map((doc) => mapDtoToAgendaEvent(doc.id, doc.data()));

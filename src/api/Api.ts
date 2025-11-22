@@ -19,6 +19,8 @@ export interface ApiService {
 
   findEventsByDayId: (dayId: string) => Promise<AgendaEvent[]>;
 
+  findAllEventsOfMonth: (year: number, month: number) => Promise<AgendaEvent[]>;
+
   findEventsByDayIdAndRoomId: (
     dayId: string,
     roomId: string
