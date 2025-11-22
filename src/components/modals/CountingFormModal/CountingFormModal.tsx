@@ -23,9 +23,9 @@ type Props = ModalPageProps & {
   onChange?: (counts: DayCounts) => void;
 };
 
-const selectDefaultTab = () => {
+const selectDefaultTab = (dayId: string) => {
   const now = new Date();
-  if (now.getHours() >= 20) {
+  if (now.getHours() >= 20 || new Date(dayId).getDay() == 5) {
     return 'night';
   } else {
     return 'afternoon';
@@ -37,13 +37,16 @@ export default function CountingFormModal(props: Props) {
     dayId: props.dayId,
   });
   const [loading, setLoading] = useState(false);
-  const [currentTab, setCurrentTab] = useState(selectDefaultTab());
+  const [currentTab, setCurrentTab] = useState(selectDefaultTab(props.dayId));
 
   useEffect(() => {
     countingService.getCounting(props.dayId).then((countings) => {
       setCounts(countings || { dayId: props.dayId });
     });
+    setCurrentTab(selectDefaultTab(props.dayId));
   }, [props.dayId]);
+
+  const isSaturday = new Date(props.dayId).getDay() === 6;
 
   const ACTIONS: ModalAction[] = [
     {
@@ -108,15 +111,17 @@ export default function CountingFormModal(props: Props) {
             <Nav
               fill
               variant="tabs"
-              defaultActiveKey={selectDefaultTab()}
-              onSelect={(e) => setCurrentTab(e || 'afternoon')}
+              defaultActiveKey={selectDefaultTab(props.dayId)}
+              onSelect={(e) => setCurrentTab(e || 'night')}
             >
-              <Nav.Item>
-                <Nav.Link eventKey="afternoon" title="Après-midi">
-                  <Icon icon="sunny" iconSize={30} />
-                  <span style={{ fontSize: 20 }}>Après-midi</span>
-                </Nav.Link>
-              </Nav.Item>
+              {isSaturday && (
+                <Nav.Item>
+                  <Nav.Link eventKey="afternoon" title="Après-midi">
+                    <Icon icon="sunny" iconSize={30} />
+                    <span style={{ fontSize: 20 }}>Après-midi</span>
+                  </Nav.Link>
+                </Nav.Item>
+              )}
               <Nav.Item>
                 <Nav.Link eventKey="night" title="Soirée">
                   <Icon icon="nightlight" iconSize={30} />
@@ -126,12 +131,13 @@ export default function CountingFormModal(props: Props) {
             </Nav>
           </div>
 
-          {!loading && currentTab === 'afternoon' ? (
+          {!loading && isSaturday && currentTab === 'afternoon' ? (
             <>
               {activities.map((act) => (
                 <CustomCard key={act.id} clickable={false}>
                   <NumberInput
                     label={act.name}
+                    min={0}
                     value={
                       counts.afternoon && counts.afternoon[act.id] !== undefined
                         ? counts.afternoon[act.id]
@@ -151,6 +157,7 @@ export default function CountingFormModal(props: Props) {
                 <CustomCard key={act.id} style={{}}>
                   <NumberInput
                     label={act.name}
+                    min={0}
                     value={
                       counts.night && counts.night[act.id] !== undefined
                         ? counts.night[act.id]
