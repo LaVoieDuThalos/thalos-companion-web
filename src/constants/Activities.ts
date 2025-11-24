@@ -98,6 +98,7 @@ export const EVENEMENT = {
 export const AUTRE_TYPE = {
   id: 'autre',
   name: 'Autre',
+  countable: true,
   style: { color: 'white', backgroundColor: Colors.gray },
 };
 

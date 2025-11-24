@@ -57,6 +57,10 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
     eventIsInTimeSlot(event, timeWindow.startTimestamp, timeWindow.endTimestamp)
   );
 
+  const displayMorning = eventsVisibles
+    .map((e) => parseInt(e.start))
+    .filter((start) => start < 14).length;
+
   const navigate = useNavigate();
 
   const hours = calendarService.hours(
@@ -142,7 +146,7 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
 
   useEffect(() => {
     updateDimensions();
-    changeTimeWindow(14, 19);
+    changeTimeWindow(19, 24);
 
     const handleResize = () => updateDimensions();
     window.addEventListener('resize', handleResize);
@@ -153,13 +157,15 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
     <div className="planning-container" ref={parentRef}>
       <div className="time-window-selector">
         <ButtonGroup>
-          <Button
-            variant="secondary"
-            className={timeWindow.hourStart === 9 ? 'selected' : ''}
-            onClick={() => changeTimeWindow(9, 14)}
-          >
-            Matin
-          </Button>
+          {displayMorning ? (
+            <Button
+              variant="secondary"
+              className={timeWindow.hourStart === 9 ? 'selected' : ''}
+              onClick={() => changeTimeWindow(9, 14)}
+            >
+              Matin
+            </Button>
+          ) : null}
           <Button
             variant="secondary"
             className={timeWindow.hourStart === 14 ? 'selected' : ''}
