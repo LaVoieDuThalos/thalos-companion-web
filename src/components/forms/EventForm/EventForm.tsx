@@ -47,6 +47,12 @@ type Props = CustomFormProps<FormData> & {
   availableTables: TablesAvailables;
 };
 
+const isUnusualSchedule = (dayId: string, hour: number) => {
+  const day = new Date(dayId).getDay();
+  const weekEnd = [5, 6];
+  return (weekEnd.includes(day) && hour < 20) || !weekEnd.includes(day);
+};
+
 export default function EventForm({
   disabled,
   state,
@@ -147,6 +153,24 @@ export default function EventForm({
         </Form.Select>
         {state?.submitted && hasError(errors, 'startHourIsEmpty') ? (
           <FormError error="L&lsquo;heure de début est obligatoire" />
+        ) : null}
+
+        {formData.start &&
+        isUnusualSchedule(formData.dayId, parseInt(formData.start)) ? (
+          <Alert variant="warning">
+            <Icon icon="warning" iconSize={22} />
+            Vous avez indiqué une horaire hors ouverture normale de la salle.
+            <p>
+              Renseignez-vous au préalable sur l'ouverture de la salle sous{' '}
+              <a
+                href="https://discord.com/channels/677657875736166410/761516258176401419"
+                target="_blank"
+              >
+                Discord
+              </a>
+              .
+            </p>
+          </Alert>
         ) : null}
       </Form.Group>
 
