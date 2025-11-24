@@ -8,6 +8,7 @@ import HomePage from './app/Home/Home';
 import KeysPage from './app/Keys/Keys';
 import './index.scss';
 
+import AboutPage from './app/AboutPage/AboutPage';
 import AgendaPage from './app/Agenda';
 import EventDetailsPage from './app/events/EventDetails';
 import GameDayPage from './app/GameDayPage/GameDayPage';
@@ -22,6 +23,10 @@ const router = createBrowserRouter(
         {
           path: '/',
           element: <HomePage />,
+        },
+        {
+          path: '/about',
+          element: <AboutPage />,
         },
         {
           path: '/agenda',

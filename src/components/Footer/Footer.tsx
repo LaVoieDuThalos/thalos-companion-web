@@ -40,6 +40,13 @@ export default function Footer() {
             onClick={() => navigate('/keys')}
           />
         ) : null}
+
+        <IconButton
+          icon="info"
+          label=""
+          variant="secondary"
+          onClick={() => navigate('/about')}
+        />
       </ButtonGroup>
     </div>
   );

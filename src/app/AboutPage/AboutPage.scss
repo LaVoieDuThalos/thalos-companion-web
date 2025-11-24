@@ -1,0 +1,30 @@
+@import '../../scss/variables.scss';
+
+h2 {
+  font-weight: bold;
+  color: $primary;
+  text-decoration: underline;
+}
+
+.objectives {
+  ul {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+}
+
+.links {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+
+  a,
+  a:active,
+  a:hover,
+  a:visited {
+    font-weight: bold;
+    text-decoration: none;
+  }
+}
