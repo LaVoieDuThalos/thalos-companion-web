@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Navbar } from 'react-bootstrap';
 import { matchPath, useLocation, useNavigate } from 'react-router';
 import { Colors } from '../../constants/Colors';
+import { Globals } from '../../constants/Globals';
 import { AppContext } from '../../contexts/AppContext';
 import { useUser } from '../../hooks/useUser';
 import type { User } from '../../model/User';
@@ -28,10 +29,10 @@ export default function Header() {
   return (
     <>
       <Navbar expand="lg" className="justify-content-between">
-        <Navbar.Brand href="/" style={{}}>
+        <Navbar.Brand href={Globals.BASE_URL + '/'} style={{}}>
           <img
             alt="Logo"
-            src={'/thalos-companion-web/icon100.png'}
+            src={Globals.BASE_URL + '/icon100.png'}
             width="40"
             height="40"
             className="d-inline-block align-top"

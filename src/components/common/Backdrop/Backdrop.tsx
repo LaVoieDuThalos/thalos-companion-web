@@ -1,3 +1,4 @@
+import { Globals } from '../../../constants/Globals';
 import ActivityIndicator from '../ActivityIndicator';
 import './Backdrop.scss';
 
@@ -8,7 +9,7 @@ export default function Backdrop() {
         <ActivityIndicator size={150} />
         <img
           alt="Logo"
-          src={'/thalos-companion-web/icon100.png'}
+          src={Globals.BASE_URL + '/icon100.png'}
           width="100"
           height="100"
           className="d-inline-block align-top"
