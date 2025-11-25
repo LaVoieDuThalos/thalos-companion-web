@@ -1,0 +1,3 @@
+4. Accueil
+
+4.1 Affichage contextualisé en fonction des préférences utilisateur

@@ -1,0 +1,7 @@
+2. Settings
+
+2.1 Saisie avec le nom manquant
+
+2.2 Saisie complète
+
+2.3 Saisie avec un nom bizarre (accents, espaces, etc..)

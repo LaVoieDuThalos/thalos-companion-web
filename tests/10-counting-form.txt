@@ -1,0 +1,8 @@
+
+10. Comptages
+
+10.1 Affichage du vendredi / samedi
+
+10.2 Sélection par défaut de l'onglet (pour le samedi)
+
+10.3 Saisie nominale

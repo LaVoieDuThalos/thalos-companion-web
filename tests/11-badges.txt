@@ -1,0 +1,7 @@
+11. Gestion des badges
+
+11.1 Affichage nominal de la page
+
+11.2 Page détails d'un badge 
+
+11.3 Donner un badge à ...

@@ -1,0 +1,15 @@
+7. Page journée Agenda
+
+7.1 Affichage de la page 
+
+7.2 Naviguer vers la journée suivante et précédente
+
+7.3 Saisie du comptage 
+
+7.4 Saisie de l'ouverture/fermeture
+
+7.5 Consulter l'occupation des salles
+
+7.6 Naviguer vers la page détails d'un event
+
+7.7 Affichage du programme

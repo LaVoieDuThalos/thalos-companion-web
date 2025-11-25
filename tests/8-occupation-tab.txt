@@ -1,0 +1,5 @@
+8. Occupation des salles
+
+8.1 Afficher les occupations
+
+8.2 Modifier la salle et créneau

@@ -1,0 +1,7 @@
+5. Page détails d'un évènement
+
+5.1 Modifier
+
+5.2 Supprimer
+
+5.3 Naviguer vers la page journée
