@@ -35,3 +35,26 @@ jobs:
                   name: build
                   path: ./dist
                   retention-days: 1
+    ftp-deploy:
+        name: 🎉 Publish release
+        runs-on: ubuntu-latest
+        steps:
+            - name: 🚚 Get latest code
+              uses: actions/checkout@v4
+            - name: Download a single artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: build
+                  path: dist
+            - name: 📂 Sync files
+              uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+              with:
+                  server: ${{ secrets.ftpServer }}
+                  username: ${{ secrets.ftpUsername }}
+                  password: ${{ secrets.ftpPassword }}
+                  protocol: ftps
+                  port: ${{ secrets.ftpPort }}
+                  local-dir: dist
+                  server-dir: /www/thalos-companion-web/
+                  dry-run: true
+                  dangerous-clean-slate: true
