@@ -8,6 +8,11 @@ export type LastModification = {
   user: Partial<User>;
 };
 
+export type EventSubscription = {
+  user: Partial<User>;
+  subscribedAt: string;
+};
+
 export interface AgendaEvent {
   id: string;
   title: string;
@@ -28,4 +33,7 @@ export interface AgendaEvent {
   lastModification?: LastModification;
   discordChannel?: string;
   img?: string;
+  withSubscriptions?: boolean;
+  maxSubscriptions?: number;
+  subscriptions?: EventSubscription[];
 }

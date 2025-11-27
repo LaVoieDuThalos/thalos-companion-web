@@ -389,6 +389,33 @@ export default function EventForm({
         </Form.Group>
       )}
 
+      {/* Inscriptions ------------------------------------------------------------- */}
+      <Form.Group className="mb-3" controlId="eventForm.InscriptionsInput">
+        <Form.Label>Sur inscription</Form.Label>
+        <Form.Select
+          size="lg"
+          disabled={disabled}
+          value={formData.withSubscriptions + ''}
+          onChange={(e) => updateForm('withSubscriptions', e)}
+        >
+          <option>-</option>
+          {['Avec', 'Sans'].map((option) => (
+            <option
+              key={option}
+              value={
+                (option === 'Avec'
+                  ? true
+                  : option === 'Sans'
+                    ? false
+                    : undefined) + ''
+              }
+            >
+              {option}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+
       {/* Description ------------------------------------------------------------- */}
       <Form.Group className="mb-3" controlId="eventForm.DescriptionInput">
         <Form.Label>Description (facultatif)</Form.Label>
