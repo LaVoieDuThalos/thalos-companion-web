@@ -4,7 +4,6 @@ import './App.scss';
 import Alerts from './components/common/Alerts';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
-import InstallAppPrompt from './components/InstallAppPrompt';
 import AlertContextProvider from './contexts/AlertsContext';
 import AppContextProvider from './contexts/AppContext';
 import { UserContextProvider } from './contexts/UserContext';
@@ -30,7 +29,6 @@ function App() {
       <AppContextProvider>
         <UserContextProvider>
           <AlertContextProvider>
-            <InstallAppPrompt />
             <div className="content">
               <Header />
 
