@@ -8,6 +8,18 @@ export type LastModification = {
   user: Partial<User>;
 };
 
+export type EventSubscriptionStatus = 'validated' | 'cancelled' | 'waiting';
+
+export type EventSubscription = {
+  id: string;
+  eventId: string;
+  user: Partial<User>;
+  subscribedAt: string;
+  status?: EventSubscriptionStatus;
+};
+
+export type EventSubscriptionModes = 'auto' | 'manual';
+
 export interface AgendaEvent {
   id: string;
   title: string;
@@ -28,4 +40,7 @@ export interface AgendaEvent {
   lastModification?: LastModification;
   discordChannel?: string;
   img?: string;
+  withSubscriptions?: boolean;
+  maxSubscriptions?: number;
+  subscriptionMode?: EventSubscriptionModes;
 }

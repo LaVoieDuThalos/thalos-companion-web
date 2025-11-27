@@ -10,6 +10,7 @@ import {
   type FormData,
 } from '../../modals/EventFormModal';
 
+import { EVENT_SUBSCRIPTION_MODES } from '../../../constants/EventSubscriptionModes';
 import { Globals } from '../../../constants/Globals';
 import { useUser } from '../../../hooks/useUser';
 import type { Room } from '../../../model/Room';
@@ -18,6 +19,7 @@ import { roomService } from '../../../services/RoomService';
 import { settingsService } from '../../../services/SettingsService';
 import FormError from '../../common/FormError/FormError';
 import Icon from '../../common/Icon';
+import NumberInput from '../../common/NumberInput/NumberInput';
 import RichEditor from '../../common/RichEditor/RichEditor';
 import RoomPriorities from '../../RoomPriorities/RoomPriorities';
 import './EventForm.scss';
@@ -67,12 +69,16 @@ export default function EventForm({
   const durations = Durations;
   const { user } = useUser();
 
-  const integerFields = ['durationInMinutes', 'tables'];
+  const integerFields = ['durationInMinutes', 'tables', 'maxSubscriptions'];
+  const booleanFields = ['withSubscriptions'];
 
   const updateForm = (field: string, event: Event) => {
     if (field === 'roomId') {
       // reset tables selection when room changes
       formData.tables = 0;
+    }
+    if (field === 'subscriptionMode') {
+      formData.subscriptionMode = event.target.value;
     }
 
     const newFormData = {
@@ -80,7 +86,9 @@ export default function EventForm({
       [field]:
         integerFields.indexOf(field) >= 0
           ? parseInt(event.target.value)
-          : event.target.value,
+          : booleanFields.indexOf(field) >= 0
+            ? event.target.value === 'true'
+            : event.target.value,
     };
     onChange(newFormData);
   };
@@ -388,6 +396,63 @@ export default function EventForm({
           ) : null}
         </Form.Group>
       )}
+
+      {/* Inscriptions ------------------------------------------------------------- */}
+      <Form.Group className="mb-3" controlId="eventForm.InscriptionsInput">
+        <Form.Label>Sur inscription</Form.Label>
+        <Form.Select
+          size="lg"
+          disabled={disabled}
+          value={formData.withSubscriptions + ''}
+          onChange={(e) => updateForm('withSubscriptions', e)}
+        >
+          {['Sans', 'Avec'].map((option) => (
+            <option key={option} value={`${option === 'Avec'}`}>
+              {option}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+
+      {/* Nbres de places max ------------------------------------------------------------- */}
+      {formData.withSubscriptions ? (
+        <Form.Group className="mb-3" controlId="eventForm.MaxInscriptionsInput">
+          <NumberInput
+            label="Nombre de places"
+            min={1}
+            value={formData.maxSubscriptions || 1}
+            onChange={(e) =>
+              updateForm('maxSubscriptions', {
+                target: {
+                  value: `${e}`,
+                },
+              })
+            }
+          />
+        </Form.Group>
+      ) : null}
+
+      {/* Mode d'inscription ------------------------------------------------------------- */}
+      {formData.withSubscriptions ? (
+        <Form.Group
+          className="mb-3"
+          controlId="eventForm.SubscriptionModeInput"
+        >
+          <Form.Label>Sélection des participants</Form.Label>
+          <Form.Select
+            size="lg"
+            disabled={disabled}
+            value={formData.subscriptionMode}
+            onChange={(e) => updateForm('subscriptionMode', e)}
+          >
+            {EVENT_SUBSCRIPTION_MODES.map((mode) => (
+              <option key={mode.id} value={mode.id}>
+                {mode.label}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+      ) : null}
 
       {/* Description ------------------------------------------------------------- */}
       <Form.Group className="mb-3" controlId="eventForm.DescriptionInput">

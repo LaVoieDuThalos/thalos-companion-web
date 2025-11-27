@@ -18,6 +18,7 @@ import { Image } from 'react-bootstrap';
 import { Globals } from '../../constants/Globals';
 import RichEditor from '../common/RichEditor/RichEditor';
 import type { StyleSheet } from '../common/Types';
+import EventSubscriptions from '../EventSubscriptions/EventSubscriptions';
 import './AgendaEventCard.scss';
 
 export type Options = {
@@ -25,7 +26,7 @@ export type Options = {
 };
 
 type Props = {
-  event: Partial<AgendaEvent>;
+  event: AgendaEvent;
   complete?: boolean;
   showButtons?: boolean;
   options?: Options;
@@ -186,6 +187,10 @@ export default function AgendaEventCard({
           </Label>
         </Row>
       ) : null}
+
+      {complete && event.withSubscriptions && (
+        <EventSubscriptions event={event} />
+      )}
 
       {showButtons ? (
         <div className="buttons">
