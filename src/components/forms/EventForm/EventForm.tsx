@@ -1,4 +1,4 @@
-import { Alert, Form } from 'react-bootstrap';
+import { Alert, Form, Image } from 'react-bootstrap';
 import { ACTIVITIES, EVENEMENT, JDR } from '../../../constants/Activities';
 import { Durations } from '../../../constants/Durations';
 import { ROOMS, SALLE_DU_LAC, TOUTE_LA_SALLE } from '../../../constants/Rooms';
@@ -10,6 +10,7 @@ import {
   type FormData,
 } from '../../modals/EventFormModal';
 
+import { Globals } from '../../../constants/Globals';
 import { useUser } from '../../../hooks/useUser';
 import type { Room } from '../../../model/Room';
 import type { TablesAvailables } from '../../../services/BookingService';
@@ -346,9 +347,51 @@ export default function EventForm({
         ) : null}
       </Form.Group>
 
+      {/* Salon Discord ------------------------------------------------------------- */}
+      <Form.Group className="mb-3" controlId="eventForm.DiscordChannelInput">
+        <Form.Label>
+          <Image
+            src={Globals.BASE_URL + '/icons/discord.png'}
+            width={22}
+            height={22}
+            roundedCircle
+          />
+          URL du salon Discord dédié (facultatif)
+        </Form.Label>
+        <Form.Control
+          type="text"
+          placeholder=""
+          className="discord-channel"
+          disabled={disabled}
+          value={formData.discordChannel}
+          onChange={(e) => updateForm('discordChannel', e)}
+        />
+        {state?.submitted && hasError(errors, 'discordChannelIsInvalid') ? (
+          <FormError error="L'URL est invalide. Elle doit être sous la forme de 'https://discord.com/channels/xxxxx" />
+        ) : null}
+      </Form.Group>
+
+      {/* Affiche ------------------------------------------------------------- */}
+      {formData.activityId && formData.activityId === EVENEMENT.id && (
+        <Form.Group className="mb-3" controlId="eventForm.ImgInput">
+          <Form.Label>URL de l'illustration / Affiche (facultatif)</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder=""
+            className="img"
+            disabled={disabled}
+            value={formData.img}
+            onChange={(e) => updateForm('img', e)}
+          />
+          {state?.submitted && hasError(errors, 'imgIsInvalid') ? (
+            <FormError error="L'URL est invalide. Elle doit être sous la forme de 'https://**" />
+          ) : null}
+        </Form.Group>
+      )}
+
       {/* Description ------------------------------------------------------------- */}
       <Form.Group className="mb-3" controlId="eventForm.DescriptionInput">
-        <Form.Label>Description</Form.Label>
+        <Form.Label>Description (facultatif)</Form.Label>
         <RichEditor
           value={formData.description}
           onChange={(e) => updateForm('description', e)}

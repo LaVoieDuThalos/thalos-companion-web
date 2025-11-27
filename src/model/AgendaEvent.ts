@@ -26,4 +26,6 @@ export interface AgendaEvent {
   description?: string;
   creator?: Partial<User>;
   lastModification?: LastModification;
+  discordChannel?: string;
+  img?: string;
 }

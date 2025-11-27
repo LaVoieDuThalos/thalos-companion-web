@@ -38,6 +38,8 @@ export const mapAgendaEventToDto = (
     tables: json.tables,
     startTime: json.startTime,
     endTime: json.endTime,
+    discordChannel: json.discordChannel,
+    img: json.img,
   };
 };
 

@@ -24,7 +24,6 @@
   .description {
     background-color: whitesmoke;
     text-align: left;
-    min-height: 300px;
     padding: 10px;
     border-radius: 10px;
   }
@@ -38,7 +37,7 @@
 
   .buttons {
     display: flex;
-    gap: 5;
+    gap: 5px;
     flex-direction: row;
     justify-content: flex-end;
   }

@@ -14,6 +14,8 @@ import Row from '../common/Row';
 import Tag from '../common/Tag/Tag';
 import View from '../common/View';
 
+import { Image } from 'react-bootstrap';
+import { Globals } from '../../constants/Globals';
 import RichEditor from '../common/RichEditor/RichEditor';
 import type { StyleSheet } from '../common/Types';
 import './AgendaEventCard.scss';
@@ -125,6 +127,13 @@ export default function AgendaEventCard({
         <span>?</span>
       )}
 
+      {/* Illustration / Affiche */}
+      {complete && event.img ? (
+        <div className="event-img">
+          <Image src={event.img} fluid />
+        </div>
+      ) : null}
+
       {/* Creator */}
       {complete ? (
         <View>
@@ -134,7 +143,8 @@ export default function AgendaEventCard({
               <span className="creator-name">{event.creator.name}</span>
             </div>
           ) : null}
-          {event.lastModification ? (
+          {event.lastModification &&
+          event.creator?.id !== event.lastModification.user.id ? (
             <div className="last-modification">
               <span>Dernière modification par</span>
               <span className="last-modifier-name">
@@ -179,6 +189,15 @@ export default function AgendaEventCard({
 
       {showButtons ? (
         <div className="buttons">
+          {event.discordChannel && (
+            <a href={event.discordChannel} target="_blank">
+              <Image
+                src={Globals.BASE_URL + '/icons/discord.png'}
+                width={50}
+                height={50}
+              />
+            </a>
+          )}
           <IconButton
             icon="edit"
             color={Colors.white}

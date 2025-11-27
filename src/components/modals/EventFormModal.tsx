@@ -51,6 +51,8 @@ export type FormData = {
   durationInMinutes: number;
   description?: string;
   creatorId?: string;
+  discordChannel?: string;
+  img?: string;
 };
 
 type Props = ModalPageProps & {
@@ -124,6 +126,11 @@ function validateForm(
       formData.activityId === JDR.id &&
       !Validators.allowedCharacters(formData.title),
     tablesIsEmpty: isZero(formData.tables),
+    discordChannelIsInvalid: Validators.notStartsWith(
+      formData.discordChannel,
+      'https://discord.com/channels'
+    ),
+    imgIsInvalid: Validators.notStartsWith(formData.img, 'https://'),
   };
 }
 
@@ -150,6 +157,8 @@ export default function EventFormModal({
       gameMaster: event ? event.gameMaster : '',
       tables: event && event.tables ? event.tables : TOUTE_LA_SALLE,
       description: event ? event.description : '',
+      discordChannel: event ? event.discordChannel : '',
+      img: event ? event.img : '',
       ...event,
     }) satisfies FormData;
 

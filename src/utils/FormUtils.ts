@@ -48,4 +48,11 @@ export const Validators = {
     yesterday.setDate(yesterday.getDate() - 1);
     return !!date && date.getTime() < yesterday.getTime();
   },
+
+  notStartsWith: (testValue: string | undefined, value: string) => {
+    if (!testValue) {
+      return false;
+    }
+    return !testValue.startsWith(value);
+  },
 };
