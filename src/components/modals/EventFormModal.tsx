@@ -157,8 +157,8 @@ export default function EventFormModal({
       gameMaster: event ? event.gameMaster : '',
       tables: event && event.tables ? event.tables : TOUTE_LA_SALLE,
       description: event ? event.description : '',
-      discordChannel: event ? event.discordChannel : '',
-      img: event ? event.img : '',
+      discordChannel: event && event.discordChannel ? event.discordChannel : '',
+      img: event && event.img ? event.img : '',
       ...event,
     }) satisfies FormData;
 
