@@ -12,7 +12,7 @@ import {
   setDoc,
   where,
 } from '@firebase/firestore';
-import type { AgendaEvent } from '../model/AgendaEvent';
+import type { AgendaEvent, EventSubscription } from '../model/AgendaEvent';
 import type { DayCounts } from '../model/Counting';
 import type { OpenCloseRoom } from '../model/Room';
 import type {
@@ -38,6 +38,7 @@ const Collections = {
   KEY_HISTORY: 'key-history',
   COUNTINGS: 'countings',
   DAYS: 'days',
+  SUBSCRIPTIONS: 'event-subscriptions',
 };
 
 class FirestoreApi implements ApiService {
@@ -266,6 +267,53 @@ class FirestoreApi implements ApiService {
   saveOpenCloseConfiguration(config: OpenCloseRoom): Promise<void> {
     console.log('saveOpenCloseConfiguration()');
     return setDoc(doc(FirebaseDb, Collections.DAYS, config.dayId), config);
+  }
+
+  findAllSubscriptionsOfEvent(eventId: string): Promise<EventSubscription[]> {
+    console.log('findAllSubscriptionsOfEvent', eventId);
+    const q = query(
+      collection(FirebaseDb, Collections.SUBSCRIPTIONS),
+      where('eventId', '==', eventId),
+      orderBy('subscribedAt', 'asc')
+    );
+    return getDocs(q).then((results) => {
+      return results.docs.map((doc) => doc.data() as EventSubscription);
+    });
+  }
+
+  subscribeUserToEvent(sub: EventSubscription): Promise<void> {
+    console.log('subscribeUserToEvent', sub);
+    return setDoc(doc(FirebaseDb, Collections.SUBSCRIPTIONS, sub.id), sub);
+  }
+
+  unsubscribeUserToEvent(subId: string): Promise<void> {
+    console.log('subscribeUserToEvent', subId);
+    return deleteDoc(doc(FirebaseDb, Collections.SUBSCRIPTIONS, subId));
+  }
+
+  unsubscribeAll(eventId: string): Promise<void> {
+    console.log('unsubscribeAll', eventId);
+
+    const q = query(
+      collection(FirebaseDb, Collections.SUBSCRIPTIONS),
+      where('eventId', '==', eventId)
+    );
+    return getDocs(q).then((snap) =>
+      snap.forEach((sub) =>
+        deleteDoc(doc(FirebaseDb, Collections.SUBSCRIPTIONS, sub.data()['id']))
+      )
+    );
+  }
+
+  updateSubscriptionStatus(
+    sub: EventSubscription,
+    status: string
+  ): Promise<void> {
+    console.log('updateSubscriptionStatus', sub, status);
+    return setDoc(doc(FirebaseDb, Collections.SUBSCRIPTIONS, sub.id), {
+      ...sub,
+      status,
+    });
   }
 }
 

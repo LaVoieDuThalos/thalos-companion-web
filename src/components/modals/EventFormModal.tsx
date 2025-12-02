@@ -4,10 +4,15 @@ import { JDR } from '../../constants/Activities';
 import { Colors } from '../../constants/Colors';
 import { JUSQUA_LA_FERMETURE } from '../../constants/Durations';
 import type { EventCreationMode } from '../../constants/EventCreationWizard';
+import { MODE_AUTO_BY_REGISTRATION_DATE } from '../../constants/EventSubscriptionModes';
 import { TOUTE_LA_SALLE } from '../../constants/Rooms';
 import { useAlert } from '../../hooks/useAlert';
 import { useUser } from '../../hooks/useUser';
-import type { AgendaEvent, LastModification } from '../../model/AgendaEvent';
+import type {
+  AgendaEvent,
+  EventSubscription,
+  LastModification,
+} from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
 import {
   bookingService,
@@ -53,6 +58,10 @@ export type FormData = {
   creatorId?: string;
   discordChannel?: string;
   img?: string;
+  withSubscriptions?: boolean;
+  maxSubscriptions?: number;
+  subscriptions?: EventSubscription[];
+  subscriptionMode?: string;
 };
 
 type Props = ModalPageProps & {
@@ -157,8 +166,8 @@ export default function EventFormModal({
       gameMaster: event ? event.gameMaster : '',
       tables: event && event.tables ? event.tables : TOUTE_LA_SALLE,
       description: event ? event.description : '',
-      discordChannel: event && event.discordChannel ? event.discordChannel : '',
-      img: event && event.img ? event.img : '',
+      discordChannel: event ? event.discordChannel : '',
+      img: event ? event.img : '',
       ...event,
     }) satisfies FormData;
 
@@ -188,6 +197,17 @@ export default function EventFormModal({
     agendaService
       .saveEvent({
         ...formData,
+        withSubscriptions: formData.withSubscriptions !== undefined,
+        subscriptionMode:
+          formData.withSubscriptions !== undefined
+            ? formData.subscriptionMode
+              ? formData.subscriptionMode
+              : MODE_AUTO_BY_REGISTRATION_DATE.id
+            : '',
+        maxSubscriptions:
+          formData.withSubscriptions !== undefined
+            ? formData.maxSubscriptions
+            : 1,
         creator:
           user != null && event?.id == null
             ? {

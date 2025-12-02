@@ -1,4 +1,8 @@
 import { ACTIVITIES } from '../constants/Activities';
+import {
+  EVENT_SUBSCRIPTION_MODES,
+  type EventSubscriptionMode,
+} from '../constants/EventSubscriptionModes';
 import { DaysOfWeek, Months } from '../constants/Months';
 import { ROOMS } from '../constants/Rooms';
 import type { Activity } from '../model/Activity';
@@ -40,6 +44,12 @@ export function fromGameDayId(id: string | undefined): GameDay | null {
     id,
     date,
   } as GameDay;
+}
+
+export function fromSubscriptionModeId(
+  modeId: string
+): EventSubscriptionMode | undefined {
+  return EVENT_SUBSCRIPTION_MODES.find((m) => m.id === modeId);
 }
 
 export function isPassed(day: string): boolean {

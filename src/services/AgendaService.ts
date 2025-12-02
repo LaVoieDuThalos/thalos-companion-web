@@ -1,6 +1,7 @@
 import { API, type ApiService } from '../api/Api';
 import type { AgendaEvent } from '../model/AgendaEvent';
 import { fromGameDayId, getEndTime, getStartTime } from '../utils/Utils';
+import { subscriptionService } from './SubscriptionService';
 
 export class AgendaService {
   private api: ApiService;
@@ -62,7 +63,9 @@ export class AgendaService {
   }
 
   deleteEvent(eventId: string): Promise<void> {
-    return this.api.deleteEvent(eventId);
+    return this.api
+      .deleteEvent(eventId)
+      .then(() => subscriptionService.unsubscribeAll(eventId));
   }
 }
 

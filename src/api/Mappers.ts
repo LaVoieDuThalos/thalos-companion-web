@@ -40,6 +40,9 @@ export const mapAgendaEventToDto = (
     endTime: json.endTime,
     discordChannel: json.discordChannel,
     img: json.img,
+    withSubscriptions: json.withSubscriptions,
+    maxSubscriptions: json.maxSubscriptions,
+    subscriptionMode: json.subscriptionMode,
   };
 };
 

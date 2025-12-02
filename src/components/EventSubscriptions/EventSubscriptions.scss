@@ -1,0 +1,35 @@
+@import '../../scss/variables.scss';
+
+.subscriptions-title {
+  font-size: larger;
+}
+
+.subscriptions {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-content: center;
+  justify-content: center;
+  .subscription {
+    width: 100%;
+
+    .subscription-details {
+      display: flex;
+      justify-content: space-between;
+      .user {
+        .name {
+        }
+      }
+
+      .subscribed-at {
+        color: gray;
+        align-self: center;
+      }
+    }
+  }
+
+  .empty-seat {
+    color: $secondary;
+  }
+}

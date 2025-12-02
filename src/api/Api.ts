@@ -1,4 +1,4 @@
-import type { AgendaEvent } from '../model/AgendaEvent';
+import type { AgendaEvent, EventSubscription } from '../model/AgendaEvent';
 import type { DayCounts } from '../model/Counting';
 import type { OpenCloseRoom } from '../model/Room';
 import type {
@@ -55,6 +55,21 @@ export interface ApiService {
   findOpenCloseConfiguration: (dayId: string) => Promise<OpenCloseRoom | null>;
 
   saveOpenCloseConfiguration: (config: OpenCloseRoom) => Promise<void>;
+
+  findAllSubscriptionsOfEvent: (
+    eventId: string
+  ) => Promise<EventSubscription[]>;
+
+  subscribeUserToEvent: (sub: EventSubscription) => Promise<void>;
+
+  unsubscribeUserToEvent: (subId: string) => Promise<void>;
+
+  unsubscribeAll: (eventId: string) => Promise<void>;
+
+  updateSubscriptionStatus: (
+    sub: EventSubscription,
+    status: string
+  ) => Promise<void>;
 }
 
 const apiMode = import.meta.env.VITE_API || 'firebase';

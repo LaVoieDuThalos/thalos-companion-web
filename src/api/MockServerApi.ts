@@ -2,7 +2,7 @@
 import { ACTIVITIES } from '../constants/Activities';
 import { ROOMS } from '../constants/Rooms';
 import type { Activity } from '../model/Activity';
-import type { AgendaEvent } from '../model/AgendaEvent';
+import type { AgendaEvent, EventSubscription } from '../model/AgendaEvent';
 import type { DayCounts } from '../model/Counting';
 import type { OpenCloseRoom, Room } from '../model/Room';
 import type {
@@ -218,6 +218,33 @@ class MockServerApi implements ApiService {
 
   saveOpenCloseConfiguration(config: OpenCloseRoom): Promise<void> {
     console.log('saveOpenCloseConfiguration', config);
+    return Promise.resolve();
+  }
+
+  findAllSubscriptionsOfEvent(eventId: string): Promise<EventSubscription[]> {
+    console.log('findAllSubscriptionsOfEvent', eventId);
+    return Promise.resolve([]);
+  }
+  subscribeUserToEvent(sub: EventSubscription): Promise<void> {
+    console.log('subscribeUserToEvent', sub);
+    return Promise.resolve();
+  }
+
+  unsubscribeUserToEvent(subId: string): Promise<void> {
+    console.log('subscribeUserToEvent', subId);
+    return Promise.resolve();
+  }
+
+  unsubscribeAll(eventId: string): Promise<void> {
+    console.log('unsubscribeAll', eventId);
+    return Promise.resolve();
+  }
+
+  updateSubscriptionStatus(
+    sub: EventSubscription,
+    status: string
+  ): Promise<void> {
+    console.log('updateSubscriptionStatus', sub, status);
     return Promise.resolve();
   }
 }
