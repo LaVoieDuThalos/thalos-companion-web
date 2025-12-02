@@ -2,6 +2,10 @@ import { calendarService } from '../services/CalendarService';
 import { roomService } from '../services/RoomService';
 import { AOS, AUBERGE_ESPAGNOLE, JDR, WARHAMMER_40K } from './Activities';
 import { JUSQUA_LA_FERMETURE } from './Durations';
+import {
+  MODE_AUTO_BY_REGISTRATION_DATE,
+  MODE_MANUAL,
+} from './EventSubscriptionModes';
 import { TOUTE_LA_SALLE } from './Rooms';
 
 type InitFormData = { [key: string]: unknown };
@@ -28,12 +32,16 @@ export const CREATION_MODES: EventCreationMode[] = [
         day
       );
       return {
+        title: 'Rencontres Warhammer 40k',
         activityId: activityId,
         dayId: day.id,
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
-        tables: 2,
+        tables: 8,
+        withSubscriptions: true,
+        maxSubscriptions: 4,
+        subscriptionMode: MODE_MANUAL.id,
       };
     },
   },
@@ -50,12 +58,16 @@ export const CREATION_MODES: EventCreationMode[] = [
         day
       );
       return {
+        title: 'Rencontres Warhammer 40k',
         activityId: activityId,
         dayId: day.id,
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
-        tables: 2,
+        tables: 8,
+        withSubscriptions: true,
+        maxSubscriptions: 4,
+        subscriptionMode: MODE_MANUAL.id,
       };
     },
   },
@@ -77,6 +89,8 @@ export const CREATION_MODES: EventCreationMode[] = [
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
         tables: 2,
+        withSubscriptions: true,
+        subscriptionMode: MODE_MANUAL.id,
       };
     },
   },
@@ -98,6 +112,8 @@ export const CREATION_MODES: EventCreationMode[] = [
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
         tables: 2,
+        withSubscriptions: true,
+        subscriptionMode: MODE_MANUAL.id,
       };
     },
   },
@@ -118,12 +134,15 @@ export const CREATION_MODES: EventCreationMode[] = [
   },
   {
     id: 'bigJdr',
-    label: 'Grand jeu de rôle (>= 6 joueurs)',
+    label: 'Grand jeu de rôle (Sur inscription)',
     color: JDR.style.color,
     backgroundColor: JDR.style.backgroundColor,
     formDataFn: () => {
       return {
         activityId: 'jdr',
+        withSubscriptions: true,
+        maxSubscriptions: 4,
+        subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
   },

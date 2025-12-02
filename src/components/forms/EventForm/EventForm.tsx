@@ -397,62 +397,67 @@ export default function EventForm({
         </Form.Group>
       )}
 
-      {/* Inscriptions ------------------------------------------------------------- */}
-      <Form.Group className="mb-3" controlId="eventForm.InscriptionsInput">
-        <Form.Label>Sur inscription</Form.Label>
-        <Form.Select
-          size="lg"
-          disabled={disabled}
-          value={formData.withSubscriptions + ''}
-          onChange={(e) => updateForm('withSubscriptions', e)}
-        >
-          {['Sans', 'Avec'].map((option) => (
-            <option key={option} value={`${option === 'Avec'}`}>
-              {option}
-            </option>
-          ))}
-        </Form.Select>
-      </Form.Group>
-
-      {/* Nbres de places max ------------------------------------------------------------- */}
-      {formData.withSubscriptions ? (
-        <Form.Group className="mb-3" controlId="eventForm.MaxInscriptionsInput">
-          <NumberInput
-            label="Nombre de places"
-            min={1}
-            value={formData.maxSubscriptions || 1}
-            onChange={(e) =>
-              updateForm('maxSubscriptions', {
-                target: {
-                  value: `${e}`,
-                },
-              })
-            }
-          />
-        </Form.Group>
-      ) : null}
-
-      {/* Mode d'inscription ------------------------------------------------------------- */}
-      {formData.withSubscriptions ? (
-        <Form.Group
-          className="mb-3"
-          controlId="eventForm.SubscriptionModeInput"
-        >
-          <Form.Label>Sélection des participants</Form.Label>
+      <div className="inscriptions-section">
+        {/* Inscriptions ------------------------------------------------------------- */}
+        <Form.Group className="mb-3" controlId="eventForm.InscriptionsInput">
+          <Form.Label>Sur inscription</Form.Label>
           <Form.Select
             size="lg"
             disabled={disabled}
-            value={formData.subscriptionMode}
-            onChange={(e) => updateForm('subscriptionMode', e)}
+            value={formData.withSubscriptions + ''}
+            onChange={(e) => updateForm('withSubscriptions', e)}
           >
-            {EVENT_SUBSCRIPTION_MODES.map((mode) => (
-              <option key={mode.id} value={mode.id}>
-                {mode.label}
+            {['Sans', 'Avec'].map((option) => (
+              <option key={option} value={`${option === 'Avec'}`}>
+                {option}
               </option>
             ))}
           </Form.Select>
         </Form.Group>
-      ) : null}
+
+        {/* Nbres de places max ------------------------------------------------------------- */}
+        {formData.withSubscriptions ? (
+          <Form.Group
+            className="mb-3"
+            controlId="eventForm.MaxInscriptionsInput"
+          >
+            <NumberInput
+              label="Nombre de places"
+              min={1}
+              value={formData.maxSubscriptions || 1}
+              onChange={(e) =>
+                updateForm('maxSubscriptions', {
+                  target: {
+                    value: `${e}`,
+                  },
+                })
+              }
+            />
+          </Form.Group>
+        ) : null}
+
+        {/* Mode d'inscription ------------------------------------------------------------- */}
+        {formData.withSubscriptions ? (
+          <Form.Group
+            className="mb-3"
+            controlId="eventForm.SubscriptionModeInput"
+          >
+            <Form.Label>Sélection des participants</Form.Label>
+            <Form.Select
+              size="lg"
+              disabled={disabled}
+              value={formData.subscriptionMode}
+              onChange={(e) => updateForm('subscriptionMode', e)}
+            >
+              {EVENT_SUBSCRIPTION_MODES.map((mode) => (
+                <option key={mode.id} value={mode.id}>
+                  {mode.label}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        ) : null}
+      </div>
 
       {/* Description ------------------------------------------------------------- */}
       <Form.Group className="mb-3" controlId="eventForm.DescriptionInput">

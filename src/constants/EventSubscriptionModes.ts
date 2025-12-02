@@ -5,7 +5,7 @@ export type EventSubscriptionMode = {
 
 export const MODE_AUTO_BY_REGISTRATION_DATE: EventSubscriptionMode = {
   id: 'auto',
-  label: "Sélection basée sur la date d'inscription",
+  label: "Sélection automatique basée sur la date d'inscription",
 };
 
 export const MODE_MANUAL: EventSubscriptionMode = {
