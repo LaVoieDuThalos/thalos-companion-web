@@ -20,8 +20,17 @@ class KeyService {
     return this.api.findKeyById(keyId);
   }
 
-  updateKey(key: RoomKey): Promise<RoomKey> {
-    return this.api.updateKey(key);
+  async updateKey(
+    key: RoomKey
+  ): Promise<{ key: RoomKey; history: RoomKeyHistory }> {
+    const newKey = await this.api.updateKey(key);
+    const history = await this.addToHistory({
+      date: new Date().toISOString(),
+      keyId: key?.id,
+      from: key?.owner,
+      to: newKey.owner,
+    } as RoomKeyHistoryEntry);
+    return { key: newKey, history };
   }
 
   findHistory(keyId: string | undefined): Promise<RoomKeyHistory> {

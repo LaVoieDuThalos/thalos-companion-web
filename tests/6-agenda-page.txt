@@ -1,4 +1,4 @@
-6. Agenda
+6. AgendaPage
 
 6.1 Affichage par mois et naviguer vers le mois suivant et précédent
 

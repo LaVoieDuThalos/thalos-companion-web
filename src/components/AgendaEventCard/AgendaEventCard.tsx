@@ -18,8 +18,8 @@ import { Image } from 'react-bootstrap';
 import { Globals } from '../../constants/Globals';
 import RichEditor from '../common/RichEditor/RichEditor';
 import type { StyleSheet } from '../common/Types';
-import EventSubscriptions from '../EventSubscriptions/EventSubscriptions';
 import './AgendaEventCard.scss';
+import EventSubscriptions from './components/EventSubscriptions/EventSubscriptions.tsx';
 
 export type Options = {
   hideDate?: boolean;

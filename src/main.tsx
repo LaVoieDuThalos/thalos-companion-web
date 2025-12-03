@@ -9,10 +9,10 @@ import KeysPage from './app/Keys/Keys';
 import './index.scss';
 
 import AboutPage from './app/AboutPage/AboutPage';
-import AgendaPage from './app/Agenda';
 import EventDetailsPage from './app/events/EventDetails';
 import GameDayPage from './app/GameDayPage/GameDayPage';
 import KeyPage from './app/KeyPage/KeyPage';
+import AgendaPage from './app/AgendaPage/AgendaPage.tsx';
 
 const router = createBrowserRouter(
   [

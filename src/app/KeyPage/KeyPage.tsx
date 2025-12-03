@@ -5,7 +5,6 @@ import CustomCard from '../../components/common/CustomCard/CustomCard';
 import {
   type RoomKey,
   type RoomKeyHistory,
-  type RoomKeyHistoryEntry,
   type RoomKeyOwner,
 } from '../../model/RoomKey';
 import { keyService } from '../../services/KeyService';
@@ -14,6 +13,7 @@ import Icon from '../../components/common/Icon';
 import UserSelectModal from '../../components/modals/UserSelectModal/UserSelectModal';
 import type { User } from '../../model/User';
 import './KeyPage.scss';
+import KeyHistoryCard from './components/KeyHistoryCard/KeyHistoryCard.tsx';
 
 export default function KeyPage() {
   const { keyId } = useParams<{ keyId: string }>();
@@ -35,11 +35,6 @@ export default function KeyPage() {
       });
   }, [keyId]);
 
-  const formatDate = (isoDate: string) => {
-    const d = new Date(isoDate);
-    return d.toLocaleDateString() + ' - ' + d.getHours() + ':' + d.getMinutes();
-  };
-
   const updateOwner = (user: User) => {
     keyService
       .updateKey({
@@ -49,16 +44,6 @@ export default function KeyPage() {
           name: user.name,
         } as RoomKeyOwner,
       } as RoomKey)
-      .then((newKey) => {
-        return keyService
-          .addToHistory({
-            date: new Date().toISOString(),
-            keyId: key?.id,
-            from: key?.owner,
-            to: newKey.owner,
-          } as RoomKeyHistoryEntry)
-          .then((history) => ({ key: newKey, history }));
-      })
       .then((newKeyAndHistory) => {
         setKey(newKeyAndHistory.key);
         setKeyHistory(newKeyAndHistory.history);
@@ -86,21 +71,8 @@ export default function KeyPage() {
           </div>
         </div>
       </CustomCard>
-      <CustomCard>
-        <div className="history">
-          <h4>Historique</h4>
-          {keyHistory.map((entry) => (
-            <div key={entry.date} className="entry">
-              <span className="date">{formatDate(entry.date)}</span>
-              <span className="from-name">{entry.from.name}</span>
-              <span className="separator">
-                <Icon icon="double_arrow" iconSize={16} />
-              </span>
-              <span className="to-name">{entry.to.name}</span>
-            </div>
-          ))}
-        </div>
-      </CustomCard>
+
+      <KeyHistoryCard keyHistory={keyHistory} />
     </div>
   );
 }

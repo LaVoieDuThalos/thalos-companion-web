@@ -1,14 +1,13 @@
-import { type CardProps } from 'react-bootstrap';
-import type { AgendaEvent } from '../../model/AgendaEvent';
-import type { GameDay } from '../../model/GameDay';
-import { printGameDay } from '../../utils/Utils';
-import CustomCard from '../common/CustomCard/CustomCard';
-import Icon from '../common/Icon';
-import Row from '../common/Row';
+import { type CardProps, Row } from 'react-bootstrap';
 
 import { useNavigate } from 'react-router';
-import RoomPriorities from '../RoomPriorities/RoomPriorities';
 import './GameDayCard.scss';
+import type { GameDay } from '../../../../model/GameDay.ts';
+import type { AgendaEvent } from '../../../../model/AgendaEvent.ts';
+import CustomCard from '../../../../components/common/CustomCard/CustomCard.tsx';
+import Icon from '../../../../components/common/Icon.tsx';
+import { printGameDay } from '../../../../utils/Utils.ts';
+import RoomPriorities from '../../../../components/RoomPriorities/RoomPriorities.tsx';
 
 type Props = CardProps & {
   day: GameDay;

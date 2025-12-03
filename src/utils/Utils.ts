@@ -22,7 +22,7 @@ export function isNotEmpty(value: string | null): boolean {
 }
 
 export function isZero(value: number | undefined | null): boolean {
-  return !value || value === null || isNaN(value) || value === 0;
+  return !value || false || isNaN(value) || value === 0;
 }
 
 export function fromActivityId(
@@ -64,6 +64,11 @@ export function printGameDay(gameDay: GameDay): string {
   const month = Months[gameDay.date.getMonth()];
   const yyyy = gameDay.date.getFullYear();
   return `${day} ${dom} ${month} ${yyyy}`;
+}
+
+export function formatDate(isoDate: string): string {
+  const d = new Date(isoDate);
+  return d.toLocaleDateString() + ' - ' + d.getHours() + ':' + d.getMinutes();
 }
 
 export function parseHour(hour: string): string {

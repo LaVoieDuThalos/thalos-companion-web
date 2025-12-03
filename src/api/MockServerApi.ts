@@ -38,8 +38,8 @@ export const userMapper = (json: any): User => {
 };
 
 class MockServerApi implements ApiService {
-  private activities: Activity[];
-  private rooms: Room[];
+  private readonly activities: Activity[];
+  private readonly rooms: Room[];
 
   constructor(activities: Activity[], rooms: Room[]) {
     this.activities = activities;

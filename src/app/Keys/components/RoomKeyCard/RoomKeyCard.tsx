@@ -1,9 +1,8 @@
-import type { RoomKey } from '../../model/RoomKey';
-import CustomCard from '../common/CustomCard/CustomCard';
-import Icon from '../common/Icon';
-
 import { useNavigate } from 'react-router';
 import './RoomKeyCard.scss';
+import type { RoomKey } from '../../../../model/RoomKey.ts';
+import CustomCard from '../../../../components/common/CustomCard/CustomCard.tsx';
+import Icon from '../../../../components/common/Icon.tsx';
 
 type Props = {
   roomKey: RoomKey;

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import ActivityIndicator from '../../components/common/ActivityIndicator';
 import View from '../../components/common/View';
-import RoomKeyCard from '../../components/RoomKeyCard/RoomKeyCard';
 import { Colors } from '../../constants/Colors';
 import type { RoomKey } from '../../model/RoomKey';
 import { keyService } from '../../services/KeyService';
 import './Keys.scss';
+import RoomKeyCard from './components/RoomKeyCard/RoomKeyCard.tsx';
 
 export default function KeysPage() {
   const [keys, setKeys] = useState<RoomKey[]>([]);
@@ -16,15 +16,15 @@ export default function KeysPage() {
     keyService
       .findAllKeys()
       .then((keys) => {
-        setKeys(keys.sort((a, b) => a.name.localeCompare(b.name)));
+        setKeys(keys.sort(sortByName));
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, []);
 
   return (
-    <View style={{}}>
-      <span style={{}}>Gestion des badges de la salle</span>
+    <div>
+      <span>Gestion des badges de la salle</span>
 
       <div>
         {loading ? (
@@ -40,6 +40,8 @@ export default function KeysPage() {
           </div>
         ) : null}
       </div>
-    </View>
+    </div>
   );
 }
+
+const sortByName = (a: RoomKey, b: RoomKey) => a.name.localeCompare(b.name);

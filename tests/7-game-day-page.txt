@@ -1,4 +1,4 @@
-7. Page journée Agenda
+7. Page journée AgendaPage
 
 7.1 Affichage de la page 
 

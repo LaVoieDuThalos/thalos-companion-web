@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import IconButton from '../common/IconButton/IconButton';
 
 import { Months } from '../../constants/Months';
 import { type AgendaEvent } from '../../model/AgendaEvent';
@@ -7,24 +6,25 @@ import { type GameDay } from '../../model/GameDay';
 import { agendaService } from '../../services/AgendaService';
 import { calendarService } from '../../services/CalendarService';
 import { firstDateOfMonth } from '../../utils/Utils';
-import GameDayCard from '../GameDayCard/GameDayCard';
-import './Agenda.scss';
+import './AgendaPage.scss';
+import { getAllEventsOfDay } from '../../utils/AgendaUtils.ts';
+import IconButton from '../../components/common/IconButton/IconButton.tsx';
+import GameDayCard from './components/GameDayCard/GameDayCard.tsx';
 
-const getAllEventsOfDay = (dayId: string, events: AgendaEvent[]) => {
-  return events.filter((e) => e.day.id === dayId);
-};
+const JANUARY = 0;
+const DECEMBER = 11;
 
-export default function Agenda() {
+export default function AgendaPage() {
   const [current, setCurrent] = useState(firstDateOfMonth());
   const [days, setDays] = useState<GameDay[]>([]);
   const [eventsOfMonth, setEventsOfMonth] = useState<AgendaEvent[]>([]);
 
   const incMonth = (inc: number) => {
     const month = current.getMonth() + inc;
-    if (month > 11) {
+    if (month > DECEMBER) {
       setCurrent((prev) => new Date(prev.getFullYear() + 1, 0, 1));
-    } else if (month < 0) {
-      setCurrent((prev) => new Date(prev.getFullYear() - 1, 11, 1));
+    } else if (month < JANUARY) {
+      setCurrent((prev) => new Date(prev.getFullYear() - 1, DECEMBER, 1));
     } else {
       setCurrent((prev) => new Date(prev.getFullYear(), month, 1));
     }

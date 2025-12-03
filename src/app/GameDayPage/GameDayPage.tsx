@@ -1,11 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import ActivityIndicator from '../../components/common/ActivityIndicator';
 import IconButton from '../../components/common/IconButton/IconButton';
-import View from '../../components/common/View';
 import CountingFormModal from '../../components/modals/CountingFormModal/CountingFormModal';
 import EventFormModal from '../../components/modals/EventFormModal';
-import { Colors } from '../../constants/Colors';
 import { ROLE_BUREAU } from '../../constants/Roles';
 import { AppContext } from '../../contexts/AppContext';
 import { useUser } from '../../hooks/useUser';
@@ -13,26 +10,22 @@ import type { AgendaEvent } from '../../model/AgendaEvent';
 import type { GameDay } from '../../model/GameDay';
 import { agendaService } from '../../services/AgendaService';
 import { calendarService } from '../../services/CalendarService';
-import { settingsService } from '../../services/SettingsService';
 import { isPassed, printGameDay } from '../../utils/Utils';
 
-import { Nav } from 'react-bootstrap';
-import CustomCard from '../../components/common/CustomCard/CustomCard';
-import Icon from '../../components/common/Icon';
-import GameDayPlanning from '../../components/GameDayPlanning/GameDayPlanning';
-import GameDayRoomsOccupation from '../../components/GameDayRoomsOccupation/GameDayRoomsOccupation';
+import { Alert } from 'react-bootstrap';
 import RoomPriorities from '../../components/RoomPriorities/RoomPriorities';
-import { type DayCounts } from '../../model/Counting';
-import { countingService } from '../../services/CountingService';
+import View from '../../components/common/View.tsx';
 import './GameDayPage.scss';
+import CountingsCard from './components/CountingsCard/CountingsCard.tsx';
+import GameDayPageTabs from './components/GameDayPageTabs/GameDayPageTabs.tsx';
 
 export default function GameDayPage() {
   const appContext = useContext(AppContext);
   const navigate = useNavigate();
   const params = useParams<{ dayId: string }>();
 
-  const { user } = useUser();
-  const [day, setDay] = useState<GameDay | null>(null);
+  const { hasRole } = useUser();
+  const [day, setDay] = useState<GameDay | undefined>(undefined);
   const [previousDay, setPreviousDay] = useState<GameDay | null>(null);
   const [nextDay, setNextDay] = useState<GameDay | null>(null);
 
@@ -42,14 +35,11 @@ export default function GameDayPage() {
   const [countingFormModalVisible, setCountingFormModalVisible] =
     useState(false);
 
-  const [currentTab, setCurrentTab] = useState('programme');
-  const [countings, setCountings] = useState<DayCounts | undefined>(undefined);
-
-  const goPrevious = () => {
+  const goPreviousDay = () => {
     navigate(`/agenda/${previousDay?.id}`);
   };
 
-  const goNext = () => {
+  const goNextDay = () => {
     navigate(`/agenda/${nextDay?.id}`);
   };
 
@@ -69,15 +59,6 @@ export default function GameDayPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-
-    if (
-      params.dayId &&
-      settingsService.hasRole(user.preferences, ROLE_BUREAU)
-    ) {
-      countingService
-        .getCounting(params.dayId)
-        .then((countings) => setCountings(countings ?? undefined));
-    }
   }, [params.dayId, needARefresh]);
 
   useEffect(() => {
@@ -88,7 +69,7 @@ export default function GameDayPage() {
   }, [day]);
 
   return (
-    <View style={{}}>
+    <View>
       <EventFormModal
         show={eventFormModalVisible}
         dayId={params.dayId}
@@ -100,7 +81,7 @@ export default function GameDayPage() {
         }}
       />
 
-      {day && settingsService.hasRole(user.preferences, ROLE_BUREAU) ? (
+      {day && hasRole(ROLE_BUREAU) ? (
         <CountingFormModal
           dayId={day?.id}
           title={`Comptage : ${printGameDay(day)}`}
@@ -113,65 +94,30 @@ export default function GameDayPage() {
         />
       ) : null}
 
+      {/* Sélecteur de la journée */}
       <div key="1" className="day-selector">
-        <IconButton icon="arrow_left" onClick={() => goPrevious()} />
+        <IconButton icon="arrow_left" onClick={() => goPreviousDay()} />
         {day ? <span className="day-title">{printGameDay(day)}</span> : null}
-        <IconButton icon="arrow_right" color="gray" onClick={() => goNext()} />
-      </div>
-      <div className="room-priorities">
-        {day ? <RoomPriorities day={day} /> : null}
-      </div>
-      {day &&
-        isPassed(day?.id) &&
-        settingsService.hasRole(user.preferences, ROLE_BUREAU) && (
-          <CustomCard
-            clickable
-            onClick={() => setCountingFormModalVisible(true)}
-          >
-            {!!countings && (
-              <Icon icon="check_circle" iconSize={30} color={Colors.green} />
-            )}
-            <Icon
-              icon="123"
-              color={countings === undefined ? Colors.gray : Colors.green}
-              iconSize={40}
-            />
-          </CustomCard>
-        )}
-      <div>
-        <Nav
-          fill
-          variant="tabs"
-          defaultActiveKey="programme"
-          onSelect={(e) => setCurrentTab(e || 'programme')}
-        >
-          <Nav.Item>
-            <Nav.Link eventKey="programme" title="Programme">
-              <Icon icon="event_note" iconSize={20} />
-              Programme
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey="occupation" title="Occupation des salles">
-              <Icon icon="room_preferences" iconSize={20} />
-              Occupation des salles
-            </Nav.Link>
-          </Nav.Item>
-        </Nav>
+        <IconButton
+          icon="arrow_right"
+          color="gray"
+          onClick={() => goNextDay()}
+        />
       </div>
 
-      {loading ? (
-        <View style={{}}>
-          <ActivityIndicator color={Colors.red} size={50} />
-        </View>
-      ) : null}
+      {/* Occupation des activités */}
+      <Alert variant="info">{day ? <RoomPriorities day={day} /> : null}</Alert>
 
-      {!loading && day && currentTab === 'programme' ? (
-        <GameDayPlanning events={events} day={day} />
-      ) : null}
-      {!loading && currentTab === 'occupation' && day ? (
-        <GameDayRoomsOccupation day={day} events={events} />
-      ) : null}
+      {/* Comptages */}
+      {day && isPassed(day?.id) && hasRole(ROLE_BUREAU) && (
+        <CountingsCard
+          day={day}
+          onClick={() => setCountingFormModalVisible(true)}
+        />
+      )}
+
+      {/* Programme / Occupation des salles */}
+      <GameDayPageTabs day={day} events={events} loading={loading} />
     </View>
   );
 }

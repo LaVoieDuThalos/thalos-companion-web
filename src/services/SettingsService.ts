@@ -40,7 +40,7 @@ class SettingsService {
     }
   }
 
-  activityVisible(prefs: UserPreferences | null, activityId: string): boolean {
+  activityVisible(prefs: User | UserPreferences | null, activityId: string): boolean {
     if (prefs === null) {
       return true;
     }
@@ -50,14 +50,27 @@ class SettingsService {
     } else if (activity?.id !== EVENEMENT.id && !activity?.filterable) {
       return true;
     }
-    return !!prefs.activities && prefs.activities.indexOf(activityId) >= 0;
-  }
-
-  hasRole(prefs: UserPreferences | undefined, role: Role): boolean {
-    if (prefs === null) {
+    if('activities' in prefs) {
+      return !!prefs.activities && prefs.activities.indexOf(activityId) >= 0;
+    }else if('preferences' in prefs) {
+      return !!prefs.preferences?.activities && prefs.preferences.activities.indexOf(activityId) >= 0;
+    }else{
       return false;
     }
-    return !!prefs?.roles && prefs?.roles?.indexOf(role.id) >= 0;
+  }
+
+  hasRole(prefs: User | UserPreferences | undefined, role: Role): boolean {
+    if (prefs === null || prefs === undefined) {
+      return false;
+    }
+    if('roles' in prefs) {
+      return !!prefs?.roles && prefs?.roles?.indexOf(role.id) >= 0;
+    }else if('preferences' in prefs) {
+      return !!prefs.preferences?.roles && prefs.preferences.roles?.indexOf(role.id) >= 0;
+    }else{
+      console.error('Type inconnu', prefs)
+      return false;
+    }
   }
 }
 
