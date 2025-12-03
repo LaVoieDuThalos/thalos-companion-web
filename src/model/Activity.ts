@@ -4,5 +4,6 @@ export interface Activity {
   filterable?: boolean;
   countable?: boolean;
   figurines?: boolean;
+  referent?: boolean;
   style: { color: string; backgroundColor: string };
 }

@@ -1,9 +1,12 @@
+import { Button } from 'react-bootstrap';
+import { Colors } from '../../../../../../constants/Colors.ts';
 import { useUser } from '../../../../../../hooks/useUser.ts';
+import type {
+  AgendaEvent,
+  EventSubscription,
+} from '../../../../../../model/AgendaEvent.ts';
 import CustomCard from '../../../../../common/CustomCard/CustomCard.tsx';
 import Icon from '../../../../../common/Icon.tsx';
-import { Colors } from '../../../../../../constants/Colors.ts';
-import { Button } from 'react-bootstrap';
-import type { AgendaEvent, EventSubscription } from '../../../../../../model/AgendaEvent.ts';
 
 type EventSubscriptionProps = {
   event: AgendaEvent;
@@ -14,14 +17,16 @@ type EventSubscriptionProps = {
 };
 
 export default function EventSubscriptionCard({
-                                                event,
-                                                sub,
-                                                userSubscription,
-                                                onUnsubscribe,
-                                                onUpdateSubscription,
-                                              }: EventSubscriptionProps) {
-  const { user } = useUser();
-  const currentUserIsTheEventCreator = user.id === event.creator?.id;
+  event,
+  sub,
+  userSubscription,
+  onUnsubscribe,
+  onUpdateSubscription,
+}: EventSubscriptionProps) {
+  const { user, hasRoleReferent } = useUser();
+  const currentUserIsTheEventCreator =
+    user.id === event.creator?.id ||
+    (event.activity && hasRoleReferent(event.activity?.id));
   const subcribedAtDate = new Date(sub.subscribedAt);
   return (
     <CustomCard>

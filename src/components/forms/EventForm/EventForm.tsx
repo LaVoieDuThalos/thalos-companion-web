@@ -1,4 +1,4 @@
-import { Alert, Form, Image } from 'react-bootstrap';
+import { Alert, Button, Form, Image } from 'react-bootstrap';
 import { ACTIVITIES, EVENEMENT, JDR } from '../../../constants/Activities';
 import { Durations } from '../../../constants/Durations';
 import { ROOMS, SALLE_DU_LAC, TOUTE_LA_SALLE } from '../../../constants/Rooms';
@@ -10,6 +10,7 @@ import {
   type FormData,
 } from '../../modals/EventFormModal';
 
+import { useState } from 'react';
 import { EVENT_SUBSCRIPTION_MODES } from '../../../constants/EventSubscriptionModes';
 import { Globals } from '../../../constants/Globals';
 import { useUser } from '../../../hooks/useUser';
@@ -64,6 +65,12 @@ export default function EventForm({
   formData,
   availableTables,
 }: Props) {
+  const [showMoreInfos, setShowMoreInfos] = useState(
+    formData.img !== '' ||
+      formData.discordChannel !== '' ||
+      formData.description !== ''
+  );
+
   const days = calendarService.buildDaysFromDate(new Date(), 60);
   const hours = calendarService.hours();
   const durations = Durations;
@@ -355,52 +362,10 @@ export default function EventForm({
         ) : null}
       </Form.Group>
 
-      {/* Salon Discord ------------------------------------------------------------- */}
-      <Form.Group className="mb-3" controlId="eventForm.DiscordChannelInput">
-        <Form.Label>
-          <Image
-            src={Globals.BASE_URL + '/icons/discord.png'}
-            width={22}
-            height={22}
-            roundedCircle
-          />
-          URL du salon Discord dédié (facultatif)
-        </Form.Label>
-        <Form.Control
-          type="text"
-          placeholder=""
-          className="discord-channel"
-          disabled={disabled}
-          value={formData.discordChannel}
-          onChange={(e) => updateForm('discordChannel', e)}
-        />
-        {state?.submitted && hasError(errors, 'discordChannelIsInvalid') ? (
-          <FormError error="L'URL est invalide. Elle doit être sous la forme de 'https://discord.com/channels/xxxxx" />
-        ) : null}
-      </Form.Group>
-
-      {/* Affiche ------------------------------------------------------------- */}
-      {formData.activityId && formData.activityId === EVENEMENT.id && (
-        <Form.Group className="mb-3" controlId="eventForm.ImgInput">
-          <Form.Label>URL de l'illustration / Affiche (facultatif)</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder=""
-            className="img"
-            disabled={disabled}
-            value={formData.img}
-            onChange={(e) => updateForm('img', e)}
-          />
-          {state?.submitted && hasError(errors, 'imgIsInvalid') ? (
-            <FormError error="L'URL est invalide. Elle doit être sous la forme de 'https://**" />
-          ) : null}
-        </Form.Group>
-      )}
-
       <div className="inscriptions-section">
         {/* Inscriptions ------------------------------------------------------------- */}
         <Form.Group className="mb-3" controlId="eventForm.InscriptionsInput">
-          <Form.Label>Sur inscription</Form.Label>
+          <Form.Label>Inscriptions des participants</Form.Label>
           <Form.Select
             size="lg"
             disabled={disabled}
@@ -459,14 +424,87 @@ export default function EventForm({
         ) : null}
       </div>
 
-      {/* Description ------------------------------------------------------------- */}
-      <Form.Group className="mb-3" controlId="eventForm.DescriptionInput">
-        <Form.Label>Description (facultatif)</Form.Label>
-        <RichEditor
-          value={formData.description}
-          onChange={(e) => updateForm('description', e)}
-        />
-      </Form.Group>
+      <div className="more-infos">
+        <Button
+          variant="secondary"
+          style={{ width: '100%' }}
+          onClick={() => setShowMoreInfos((prev) => !prev)}
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignContent: 'center',
+              fontWeight: 'bold',
+            }}
+          >
+            Plus d'infos
+            <Icon
+              icon={showMoreInfos ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
+              iconSize={30}
+            />
+          </div>
+        </Button>
+
+        <div
+          className="more-infos-body"
+          style={{ display: showMoreInfos ? 'block' : 'none' }}
+        >
+          {/* Salon Discord ------------------------------------------------------------- */}
+          <Form.Group
+            className="mb-3"
+            controlId="eventForm.DiscordChannelInput"
+          >
+            <Form.Label>
+              <Image
+                src={Globals.BASE_URL + '/icons/discord.png'}
+                width={22}
+                height={22}
+                roundedCircle
+              />
+              URL du salon Discord dédié (facultatif)
+            </Form.Label>
+            <Form.Control
+              type="text"
+              placeholder=""
+              className="discord-channel"
+              disabled={disabled}
+              value={formData.discordChannel}
+              onChange={(e) => updateForm('discordChannel', e)}
+            />
+            {state?.submitted && hasError(errors, 'discordChannelIsInvalid') ? (
+              <FormError error="L'URL est invalide. Elle doit être sous la forme de 'https://discord.com/channels/xxxxx" />
+            ) : null}
+          </Form.Group>
+
+          {/* Affiche ------------------------------------------------------------- */}
+          <Form.Group className="mb-3" controlId="eventForm.ImgInput">
+            <Form.Label>
+              URL de l'illustration / Affiche (facultatif)
+            </Form.Label>
+            <Form.Control
+              type="text"
+              placeholder=""
+              className="img"
+              disabled={disabled}
+              value={formData.img}
+              onChange={(e) => updateForm('img', e)}
+            />
+            {state?.submitted && hasError(errors, 'imgIsInvalid') ? (
+              <FormError error="L'URL est invalide. Elle doit être sous la forme de 'https://**" />
+            ) : null}
+          </Form.Group>
+
+          {/* Description ------------------------------------------------------------- */}
+          <Form.Group className="mb-3" controlId="eventForm.DescriptionInput">
+            <Form.Label>Description (facultatif)</Form.Label>
+            <RichEditor
+              value={formData.description}
+              onChange={(e) => updateForm('description', e)}
+            />
+          </Form.Group>
+        </div>
+      </div>
     </Form>
   );
 }

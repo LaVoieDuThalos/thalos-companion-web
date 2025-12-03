@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-bootstrap';
-import './EventSubscriptions.scss';
-import type { AgendaEvent, EventSubscription } from '../../../../model/AgendaEvent.ts';
-import { useUser } from '../../../../hooks/useUser.ts';
-import Icon from '../../../common/Icon.tsx';
 import { Colors } from '../../../../constants/Colors.ts';
+import {
+  MODE_AUTO_BY_REGISTRATION_DATE,
+  MODE_MANUAL,
+} from '../../../../constants/EventSubscriptionModes.ts';
+import { useUser } from '../../../../hooks/useUser.ts';
+import type {
+  AgendaEvent,
+  EventSubscription,
+} from '../../../../model/AgendaEvent.ts';
 import { subscriptionService } from '../../../../services/SubscriptionService.ts';
 import CustomCard from '../../../common/CustomCard/CustomCard.tsx';
-import { MODE_AUTO_BY_REGISTRATION_DATE, MODE_MANUAL } from '../../../../constants/EventSubscriptionModes.ts';
+import Icon from '../../../common/Icon.tsx';
 import EventSubscriptionCard from './components/EventSubscriptionCard/EventSubscriptionCard.tsx';
+import './EventSubscriptions.scss';
 
 type Props = {
   event: AgendaEvent;
@@ -71,7 +77,10 @@ export default function EventSubscriptions({ event }: Props) {
         ) : (
           <>
             La sélection des participants est faite{' '}
-            <u>manuellement par l'organisateur de l'évènement.</u>
+            <u>
+              manuellement par les référents de l'activité et le créateur de
+              l'évènement.
+            </u>
           </>
         )}
       </Alert>

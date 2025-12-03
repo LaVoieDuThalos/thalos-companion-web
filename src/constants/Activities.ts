@@ -6,6 +6,7 @@ export const JDS_ACTIVITY = {
   name: 'Jeu de société',
   filterable: true,
   countable: true,
+  referent: true,
   style: { color: 'black', backgroundColor: Colors.orange },
 } as Activity;
 
@@ -14,6 +15,7 @@ export const JDR = {
   name: 'Jeu de rôle',
   filterable: true,
   countable: true,
+  referent: true,
   style: { color: 'white', backgroundColor: Colors.blue },
 };
 
@@ -23,6 +25,7 @@ export const WARHAMMER_40K = {
   filterable: true,
   countable: true,
   figurines: true,
+  referent: true,
   style: { color: 'white', backgroundColor: Colors.purple },
 };
 
@@ -32,6 +35,7 @@ export const AOS = {
   filterable: true,
   countable: true,
   figurines: true,
+  referent: true,
   style: { color: 'white', backgroundColor: Colors.green },
 };
 
@@ -41,6 +45,7 @@ export const BLOODBOWL = {
   filterable: true,
   countable: true,
   figurines: true,
+  referent: true,
   style: { color: 'white', backgroundColor: Colors.red2 },
 };
 
@@ -50,6 +55,7 @@ export const SHATTERPOINT = {
   filterable: true,
   countable: true,
   figurines: true,
+  referent: true,
   style: { color: 'white', backgroundColor: Colors.red2 },
 };
 
@@ -58,6 +64,7 @@ export const ESCAPE_GAME = {
   name: 'Escape Game',
   filterable: true,
   countable: true,
+  referent: true,
   style: { color: 'black', backgroundColor: Colors.orange2 },
 };
 
@@ -66,6 +73,7 @@ export const MURDER_PARTY = {
   name: 'Murder Party',
   filterable: true,
   countable: true,
+  referent: true,
   style: { color: 'black', backgroundColor: Colors.lightgreen },
 };
 

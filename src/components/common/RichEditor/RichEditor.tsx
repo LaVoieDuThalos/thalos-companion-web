@@ -100,7 +100,7 @@ export default function RichEditor({ value, readOnly, onChange }: Props) {
   }, [isLayoutReady]);
 
   return (
-    <div className="main-container">
+    <div className="main-container" style={{ backgroundColor: 'white' }}>
       <div
         className="editor-container editor-container_document-editor"
         ref={editorContainerRef}

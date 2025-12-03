@@ -16,6 +16,8 @@ import View from '../common/View';
 
 import { Image } from 'react-bootstrap';
 import { Globals } from '../../constants/Globals';
+import { findRoleById, ROLE_BUREAU } from '../../constants/Roles.ts';
+import { useUser } from '../../hooks/useUser.ts';
 import RichEditor from '../common/RichEditor/RichEditor';
 import type { StyleSheet } from '../common/Types';
 import './AgendaEventCard.scss';
@@ -44,12 +46,22 @@ export default function AgendaEventCard({
   onDelete,
 }: Props) {
   const navigate = useNavigate();
+  const { user, hasRole } = useUser();
 
   const duration = event.durationInMinutes
     ? durationToString(event.durationInMinutes)
     : null;
 
   const Alerts = useContext(AlertContext);
+
+  const canEdit = () => {
+    // Creator or Référent or Bureau
+    const role = findRoleById('referent.' + event.activity?.id);
+    const hasRoleReferent = role !== undefined && hasRole(role);
+    return (
+      event.creator?.id === user.id || hasRole(ROLE_BUREAU) || hasRoleReferent
+    );
+  };
 
   const confirmDeleteEvent = () => {
     Alerts.dialog(
@@ -207,6 +219,7 @@ export default function AgendaEventCard({
             icon="edit"
             color={Colors.white}
             variant="secondary"
+            disabled={!canEdit()}
             iconSize={32}
             onClick={() => (onEdit ? onEdit() : null)}
           />
@@ -214,6 +227,7 @@ export default function AgendaEventCard({
             icon="delete"
             variant="danger"
             color={Colors.white}
+            disabled={!canEdit()}
             iconSize={32}
             onClick={() => confirmDeleteEvent()}
           />
