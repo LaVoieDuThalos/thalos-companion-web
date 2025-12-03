@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
-import { TOUTE_LA_SALLE } from '../../constants/Rooms';
-import type { AgendaEvent } from '../../model/AgendaEvent';
-import type { GameDay } from '../../model/GameDay';
-import { calendarService } from '../../services/CalendarService';
-import { clamp, eventIsInTimeSlot, fromRoomId } from '../../utils/Utils';
-import CustomCard from '../common/CustomCard/CustomCard';
-import Icon from '../common/Icon';
-import Tag from '../common/Tag/Tag';
 import './RoomPlanning.scss';
+import type { GameDay } from '../../../../model/GameDay.ts';
+import type { AgendaEvent } from '../../../../model/AgendaEvent.ts';
+import { clamp, eventIsInTimeSlot, fromRoomId } from '../../../../utils/Utils.ts';
+import { calendarService } from '../../../../services/CalendarService.ts';
+import Icon from '../../../common/Icon.tsx';
+import CustomCard from '../../../common/CustomCard/CustomCard.tsx';
+import Tag from '../../../common/Tag/Tag.tsx';
+import { TOUTE_LA_SALLE } from '../../../../constants/Rooms.ts';
 
 type Props = {
   roomId: string;

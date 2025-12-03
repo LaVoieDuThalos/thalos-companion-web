@@ -18,18 +18,19 @@ export class AgendaService {
     return this.api.findEventById(eventId);
   }
 
-  findEventsOfDay(
+  async findEventsOfDay(
     dayId: string,
-    excludeEventIds: string[] = []
+    excludeEventIds: string[] = [],
   ): Promise<AgendaEvent[]> {
-    return this.api
-      .findEventsByDayId(dayId)
-      .then((events) => events.filter((e) => excludeEventIds.indexOf(e.id) < 0))
-      .then(this.sortEvents);
+    const events = await this.api
+      .findEventsByDayId(dayId);
+    const events_1 = events.filter((e) => excludeEventIds.indexOf(e.id) < 0);
+    return this.sortEvents(events_1);
   }
 
-  findEventsOfMonth(year: number, month: number): Promise<AgendaEvent[]> {
-    return this.api.findAllEventsOfMonth(year, month).then(this.sortEvents);
+  async findEventsOfMonth(year: number, month: number): Promise<AgendaEvent[]> {
+    const events = await this.api.findAllEventsOfMonth(year, month);
+    return this.sortEvents(events);
   }
 
   findEventsOfDayAndRoom(
@@ -39,8 +40,9 @@ export class AgendaService {
     return this.api.findEventsByDayIdAndRoomId(dayId, roomId);
   }
 
-  findAllEvents(): Promise<AgendaEvent[]> {
-    return this.api.findAllEvents().then(this.sortEvents);
+  async findAllEvents(): Promise<AgendaEvent[]> {
+    const events = await this.api.findAllEvents();
+    return this.sortEvents(events);
   }
 
   saveEvent(event: Partial<AgendaEvent>): Promise<AgendaEvent> {
@@ -62,10 +64,10 @@ export class AgendaService {
     }
   }
 
-  deleteEvent(eventId: string): Promise<void> {
-    return this.api
-      .deleteEvent(eventId)
-      .then(() => subscriptionService.unsubscribeAll(eventId));
+  async deleteEvent(eventId: string): Promise<void> {
+    await this.api
+      .deleteEvent(eventId);
+    return await subscriptionService.unsubscribeAll(eventId);
   }
 }
 

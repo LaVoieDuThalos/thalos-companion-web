@@ -285,7 +285,7 @@ export default function EventFormModal({
       : 0;
 
     bookingService
-      .availablesTablesByRooms(
+      .availableTablesByRooms(
         _formData.dayId,
         startTime,
         endTime,

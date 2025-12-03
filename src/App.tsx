@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import './App.scss';
 import Alerts from './components/common/Alerts';
@@ -7,22 +6,10 @@ import Header from './components/Header/Header';
 import AlertContextProvider from './contexts/AlertsContext';
 import AppContextProvider from './contexts/AppContext';
 import { UserContextProvider } from './contexts/UserContext';
-
-const headerHeight = 54;
-const footerHeight = 38;
+import { useDimensions } from './hooks/useDimensions.ts';
 
 function App() {
-  const [size, setSize] = useState(
-    window.innerHeight - headerHeight - footerHeight
-  );
-
-  useEffect(() => {
-    const resizeHandler = () => {
-      setSize(window.innerHeight - headerHeight - footerHeight);
-    };
-    window.addEventListener('resize', resizeHandler);
-    return () => window.removeEventListener('resize', resizeHandler);
-  }, []);
+  const [, height] = useDimensions();
 
   return (
     <>
@@ -31,13 +18,11 @@ function App() {
           <AlertContextProvider>
             <div className="content">
               <Header />
-
               <Alerts />
-
               <div
                 className="outlet"
                 style={{
-                  height: size,
+                  height,
                 }}
               >
                 <Outlet />
@@ -45,7 +30,7 @@ function App() {
               <div
                 style={{
                   position: 'absolute',
-                  top: size + 55,
+                  top: height + 55,
                   width: '100%',
                   maxWidth: 1280,
                 }}

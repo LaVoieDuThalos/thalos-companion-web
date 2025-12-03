@@ -1,6 +1,6 @@
 import { API, type ApiService } from '../api/Api';
-import { ACTIVITIES } from '../constants/Activities';
-import { ROOMS } from '../constants/Rooms';
+import { ACTIVITIES, JDR } from '../constants/Activities';
+import { ROOMS, SALLE_JDR } from '../constants/Rooms';
 import type { Activity } from '../model/Activity';
 import type { GameDay } from '../model/GameDay';
 import type { OpenCloseRoom, Room } from '../model/Room';
@@ -48,24 +48,23 @@ class RoomService {
     if (!day) {
       return false;
     }
-    if (activityId === 'jdr' && roomId === 'jdr') {
+    if (activityId === JDR.id && roomId === SALLE_JDR.id) {
       return true;
     }
     const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day);
     return roomsChosen.map((r) => r.id).indexOf(roomId) >= 0;
   }
 
-  getOpenCloseConfig(dayId: string): Promise<OpenCloseRoom> {
-    return this.api.findOpenCloseConfiguration(dayId).then((result) => {
-      if (result == null) {
-        return {
-          dayId,
-          openAt: '20h',
-        } as OpenCloseRoom;
-      } else {
-        return result;
-      }
-    });
+  async getOpenCloseConfig(dayId: string): Promise<OpenCloseRoom> {
+    const result = await this.api.findOpenCloseConfiguration(dayId);
+    if (result == null) {
+      return {
+        dayId,
+        openAt: '20h',
+      } as OpenCloseRoom;
+    } else {
+      return result;
+    }
   }
 
   saveOpenCloseConfig(config: OpenCloseRoom): Promise<void> {

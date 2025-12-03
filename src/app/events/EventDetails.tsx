@@ -9,10 +9,11 @@ import { agendaService } from '../../services/AgendaService';
 export default function EventDetailsPage() {
   const { eventId } = useParams();
   const appContext = useContext(AppContext);
+  const navigate = useNavigate();
+
   const [event, setEvent] = useState<AgendaEvent | undefined>(undefined);
   const [eventFormModalVisible, setEventFormModalVisible] = useState(false);
   const [refresh, setRefresh] = useState('');
-  const navigate = useNavigate();
 
   const onDeleteEvent = () => {
     navigate('/');
@@ -23,20 +24,17 @@ export default function EventDetailsPage() {
   };
 
   useEffect(() => {
-    if (eventId === undefined) {
-      return;
+    if(eventId !== undefined) {
+      agendaService.findEventById(eventId).then((e) => {
+        if (e === null) {
+          console.error('No event found with id ', eventId);
+        } else {
+          setEvent(e);
+        }
+      });
     }
-
-    agendaService.findEventById(eventId).then((e) => {
-      if (e === null) {
-        console.error('No event found with id ', eventId);
-      } else {
-        setEvent(e);
-      }
-      //appContext.setLoading(false);
-    });
-    //.catch(() => appContext.setLoading(false));
   }, [eventId, refresh]);
+
   return (
     <>
       {eventFormModalVisible && (
@@ -52,7 +50,7 @@ export default function EventDetailsPage() {
           }}
         />
       )}
-      {event ? (
+      {event && (
         <AgendaEventCard
           event={event}
           complete={true}
@@ -60,7 +58,7 @@ export default function EventDetailsPage() {
           onDelete={onDeleteEvent}
           onEdit={onEditEvent}
         />
-      ) : null}
+      )}
     </>
   );
 }

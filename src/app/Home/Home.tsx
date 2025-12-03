@@ -6,55 +6,27 @@ import View from '../../components/common/View';
 import { AppContext } from '../../contexts/AppContext';
 import type { AgendaEvent } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
-import { settingsService } from '../../services/SettingsService';
 
 import { printGameDay } from '../../utils/Utils';
 import './Home.scss';
+import { useUser } from '../../hooks/useUser.ts';
 
 export default function HomePage() {
   const appContext = useContext(AppContext);
 
+  const {user, activityVisible} = useUser();
   const [loading, setLoading] = useState(false);
   const [sections, setSections] = useState<SectionListItem<AgendaEvent>[]>([]);
   const needARefresh = appContext.refreshs['home.events'];
 
   useEffect(() => {
     setLoading(true);
-    settingsService
-      .get()
-      .then((user) =>
-        agendaService.findAllEvents().then((events) => ({ events, user }))
-      )
-      .then(({ events, user }) => {
+    agendaService.findAllEvents()
+      .then((events) => {
         const eventsByDate = events
-          .filter(
-            (e) =>
-              user?.preferences &&
-              (settingsService.activityVisible(
-                user?.preferences,
-                e.activityId ?? e.activity?.id ?? ''
-              ) ||
-                e.creator?.id === user.id)
-          )
-          .map((e) => ({
-            title: printGameDay(e.day).toUpperCase(),
-            data: [e],
-          }))
-          .reduce(
-            (
-              acc: SectionListItem<AgendaEvent>[],
-              cur: SectionListItem<AgendaEvent>
-            ) => {
-              const foundIndex = acc.findIndex((i) => i.title === cur.title);
-              if (foundIndex >= 0) {
-                acc[foundIndex].data.push(cur.data[0]);
-              } else {
-                acc.push(cur);
-              }
-              return acc;
-            },
-            []
-          );
+          .filter((e) => (e.activityId && activityVisible(e.activityId)) || e.creator?.id === user.id)
+          .map(mapEventToSectionListItem)
+          .reduce(reduceEventsByDate, []);
         setSections(eventsByDate);
         setLoading(false);
       })
@@ -80,9 +52,25 @@ export default function HomePage() {
             )}
           ></SectionList>
         </>
-      ) : (
-        'Chargement en cours ...'
-      )}
+      ) : <p>Chargement en cours ...</p>}
     </View>
   );
 }
+
+const mapEventToSectionListItem = (e: AgendaEvent) => ({
+  title: printGameDay(e.day).toUpperCase(),
+  data: [e],
+} as SectionListItem<AgendaEvent>)
+
+const reduceEventsByDate = (
+  acc: SectionListItem<AgendaEvent>[],
+  cur: SectionListItem<AgendaEvent>
+) => {
+  const foundIndex = acc.findIndex((i) => i.title === cur.title);
+  if (foundIndex >= 0) {
+    acc[foundIndex].data.push(cur.data[0]);
+  } else {
+    acc.push(cur);
+  }
+  return acc;
+};

@@ -7,7 +7,7 @@ import type { GameDay } from '../../model/GameDay';
 import { fromRoomId } from '../../utils/Utils';
 import Icon from '../common/Icon';
 import Row from '../common/Row';
-import RoomPlanning from '../RoomPlanning/RoomPlanning';
+import RoomPlanning from './components/RoomPlanning/RoomPlanning.tsx';
 
 type Props = { day: GameDay; events: AgendaEvent[] };
 

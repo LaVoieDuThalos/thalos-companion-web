@@ -41,270 +41,300 @@ const Collections = {
   SUBSCRIPTIONS: 'event-subscriptions',
 };
 
+// Backend
+const FieldNames = {
+  ID: 'id',
+  DAY_ID: 'dayId',
+  NAME: 'name',
+  ROOM_ID: 'roomId',
+  KEY_ID: 'keyId',
+  DATE: 'date',
+  EVENT_ID: 'eventId',
+  SUBSCRIBED_AT: 'subscribedAt'
+};
+
 class FirestoreApi implements ApiService {
-  findUserById(userId: string): Promise<User | null> {
-    console.log('FS findUserById()', userId);
-    return getDoc(doc(FirebaseDb, Collections.USERS, userId)).then((res) => {
-      return res.data()
-        ? ({
-            ...res.data(),
-          } as User)
-        : null;
-    });
+  /* Gestion utilisateur ******************************************************/
+
+  // Recherche tous les utilisateurs qui ont au moins un nom renseigné
+  // si withEmptyName=true, retourne tous les utilisateurs
+  async findAllUsers(withEmptyName: boolean): Promise<User[]> {
+    console.log('findAllUsers()', withEmptyName);
+    const q = query(
+      collection(FirebaseDb, Collections.USERS),
+      where(FieldNames.NAME, '!=', '')
+    );
+    const results = await getDocs(
+      withEmptyName ? collection(FirebaseDb, Collections.USERS) : q
+    );
+    return results.docs
+      .map((doc) => mapDtoToUser(doc.id, doc.data()))
+      .sort((a, b) => `${a.name}`.localeCompare(`${b.name}`));
   }
 
-  findUserByName(name: string, excludeIds: string[] = []): Promise<User[]> {
+  // Recherche l'utilisateur par son identifiant
+  async findUserById(userId: string): Promise<User | null> {
+    console.log('FS findUserById()', userId);
+    const res = await getDoc(doc(FirebaseDb, Collections.USERS, userId));
+    return res.data()
+      ? ({
+          ...res.data(),
+        } as User)
+      : null;
+  }
+
+  // Recherche l'utilisateur par son nom en excluant ceux avec les identifiants mentionnés dans 'excludeIds'
+  async findUserByName(
+    name: string,
+    excludeIds: string[] = []
+  ): Promise<User[]> {
     console.log('FS findUserByName()', name, excludeIds);
     const q = query(
       collection(FirebaseDb, Collections.USERS),
-      where('name', '==', name),
-      where('id', 'not-in', excludeIds)
+      where(FieldNames.NAME, '==', name),
+      where(FieldNames.ID, 'not-in', excludeIds)
     );
-    return getDocs(q).then((results) => {
-      if (results.docs.length === 0) {
-        return [];
-      } else {
-        return results.docs.map((res) => mapDtoToUser(res.id, res.data()));
-      }
-    });
+    const results = await getDocs(q);
+    if (results.docs.length === 0) {
+      return [];
+    } else {
+      return results.docs.map((res) => mapDtoToUser(res.id, res.data()));
+    }
   }
 
-  saveOrUpdateUser(user: User): Promise<User> {
+  // Enregistre les infos d'un utilisateur (création si inexistant)
+  async saveOrUpdateUser(user: User): Promise<User> {
     console.log('saveOrUpdateUser()', user);
-    return setDoc(doc(FirebaseDb, Collections.USERS, user.id), user)
-      .then(() => this.findUserById(user.id))
-      .then((user) => {
-        if (user === null) {
-          throw new Error('Fail to create user');
-        }
-        return Promise.resolve(user);
-      });
+    await setDoc(doc(FirebaseDb, Collections.USERS, user.id), user);
+    const user_1 = await this.findUserById(user.id);
+    if (user_1 === null) {
+      throw new Error('Fail to create user');
+    }
+    return user_1;
   }
 
-  findEventById(eventId: string): Promise<AgendaEvent | null> {
+  /* Gestion des events *******************************************************/
+
+  // Recherche un event par son identifiant
+  async findEventById(eventId: string): Promise<AgendaEvent | null> {
     console.log('findEventById()', eventId);
-    return getDoc(doc(FirebaseDb, Collections.EVENTS, eventId)).then((res) => {
-      return res.data() ? mapDtoToAgendaEvent(res.id, res.data()) : null;
-    });
+    const res = await getDoc(doc(FirebaseDb, Collections.EVENTS, eventId));
+    return res.data() ? mapDtoToAgendaEvent(res.id, res.data()) : null;
   }
 
-  findEventsByDayId(dayId: string): Promise<AgendaEvent[]> {
+  // Recherche tous les events pour une journée donnée
+  async findEventsByDayId(dayId: string): Promise<AgendaEvent[]> {
     console.log('findEventsByDayId()', dayId);
     const q = query(
       collection(FirebaseDb, Collections.EVENTS),
-      where('dayId', '==', dayId)
+      where(FieldNames.DAY_ID, '==', dayId)
     );
-    return getDocs(q).then((results) => {
-      return results.docs.map((doc) => mapDtoToAgendaEvent(doc.id, doc.data()));
-    });
+    const results = await getDocs(q);
+    return results.docs.map((doc) => mapDtoToAgendaEvent(doc.id, doc.data()));
   }
 
-  findAllEventsOfMonth(year: number, month: number): Promise<AgendaEvent[]> {
+  // Recherche tous les events durant un mois
+  // month=0
+  async findAllEventsOfMonth(
+    year: number,
+    month: number
+  ): Promise<AgendaEvent[]> {
     console.log('findAllEventsOfMonth()', month);
     const q = query(
       collection(FirebaseDb, Collections.EVENTS),
       and(
-        where('dayId', '>=', `${year}-${month}-01`),
-        where('dayId', '<=', `${year}-${month}-31`)
+        where(FieldNames.DAY_ID, '>=', `${year}-${month}-01`),
+        where(FieldNames.DAY_ID, '<=', `${year}-${month}-31`)
       )
     );
-    return getDocs(q).then((results) => {
-      return results.docs.map((doc) => mapDtoToAgendaEvent(doc.id, doc.data()));
-    });
+    const results = await getDocs(q);
+    return results.docs.map((doc) => mapDtoToAgendaEvent(doc.id, doc.data()));
   }
 
-  findEventsByDayIdAndRoomId(
+  // Recherche tous les events prévus dans une salle et une journée donnée
+  async findEventsByDayIdAndRoomId(
     dayId: string,
     roomId: string
   ): Promise<AgendaEvent[]> {
     console.log('findEventsByDayIdAndRoomId()', dayId, roomId);
     const q = query(
       collection(FirebaseDb, Collections.EVENTS),
-      where('dayId', '==', dayId),
-      where('roomId', '==', roomId)
+      where(FieldNames.DAY_ID, '==', dayId),
+      where(FieldNames.ROOM_ID, '==', roomId)
     );
-    return getDocs(q).then((results) => {
-      return results.docs.map((doc) => mapDtoToAgendaEvent(doc.id, doc.data()));
-    });
+    const results = await getDocs(q);
+    return results.docs.map((doc) => mapDtoToAgendaEvent(doc.id, doc.data()));
   }
 
-  findAllEvents(): Promise<AgendaEvent[]> {
+  // Recherche tous les events enregistrés
+  async findAllEvents(): Promise<AgendaEvent[]> {
     console.log('findAllEvents()');
-    return getDocs(collection(FirebaseDb, Collections.EVENTS)).then(
-      (results) => {
-        const events = results.docs.map((doc) =>
-          mapDtoToAgendaEvent(doc.id, doc.data())
-        );
-        return events;
-      }
-    );
+    const results = await getDocs(collection(FirebaseDb, Collections.EVENTS));
+    return results.docs.map((doc) => mapDtoToAgendaEvent(doc.id, doc.data()));
   }
 
-  saveEvent(event: Partial<AgendaEvent>): Promise<AgendaEvent> {
+  // Enregistre un event et le retourne avec son nouvel identifiant s'il a été crée
+  async saveEvent(event: Partial<AgendaEvent>): Promise<AgendaEvent> {
     console.log('saveEvent()', event);
-    return addDoc(
+    const res = await addDoc(
       collection(FirebaseDb, Collections.EVENTS),
       mapAgendaEventToDto(event)
-    )
-      .then((res) => this.findEventById(res.id))
-      .then((event) => {
-        if (event === null) {
-          throw new Error('No event found with id ');
-        } else {
-          return Promise.resolve(event);
-        }
-      });
+    );
+    const event_1 = await this.findEventById(res.id);
+    if (event_1 === null) {
+      throw new Error('No event found with id ');
+    } else {
+      return Promise.resolve(event_1);
+    }
   }
 
-  updateEvent(event: Partial<AgendaEvent>): Promise<AgendaEvent> {
+  // Mise à jour d'un event et le retourne
+  async updateEvent(event: Partial<AgendaEvent>): Promise<AgendaEvent> {
     console.log('updateEvent()', event);
     if (event && event.id) {
-      return setDoc(
+      await setDoc(
         doc(FirebaseDb, Collections.EVENTS, event.id),
         mapAgendaEventToDto(event)
-      )
-        .then(() => this.findEventById(event.id!))
-        .then((event) => {
-          if (event === null) {
-            throw new Error('No event found with id ');
-          } else {
-            return Promise.resolve(event);
-          }
-        });
+      );
+      const event_1 = await this.findEventById(event.id!);
+      if (event_1 === null) {
+        throw new Error('No event found with id ');
+      } else {
+        return Promise.resolve(event_1);
+      }
     } else {
       throw new Error('Unable to update event with id empty' + event);
     }
   }
 
+  // Supprime un event avec son identifiant
   deleteEvent(eventId: string): Promise<void> {
     console.log('deleteEvent()', eventId);
     return deleteDoc(doc(FirebaseDb, Collections.EVENTS, eventId));
   }
 
-  findAllUsers(withEmptyName: boolean): Promise<User[]> {
-    console.log('findAllUsers()', withEmptyName);
+  /* Gestion des badges *******************************************************/
 
-    const q = query(
-      collection(FirebaseDb, Collections.USERS),
-      where('name', '!=', '')
-    );
-
-    return getDocs(
-      withEmptyName ? collection(FirebaseDb, Collections.USERS) : q
-    ).then((results) =>
-      results.docs
-        .map((doc) => mapDtoToUser(doc.id, doc.data()))
-        .sort((a, b) => `${a.name}`.localeCompare(`${b.name}`))
-    );
-  }
-
-  findKeyById(keyId: string): Promise<RoomKey | null> {
-    console.log('findKeyById()');
-    return getDoc(doc(FirebaseDb, Collections.KEYS, keyId)).then((result) => {
-      return result.data() ? mapDtoToRoomKey(result.id, result.data()) : null;
-    });
-  }
-
-  findAllKeys(): Promise<RoomKey[]> {
+  // Recherche tous les badges enregistrés
+  async findAllKeys(): Promise<RoomKey[]> {
     console.log('findAllKeys()');
-    return getDocs(collection(FirebaseDb, Collections.KEYS)).then((results) =>
-      results.docs.map((doc) => mapDtoToRoomKey(doc.id, doc.data()))
-    );
+    const results = await getDocs(collection(FirebaseDb, Collections.KEYS));
+    return results.docs.map((doc) => mapDtoToRoomKey(doc.id, doc.data()));
   }
 
-  updateKey(key: RoomKey): Promise<RoomKey> {
+  // Recherche un badge par son identifiant
+  async findKeyById(keyId: string): Promise<RoomKey | null> {
+    console.log('findKeyById()');
+    const result = await getDoc(doc(FirebaseDb, Collections.KEYS, keyId));
+    return result.data() ? mapDtoToRoomKey(result.id, result.data()) : null;
+  }
+
+  // Mise à jour des infos d'un badge
+  async updateKey(key: RoomKey): Promise<RoomKey> {
     console.log('updateKey()', key);
-    return setDoc(doc(FirebaseDb, Collections.KEYS, key.id), { ...key })
-      .then(() => this.findKeyById(key.id))
-      .then((k) => {
-        if (k === null) {
-          throw new Error('Fail to find key by id ');
-        }
-        return k;
-      });
+    await setDoc(doc(FirebaseDb, Collections.KEYS, key.id), { ...key });
+    const k = await this.findKeyById(key.id);
+    if (k === null) {
+      throw new Error('Fail to find key by id ');
+    }
+    return k;
   }
 
-  findKeyHistory(keyId: string): Promise<RoomKeyHistory> {
+  // Recherche l'historique des échanges d'un badge
+  // maxLog : Nombre de log à récupérer
+  async findKeyHistory(keyId: string, maxLog = 10): Promise<RoomKeyHistory> {
     console.log('findKeyHistory()', keyId);
     const q = query(
       collection(FirebaseDb, Collections.KEY_HISTORY),
-      where('keyId', '==', keyId),
-      orderBy('date', 'desc'),
-      limit(10)
+      where(FieldNames.KEY_ID, '==', keyId),
+      orderBy(FieldNames.DATE, 'desc'),
+      limit(maxLog)
     );
-    return getDocs(q).then((results) => {
-      return results.docs.map((doc) => doc.data() as RoomKeyHistoryEntry);
-    });
+    const results = await getDocs(q);
+    return results.docs.map((doc) => doc.data() as RoomKeyHistoryEntry);
   }
 
-  addToKeyHistory(entry: RoomKeyHistoryEntry): Promise<RoomKeyHistory> {
-    return addDoc(collection(FirebaseDb, Collections.KEY_HISTORY), entry).then(
-      () => this.findKeyHistory(entry.keyId)
-    );
+  // Ajoute un log dans l'historique des échange de badge
+  async addToKeyHistory(entry: RoomKeyHistoryEntry): Promise<RoomKeyHistory> {
+    await addDoc(collection(FirebaseDb, Collections.KEY_HISTORY), entry);
+    return await this.findKeyHistory(entry.keyId);
   }
 
+  /* Comptage *****************************************************************/
+
+  // Enregistre un comptage
   saveCountings(counts: DayCounts): Promise<void> {
     console.log('saveCountings()', counts);
     return setDoc(doc(FirebaseDb, Collections.COUNTINGS, counts.dayId), counts);
   }
 
-  getCountings(dayId: string): Promise<DayCounts | null> {
+  // Recherche le comptage pour une journée donnée
+  async getCountings(dayId: string): Promise<DayCounts | null> {
     console.log('getCountings()');
-    return getDoc(doc(FirebaseDb, Collections.COUNTINGS, dayId)).then(
-      (result) => {
-        return result.data() ? ({ ...result.data() } as DayCounts) : null;
-      }
-    );
+    const result = await getDoc(doc(FirebaseDb, Collections.COUNTINGS, dayId));
+    return result.data() ? ({ ...result.data() } as DayCounts) : null;
   }
 
-  findOpenCloseConfiguration(dayId: string): Promise<OpenCloseRoom | null> {
+  /* Ouverture/Fermeture de la salle ******************************************/
+
+  // Recherche les configs open/close pour une journée donnée
+  async findOpenCloseConfiguration(
+    dayId: string
+  ): Promise<OpenCloseRoom | null> {
     console.log('findOpenCloseConfiguration()');
-    return getDoc(doc(FirebaseDb, Collections.DAYS, dayId)).then((result) => {
-      return result.data() ? ({ ...result.data() } as OpenCloseRoom) : null;
-    });
+    const result = await getDoc(doc(FirebaseDb, Collections.DAYS, dayId));
+    return result.data() ? ({ ...result.data() } as OpenCloseRoom) : null;
   }
 
+  // Enregistre une config open/close pour une journée
   saveOpenCloseConfiguration(config: OpenCloseRoom): Promise<void> {
     console.log('saveOpenCloseConfiguration()');
     return setDoc(doc(FirebaseDb, Collections.DAYS, config.dayId), config);
   }
 
-  findAllSubscriptionsOfEvent(eventId: string): Promise<EventSubscription[]> {
+  /* Gestion des inscriptions *************************************************/
+
+  // Recherche toutes les inscriptions d'un event
+  async findAllSubscriptionsOfEvent(
+    eventId: string
+  ): Promise<EventSubscription[]> {
     console.log('findAllSubscriptionsOfEvent', eventId);
     const q = query(
       collection(FirebaseDb, Collections.SUBSCRIPTIONS),
-      where('eventId', '==', eventId),
-      orderBy('subscribedAt', 'asc')
+      where(FieldNames.EVENT_ID, '==', eventId),
+      orderBy(FieldNames.SUBSCRIBED_AT, 'asc')
     );
-    return getDocs(q).then((results) => {
-      return results.docs.map((doc) => doc.data() as EventSubscription);
-    });
+    const results = await getDocs(q);
+    return results.docs.map((doc) => doc.data() as EventSubscription);
   }
 
+  // Enregistre une nouvelle inscription d'un utilisateur pour un event
   subscribeUserToEvent(sub: EventSubscription): Promise<void> {
     console.log('subscribeUserToEvent', sub);
     return setDoc(doc(FirebaseDb, Collections.SUBSCRIPTIONS, sub.id), sub);
   }
 
+  // Enregistre une désinscripton d'un utilisateur sur un event
   unsubscribeUserToEvent(subId: string): Promise<void> {
     console.log('subscribeUserToEvent', subId);
     return deleteDoc(doc(FirebaseDb, Collections.SUBSCRIPTIONS, subId));
   }
 
-  unsubscribeAll(eventId: string): Promise<void> {
+  // Supprime toutes les inscriptions d'un event
+  async unsubscribeAll(eventId: string): Promise<void> {
     console.log('unsubscribeAll', eventId);
 
     const q = query(
       collection(FirebaseDb, Collections.SUBSCRIPTIONS),
-      where('eventId', '==', eventId)
+      where(FieldNames.EVENT_ID, '==', eventId)
     );
-    return getDocs(q).then((snap) =>
-      snap.forEach((sub) =>
-        deleteDoc(doc(FirebaseDb, Collections.SUBSCRIPTIONS, sub.data()['id']))
-      )
+    const snap = await getDocs(q);
+    return snap.forEach((sub) =>
+      deleteDoc(doc(FirebaseDb, Collections.SUBSCRIPTIONS, sub.data()['id']))
     );
   }
 
+  // Mise à jour du statut d'une inscription d'un utilisateur sur un event
   updateSubscriptionStatus(
     sub: EventSubscription,
     status: string

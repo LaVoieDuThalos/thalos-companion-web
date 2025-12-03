@@ -1,19 +1,20 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Colors } from '../../constants/Colors';
-import { ROLE_OUVREUR } from '../../constants/Roles';
-import { AppContext } from '../../contexts/AppContext';
-import { useUser } from '../../hooks/useUser';
-import type { AgendaEvent } from '../../model/AgendaEvent';
-import type { GameDay } from '../../model/GameDay';
-import { type OpenCloseRoom } from '../../model/Room';
-import { roomService } from '../../services/RoomService';
-import { settingsService } from '../../services/SettingsService';
-import AgendaEventCard from '../AgendaEventCard/AgendaEventCard';
-import CustomCard from '../common/CustomCard/CustomCard';
-import Label from '../common/Label';
-import OpenCloseRoomConfigModal from '../modals/OpenCloseRoomConfigModal/OpenCloseRoomConfigModal';
 import './GameDayPlanning.scss';
+import type { GameDay } from '../../../../../../model/GameDay.ts';
+import type { AgendaEvent } from '../../../../../../model/AgendaEvent.ts';
+import { AppContext } from '../../../../../../contexts/AppContext.tsx';
+import { useUser } from '../../../../../../hooks/useUser.ts';
+import type { OpenCloseRoom } from '../../../../../../model/Room.ts';
+import { roomService } from '../../../../../../services/RoomService.ts';
+import { ROLE_OUVREUR } from '../../../../../../constants/Roles.ts';
+import { settingsService } from '../../../../../../services/SettingsService.ts';
+import OpenCloseRoomConfigModal
+  from '../../../../../../components/modals/OpenCloseRoomConfigModal/OpenCloseRoomConfigModal.tsx';
+import CustomCard from '../../../../../../components/common/CustomCard/CustomCard.tsx';
+import Label from '../../../../../../components/common/Label.tsx';
+import { Colors } from '../../../../../../constants/Colors.ts';
+import AgendaEventCard from '../../../../../../components/AgendaEventCard/AgendaEventCard.tsx';
 
 type Props = {
   day: GameDay;
