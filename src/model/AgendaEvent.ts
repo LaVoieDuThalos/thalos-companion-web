@@ -14,6 +14,7 @@ export type EventSubscription = {
   id: string;
   eventId: string;
   user: Partial<User>;
+  name?: string;
   subscribedAt: string;
   status?: EventSubscriptionStatus;
 };

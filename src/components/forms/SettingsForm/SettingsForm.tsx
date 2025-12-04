@@ -54,7 +54,7 @@ export default function SettingsForm({
           }))}
         />
       </div>
-      <div className="settings-group">
+      <div className="settings-group roles">
         <RadioGroup
           label="Rôles additionnels"
           informations="Certaines fonctionnalités de l'application sont accessibles avec des rôles particuliers. Sélectionnez ci-dessous les vôtres."

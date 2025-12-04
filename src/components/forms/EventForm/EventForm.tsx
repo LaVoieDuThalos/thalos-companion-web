@@ -426,7 +426,7 @@ export default function EventForm({
 
       <div className="more-infos">
         <Button
-          variant="secondary"
+          variant="outline-dark"
           style={{ width: '100%' }}
           onClick={() => setShowMoreInfos((prev) => !prev)}
         >

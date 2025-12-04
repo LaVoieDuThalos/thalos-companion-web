@@ -59,7 +59,7 @@ export default function AgendaEventCard({
     const role = findRoleById('referent.' + event.activity?.id);
     const hasRoleReferent = role !== undefined && hasRole(role);
     return (
-      event.creator?.id === user.id || hasRole(ROLE_BUREAU) || hasRoleReferent
+      (user !== undefined && event.creator?.id === user.id) || hasRole(ROLE_BUREAU) || hasRoleReferent
     );
   };
 
@@ -169,7 +169,7 @@ export default function AgendaEventCard({
       ) : null}
 
       {/* Description */}
-      {complete ? (
+      {complete && event.description ? (
         <div className="description">
           {event.description ? (
             <RichEditor
@@ -205,33 +205,38 @@ export default function AgendaEventCard({
       )}
 
       {showButtons ? (
-        <div className="buttons">
-          {event.discordChannel && (
-            <a href={event.discordChannel} target="_blank">
-              <Image
-                src={Globals.BASE_URL + '/icons/discord.png'}
-                width={50}
-                height={50}
-              />
-            </a>
-          )}
-          <IconButton
-            icon="edit"
-            color={Colors.white}
-            variant="secondary"
-            disabled={!canEdit()}
-            iconSize={32}
-            onClick={() => (onEdit ? onEdit() : null)}
-          />
-          <IconButton
-            icon="delete"
-            variant="danger"
-            color={Colors.white}
-            disabled={!canEdit()}
-            iconSize={32}
-            onClick={() => confirmDeleteEvent()}
-          />
-        </div>
+        <>
+          <hr/>
+          <div className="buttons">
+            {event.discordChannel && (
+              <a href={event.discordChannel} target="_blank">
+                <Image
+                  src={Globals.BASE_URL + '/icons/discord.png'}
+                  width={50}
+                  height={50}
+                />
+              </a>
+            )}
+            <IconButton
+              icon="edit"
+              color={Colors.white}
+              variant="secondary"
+              disabled={!canEdit()}
+              label="MODIFIER"
+              iconSize={32}
+              onClick={() => (onEdit ? onEdit() : null)}
+            />
+            <IconButton
+              icon="delete"
+              variant="danger"
+              color={Colors.white}
+              disabled={!canEdit()}
+              label="SUPPRIMER"
+              iconSize={32}
+              onClick={() => confirmDeleteEvent()}
+            />
+          </div>
+        </>
       ) : null}
     </CustomCard>
   );

@@ -43,12 +43,7 @@ export default function EventSubscriptionCard({
             color={sub.status === 'validated' ? Colors.green : Colors.blue}
             iconSize={40}
           />
-          <Icon
-            icon="person"
-            iconSize={40}
-            color={sub.status === 'validated' ? Colors.green : Colors.blue}
-          />
-          <span className="name">{sub.user.name}</span>
+          <span className="name">{sub.name ?? sub.user.name}</span>
         </div>
         {currentUserIsTheEventCreator && (
           <div className="subscribed-at">
