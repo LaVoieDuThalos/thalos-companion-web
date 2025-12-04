@@ -197,7 +197,7 @@ export default function EventFormModal({
     agendaService
       .saveEvent({
         ...formData,
-        withSubscriptions: formData.withSubscriptions !== undefined,
+        withSubscriptions: formData.withSubscriptions !== undefined && formData.withSubscriptions,
         subscriptionMode:
           formData.withSubscriptions !== undefined
             ? formData.subscriptionMode
