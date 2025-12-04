@@ -30,7 +30,7 @@ export class SubscriptionService {
     return this.api.findAllSubscriptionsOfEvent(event.id);
   }
 
-  async subscribe(user: User, event: AgendaEvent): Promise<EventSubscription> {
+  async subscribe(user: User, subscriptionName: string, event: AgendaEvent): Promise<EventSubscription> {
     const subs = await this.findAllSubscriptionsOfEvent(event);
     if (this.alreadySubscribed(user.id, subs)) {
       return Promise.reject('Already subscribed !');
@@ -44,13 +44,13 @@ export class SubscriptionService {
           if (event.subscriptionMode === 'auto' && !eventComplete) {
             status = 'validated';
           }
-
           return {
             id: uuid(),
             user: {
               id: user.id,
               name: user.name,
             },
+            name: subscriptionName,
             eventId: event.id,
             subscribedAt: new Date().toISOString(),
             status: status,

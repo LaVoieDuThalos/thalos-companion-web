@@ -68,7 +68,6 @@ class SettingsService {
     }else if('preferences' in prefs) {
       return !!prefs.preferences?.roles && prefs.preferences.roles?.indexOf(role.id) >= 0;
     }else{
-      console.error('Type inconnu', prefs)
       return false;
     }
   }
