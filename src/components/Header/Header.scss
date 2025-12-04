@@ -15,4 +15,10 @@ nav.navbar {
     color: $white;
     @include flex-horizontal;
   }
+
+  @media (max-width: 375px) {
+    .app-title {
+      font-size: 4vw;
+    }
+  }
 }

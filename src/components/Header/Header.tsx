@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Navbar } from 'react-bootstrap';
+import { Image, Navbar } from 'react-bootstrap';
 import { matchPath, useLocation, useNavigate } from 'react-router';
 import { Colors } from '../../constants/Colors';
 import { Globals } from '../../constants/Globals';
@@ -30,14 +30,17 @@ export default function Header() {
     <>
       <Navbar expand="lg" className="justify-content-between">
         <Navbar.Brand href={Globals.BASE_URL + '/'} style={{}}>
-          <img
-            alt="Logo"
-            src={Globals.BASE_URL + '/icon100.png'}
-            width="40"
-            height="40"
-            className="d-inline-block align-top"
-          />{' '}
-          La Voie du Thalos
+          <Image src={Globals.BASE_URL + '/icon100.png'} width={'40vw'}/>
+          {/*
+            <img
+              alt="Logo"
+              src={Globals.BASE_URL + '/icon100.png'}
+              width="40"
+              height="40"
+              className="d-inline-block align-top"
+            />*/
+          }{' '}
+          <span className="app-title">La Voie du Thalos</span>
         </Navbar.Brand>
 
         <Row style={{}}>
