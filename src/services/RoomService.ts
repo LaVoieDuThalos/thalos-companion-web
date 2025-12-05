@@ -20,8 +20,8 @@ class RoomService {
 
   getActivitiesPriorityOfDay(day: GameDay): Activity[] {
     return getWeekNumber(day.date) % 2 === 0
-      ? ACTIVITIES.filter((act) => !act.figurines)
-      : ACTIVITIES.filter((act) => act.figurines);
+      ? ACTIVITIES.filter((act) => act.figurines)
+      : ACTIVITIES.filter((act) => !act.figurines);
   }
 
   chooseMeARoomForActivityAndDay(activityId: string, day: GameDay): Room {
@@ -35,7 +35,7 @@ class RoomService {
     const roomsB = ROOMS.filter((r) => r.week === 'B');
     const activityFoundInRoomsA = activitiesInRoomsA.findIndex(
       (act) => act.id === activityId
-    );
+    ) >= 0;
     return activityFoundInRoomsA ? roomsA : roomsB;
   }
 
