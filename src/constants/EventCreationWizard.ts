@@ -72,47 +72,53 @@ export const CREATION_MODES: EventCreationMode[] = [
     },
   },
   {
-    id: 'figNextFriday',
-    label: 'Rencontre Figurines Vendredi prochain',
+    id: 'aosNextFriday',
+    label: 'Rencontre AoS Vendredi prochain',
     color: AOS.style.color,
     backgroundColor: AOS.style.backgroundColor,
     formDataFn: () => {
       const day = calendarService.nextFridayGameDay();
-      const activityId = 'w40k';
+      const activityId = 'aos';
       const roomChosen = roomService.chooseMeARoomForActivityAndDay(
         activityId,
         day
       );
       return {
+        title: 'Rencontres Warhammer AoS',
+        activityId: activityId,
         dayId: day.id,
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
         tables: 2,
         withSubscriptions: true,
+        maxSubscriptions: 1,
         subscriptionMode: MODE_MANUAL.id,
       };
     },
   },
   {
-    id: 'figNextSaturday',
-    label: 'Rencontre Figurines Samedi prochain',
+    id: 'aosNextSaturday',
+    label: 'Rencontre AoS Samedi prochain',
     color: AOS.style.color,
     backgroundColor: AOS.style.backgroundColor,
     formDataFn: () => {
       const day = calendarService.nextSaturdayGameDay();
-      const activityId = 'w40k';
+      const activityId = 'aos';
       const roomChosen = roomService.chooseMeARoomForActivityAndDay(
         activityId,
         day
       );
       return {
+        title: 'Rencontres Warhammer AoS',
+        activityId: activityId,
         dayId: day.id,
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
         tables: 2,
         withSubscriptions: true,
+        maxSubscriptions: 1,
         subscriptionMode: MODE_MANUAL.id,
       };
     },
@@ -134,7 +140,7 @@ export const CREATION_MODES: EventCreationMode[] = [
   },
   {
     id: 'bigJdr',
-    label: 'Grand jeu de rôle (Sur inscription)',
+    label: 'Grand jeu de rôle (Avec inscriptions)',
     color: JDR.style.color,
     backgroundColor: JDR.style.backgroundColor,
     formDataFn: () => {

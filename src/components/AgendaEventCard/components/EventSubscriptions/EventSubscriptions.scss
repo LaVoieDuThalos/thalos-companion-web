@@ -12,23 +12,6 @@
   align-content: center;
   justify-content: center;
   padding-top: 5px;
-  .subscription {
-    width: 100%;
-
-    .subscription-details {
-      display: flex;
-      justify-content: space-between;
-      .user {
-        .name {
-        }
-      }
-
-      .subscribed-at {
-        color: gray;
-        align-self: center;
-      }
-    }
-  }
 
   .empty-seat {
     color: $secondary;

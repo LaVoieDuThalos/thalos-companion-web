@@ -1,0 +1,19 @@
+.subscription {
+  width: 100%;
+
+  .subscription-details {
+    display: flex;
+    justify-content: space-between;
+    .user {
+      .name {
+        font-size: 2vh;
+        align-self: flex-start;
+      }
+    }
+
+    .subscribed-at {
+      color: gray;
+      align-self: center;
+    }
+  }
+}

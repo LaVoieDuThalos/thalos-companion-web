@@ -140,13 +140,6 @@ export default function AgendaEventCard({
         <span>?</span>
       )}
 
-      {/* Illustration / Affiche */}
-      {complete && event.img ? (
-        <div className="event-img">
-          <Image src={event.img} fluid />
-        </div>
-      ) : null}
-
       {/* Creator */}
       {complete ? (
         <View>
@@ -166,6 +159,13 @@ export default function AgendaEventCard({
             </div>
           ) : null}
         </View>
+      ) : null}
+
+      {/* Illustration / Affiche */}
+      {complete && event.img ? (
+        <div className="event-img">
+          <Image src={event.img} fluid rounded />
+        </div>
       ) : null}
 
       {/* Description */}

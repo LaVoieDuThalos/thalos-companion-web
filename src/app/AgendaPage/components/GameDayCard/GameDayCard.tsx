@@ -1,4 +1,4 @@
-import { type CardProps, Row } from 'react-bootstrap';
+import { type CardProps } from 'react-bootstrap';
 
 import { useNavigate } from 'react-router';
 import './GameDayCard.scss';
@@ -22,10 +22,10 @@ export default function GameDayCard({ day, events }: Props) {
       clickable
       onClick={() => navigate(`/agenda/${day.id}`)}
     >
-      <Row>
+      <div className="game-day-card-header">
         <Icon icon="today" iconSize={22} color={'gray'} />
         <span className="game-day">{printGameDay(day)}</span>
-      </Row>
+      </div>
 
       <RoomPriorities day={day} />
 

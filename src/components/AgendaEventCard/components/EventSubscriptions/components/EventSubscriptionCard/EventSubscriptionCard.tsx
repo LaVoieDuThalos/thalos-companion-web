@@ -8,6 +8,8 @@ import type {
 import CustomCard from '../../../../../common/CustomCard/CustomCard.tsx';
 import Icon from '../../../../../common/Icon.tsx';
 
+import './EventSubscriptionCard.scss';
+
 type EventSubscriptionProps = {
   event: AgendaEvent;
   sub: EventSubscription;
@@ -31,6 +33,7 @@ export default function EventSubscriptionCard({
   return (
     <CustomCard>
       <div className="subscription-details">
+
         <div className="user">
           <Icon
             icon={
@@ -43,14 +46,17 @@ export default function EventSubscriptionCard({
             color={sub.status === 'validated' ? Colors.green : Colors.blue}
             iconSize={40}
           />
-          <span className="name">{sub.name ?? sub.user.name}</span>
-        </div>
-        {currentUserIsTheEventCreator && (
-          <div className="subscribed-at">
-            Inscrit(e) le: {subcribedAtDate.toLocaleDateString()} à{' '}
-            {subcribedAtDate.toLocaleTimeString()}
+          <div style={{display: 'flex', flexDirection: 'column'}}>
+            <span className="name">{sub.name ?? sub.user.name}</span>
+            {currentUserIsTheEventCreator && (
+              <div className="subscribed-at">
+                Inscrit(e) le: {subcribedAtDate.toLocaleDateString()} à{' '}
+                {subcribedAtDate.toLocaleTimeString()}
+              </div>
+            )}
           </div>
-        )}
+        </div>
+
         <div className="buttons">
           {userSubscription && sub.id === userSubscription.id && (
             <Button onClick={() => onUnsubscribe(userSubscription.id)}>
