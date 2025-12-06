@@ -23,11 +23,12 @@ class KeyService {
   async updateKey(
     key: RoomKey
   ): Promise<{ key: RoomKey; history: RoomKeyHistory }> {
+    const previousKey = await this.findKeyById(key.id);
     const newKey = await this.api.updateKey(key);
     const history = await this.addToHistory({
       date: new Date().toISOString(),
       keyId: key?.id,
-      from: key?.owner,
+      from: previousKey?.owner,
       to: newKey.owner,
     } as RoomKeyHistoryEntry);
     return { key: newKey, history };

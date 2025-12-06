@@ -68,7 +68,13 @@ export function printGameDay(gameDay: GameDay): string {
 
 export function formatDate(isoDate: string): string {
   const d = new Date(isoDate);
-  return d.toLocaleDateString() + ' - ' + d.getHours() + ':' + d.getMinutes();
+  return (
+    d.toLocaleDateString() +
+    ' - ' +
+    `${d.getHours()}`.padStart(2, '0') +
+    ':' +
+    `${d.getMinutes()}`.padStart(2, '0')
+  );
 }
 
 export function parseHour(hour: string): string {
