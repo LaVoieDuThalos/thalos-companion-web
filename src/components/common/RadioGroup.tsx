@@ -3,7 +3,7 @@ import { removeAll } from '../../utils/Utils';
 import Radio from './Radio';
 import View from './View';
 
-type RadioOption = { value: string; label: string };
+type RadioOption = { value: string; label: string; disabled?: boolean };
 type Layout = 'horizontal' | 'vertical';
 
 type Props = {
@@ -62,6 +62,7 @@ export default function RadioGroup({
             key={o.value}
             value={o.value}
             label={o.label}
+            disabled={o.disabled}
             checked={
               checkedValue &&
               checkedValue.length > 0 &&
