@@ -1,6 +1,6 @@
 import { Form } from 'react-bootstrap';
 import { ACTIVITIES } from '../../../constants/Activities';
-import { ROLES } from '../../../constants/Roles';
+import { ROLE_BUREAU, ROLES } from '../../../constants/Roles';
 import type { User } from '../../../model/User';
 import { hasError, type CustomFormProps } from '../../../utils/FormUtils';
 import RadioGroup from '../../common/RadioGroup';
@@ -68,6 +68,7 @@ export default function SettingsForm({
           options={ROLES.map((r) => ({
             value: r.id,
             label: r.label,
+            disabled: r.id === ROLE_BUREAU.id
           }))}
         />
       </div>
