@@ -6,7 +6,7 @@ import type { GameDay } from '../model/GameDay';
 import type { OpenCloseRoom, Room } from '../model/Room';
 import { fromGameDayId, getWeekNumber } from '../utils/Utils';
 
-class RoomService {
+export class RoomService {
   private api: ApiService;
   hours: string[] = [];
 
@@ -18,21 +18,21 @@ class RoomService {
     }
   }
 
-  getActivitiesPriorityOfDay(day: GameDay): Activity[] {
+  getActivitiesPriorityOfDay(day: GameDay, activities = ACTIVITIES): Activity[] {
     return getWeekNumber(day.date) % 2 === 0
-      ? ACTIVITIES.filter((act) => act.figurines)
-      : ACTIVITIES.filter((act) => !act.figurines);
+      ? activities.filter((act) => act.figurines)
+      : activities.filter((act) => !act.figurines);
   }
 
-  chooseMeARoomForActivityAndDay(activityId: string, day: GameDay): Room {
-    const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day);
+  chooseMeARoomForActivityAndDay(activityId: string, day: GameDay, rooms = ROOMS): Room {
+    const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day, rooms);
     return roomsChosen[0];
   }
 
-  getPrioritiesRoomsForActivity(activityId: string, day: GameDay): Room[] {
+  getPrioritiesRoomsForActivity(activityId: string, day: GameDay, rooms = ROOMS): Room[] {
     const activitiesInRoomsA = this.getActivitiesPriorityOfDay(day);
-    const roomsA = ROOMS.filter((r) => r.week === 'A');
-    const roomsB = ROOMS.filter((r) => r.week === 'B');
+    const roomsA = rooms.filter((r) => r.week === 'A');
+    const roomsB = rooms.filter((r) => r.week === 'B');
     const activityFoundInRoomsA = activitiesInRoomsA.findIndex(
       (act) => act.id === activityId
     ) >= 0;
