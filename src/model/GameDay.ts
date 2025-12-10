@@ -1,4 +1,6 @@
 export interface GameDay {
-  id: string;
+  id: GameDayId;
   date: Date;
 }
+
+export type GameDayId = string;

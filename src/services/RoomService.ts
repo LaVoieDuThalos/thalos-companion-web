@@ -1,9 +1,9 @@
 import { API, type ApiService } from '../api/Api';
 import { ACTIVITIES, JDR } from '../constants/Activities';
 import { ROOMS, SALLE_JDR } from '../constants/Rooms';
-import type { Activity } from '../model/Activity';
-import type { GameDay } from '../model/GameDay';
-import type { OpenCloseRoom, Room } from '../model/Room';
+import type { Activity, ActivityId } from '../model/Activity';
+import type { GameDay, GameDayId } from '../model/GameDay';
+import type { OpenCloseRoom, Room, RoomId } from '../model/Room';
 import { fromGameDayId, getWeekNumber } from '../utils/Utils';
 
 export class RoomService {
@@ -24,12 +24,12 @@ export class RoomService {
       : activities.filter((act) => !act.figurines);
   }
 
-  chooseMeARoomForActivityAndDay(activityId: string, day: GameDay, rooms = ROOMS): Room {
+  chooseMeARoomForActivityAndDay(activityId: ActivityId, day: GameDay, rooms = ROOMS): Room {
     const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day, rooms);
     return roomsChosen[0];
   }
 
-  getPrioritiesRoomsForActivity(activityId: string, day: GameDay, rooms = ROOMS): Room[] {
+  getPrioritiesRoomsForActivity(activityId: ActivityId, day: GameDay, rooms = ROOMS): Room[] {
     const activitiesInRoomsA = this.getActivitiesPriorityOfDay(day);
     const roomsA = rooms.filter((r) => r.week === 'A');
     const roomsB = rooms.filter((r) => r.week === 'B');
@@ -40,9 +40,9 @@ export class RoomService {
   }
 
   isActivityAllowedInRoom(
-    activityId: string,
-    dayId: string,
-    roomId: string
+    activityId: ActivityId,
+    dayId: GameDayId,
+    roomId: RoomId
   ): boolean {
     const day = fromGameDayId(dayId);
     if (!day) {
@@ -55,7 +55,7 @@ export class RoomService {
     return roomsChosen.map((r) => r.id).indexOf(roomId) >= 0;
   }
 
-  async getOpenCloseConfig(dayId: string): Promise<OpenCloseRoom> {
+  async getOpenCloseConfig(dayId: GameDayId): Promise<OpenCloseRoom> {
     const result = await this.api.findOpenCloseConfiguration(dayId);
     if (result == null) {
       return {

@@ -2,7 +2,7 @@ import { API, type ApiService } from '../api/Api';
 import type {
   RoomKey,
   RoomKeyHistory,
-  RoomKeyHistoryEntry,
+  RoomKeyHistoryEntry, RoomKeyId,
 } from '../model/RoomKey';
 
 class KeyService {
@@ -16,7 +16,7 @@ class KeyService {
     return this.api.findAllKeys();
   }
 
-  findKeyById(keyId: string): Promise<RoomKey | null> {
+  findKeyById(keyId: RoomKeyId): Promise<RoomKey | null> {
     return this.api.findKeyById(keyId);
   }
 
@@ -34,7 +34,7 @@ class KeyService {
     return { key: newKey, history };
   }
 
-  findHistory(keyId: string | undefined): Promise<RoomKeyHistory> {
+  findHistory(keyId: RoomKeyId | undefined): Promise<RoomKeyHistory> {
     if (keyId === undefined) {
       return Promise.resolve([]);
     }

@@ -95,7 +95,7 @@ describe('Mappers tests', () => {
           id: 'room1',
           name: 'Room A',
         },
-        start: '15H',
+        start: '15h',
         startTime: 123456,
         tables: 4,
         title: 'Test',

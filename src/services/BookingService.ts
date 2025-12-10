@@ -1,7 +1,8 @@
 import { ROOMS, TOUTE_LA_SALLE } from '../constants/Rooms';
-import type { AgendaEvent } from '../model/AgendaEvent';
+import type { AgendaEvent, AgendaEventId } from '../model/AgendaEvent';
 import { eventIsInTimeSlot } from '../utils/Utils';
 import { agendaService, type AgendaService } from './AgendaService';
+import type { GameDayId } from '../model/GameDay.ts';
 
 export type RoomsOccupation = {
   [key: string]: number;
@@ -27,10 +28,11 @@ class BookingService {
   }
 
   async availableTablesByRooms(
-    dayId: string,
+    dayId: GameDayId,
     startTime = 0,
     endTime = 0,
-    excludeEventIds: string[] = []
+    excludeEventIds: AgendaEventId[] = [],
+    rooms = ROOMS
   ): Promise<TablesAvailables> {
     const occupations = await this.findRoomsOccupation(
       dayId,
@@ -38,7 +40,7 @@ class BookingService {
       endTime,
       excludeEventIds
     );
-    return ROOMS.map((room) => {
+    return rooms.map((room) => {
       const roomCapacity = room.capacity || 0;
       const roomOccupation = occupations[room.id] || 0;
       const count =
@@ -62,10 +64,10 @@ class BookingService {
   }
 
   async findRoomsOccupation(
-    dayId: string,
+    dayId: GameDayId,
     startTime = 0,
     endTime = 0,
-    excludeEventIds: string[] = []
+    excludeEventIds: AgendaEventId[] = []
   ): Promise<RoomsOccupation> {
     const events = await this.agendaService.findEventsOfDay(
       dayId,

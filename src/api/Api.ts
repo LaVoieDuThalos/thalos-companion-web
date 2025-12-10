@@ -1,61 +1,68 @@
-import type { AgendaEvent, EventSubscription } from '../model/AgendaEvent';
+import type {
+  AgendaEvent,
+  AgendaEventId,
+  EventSubscription,
+  EventSubscriptionId,
+  EventSubscriptionStatus,
+} from '../model/AgendaEvent';
 import type { DayCounts } from '../model/Counting';
-import type { OpenCloseRoom } from '../model/Room';
+import type { OpenCloseRoom, RoomId } from '../model/Room';
 import type {
   RoomKey,
   RoomKeyHistory,
-  RoomKeyHistoryEntry,
+  RoomKeyHistoryEntry, RoomKeyId,
 } from '../model/RoomKey';
-import type { User } from '../model/User';
+import type { User, UserId } from '../model/User';
 import { firestoreApi } from './FirestoreApi';
 import { mockServerApi } from './MockServerApi';
+import type { GameDayId } from '../model/GameDay.ts';
 
 // Interface avec le backend (Firestore ou autre)
 export interface ApiService {
   /* Gestion utilisateur ******************************************************/
   findAllUsers: (withEmptyName: boolean) => Promise<User[]>;
-  findUserById: (userId: string) => Promise<User | null>;
-  findUserByName: (name: string, excludeUserIds: string[]) => Promise<User[]>;
+  findUserById: (userId: UserId) => Promise<User | null>;
+  findUserByName: (name: string, excludeUserIds: UserId[]) => Promise<User[]>;
   saveOrUpdateUser: (user: User) => Promise<User>;
 
   /* Gestion des events *******************************************************/
-  findEventById: (eventId: string) => Promise<AgendaEvent | null>;
-  findEventsByDayId: (dayId: string) => Promise<AgendaEvent[]>;
+  findEventById: (eventId: AgendaEventId) => Promise<AgendaEvent | null>;
+  findEventsByDayId: (dayId: GameDayId) => Promise<AgendaEvent[]>;
   findAllEventsOfMonth: (year: number, month: number) => Promise<AgendaEvent[]>;
   findEventsByDayIdAndRoomId: (
-    dayId: string,
-    roomId: string
+    dayId: GameDayId,
+    roomId: RoomId
   ) => Promise<AgendaEvent[]>;
   findAllEvents: () => Promise<AgendaEvent[]>;
-  saveEvent: (event: Partial<AgendaEvent>) => Promise<AgendaEvent>;
-  updateEvent: (event: Partial<AgendaEvent>) => Promise<AgendaEvent>;
-  deleteEvent: (eventId: string) => Promise<void>;
+  saveEvent: (event: AgendaEvent | Omit<AgendaEvent, 'id'>) => Promise<AgendaEvent>;
+  updateEvent: (event: AgendaEvent) => Promise<AgendaEvent>;
+  deleteEvent: (eventId: AgendaEventId) => Promise<void>;
 
   /* Gestion des badges *******************************************************/
   findAllKeys: () => Promise<RoomKey[]>;
-  findKeyById: (keyId: string) => Promise<RoomKey | null>;
+  findKeyById: (keyId: RoomKeyId) => Promise<RoomKey | null>;
   updateKey: (key: RoomKey) => Promise<RoomKey>;
-  findKeyHistory: (keyId: string) => Promise<RoomKeyHistory>;
+  findKeyHistory: (keyId: RoomKeyId) => Promise<RoomKeyHistory>;
   addToKeyHistory: (entry: RoomKeyHistoryEntry) => Promise<RoomKeyHistory>;
 
   /* Comptage *****************************************************************/
   saveCountings: (counts: DayCounts) => Promise<void>;
-  getCountings: (dayId: string) => Promise<DayCounts | null>;
+  getCountings: (dayId: GameDayId) => Promise<DayCounts | null>;
 
   /* Ouverture/Fermeture de la salle ******************************************/
-  findOpenCloseConfiguration: (dayId: string) => Promise<OpenCloseRoom | null>;
+  findOpenCloseConfiguration: (dayId: GameDayId) => Promise<OpenCloseRoom | null>;
   saveOpenCloseConfiguration: (config: OpenCloseRoom) => Promise<void>;
 
   /* Gestion des inscriptions *************************************************/
   findAllSubscriptionsOfEvent: (
-    eventId: string
+    eventId: AgendaEventId
   ) => Promise<EventSubscription[]>;
   subscribeUserToEvent: (sub: EventSubscription) => Promise<void>;
-  unsubscribeUserToEvent: (subId: string) => Promise<void>;
-  unsubscribeAll: (eventId: string) => Promise<void>;
+  unsubscribeUserToEvent: (subId: EventSubscriptionId) => Promise<void>;
+  unsubscribeAll: (eventId: AgendaEventId) => Promise<void>;
   updateSubscriptionStatus: (
     sub: EventSubscription,
-    status: string
+    status: EventSubscriptionStatus
   ) => Promise<void>;
 }
 

@@ -1,7 +1,9 @@
 import { API, type ApiService } from '../api/Api';
-import type { AgendaEvent } from '../model/AgendaEvent';
+import type { AgendaEvent, AgendaEventId } from '../model/AgendaEvent';
 import { fromGameDayId, getEndTime, getStartTime } from '../utils/Utils';
 import { subscriptionService } from './SubscriptionService';
+import type { GameDayId } from '../model/GameDay.ts';
+import type { RoomId } from '../model/Room.ts';
 
 export class AgendaService {
   private api: ApiService;
@@ -14,13 +16,13 @@ export class AgendaService {
     return events.sort((a, b) => a.startTime! - b.startTime!);
   }
 
-  findEventById(eventId: string): Promise<AgendaEvent | null> {
+  findEventById(eventId: AgendaEventId): Promise<AgendaEvent | null> {
     return this.api.findEventById(eventId);
   }
 
   async findEventsOfDay(
-    dayId: string,
-    excludeEventIds: string[] = [],
+    dayId: GameDayId,
+    excludeEventIds: AgendaEventId[] = [],
   ): Promise<AgendaEvent[]> {
     const events = await this.api
       .findEventsByDayId(dayId);
@@ -34,8 +36,8 @@ export class AgendaService {
   }
 
   findEventsOfDayAndRoom(
-    dayId: string,
-    roomId: string
+    dayId: GameDayId,
+    roomId: RoomId
   ): Promise<AgendaEvent[]> {
     return this.api.findEventsByDayIdAndRoomId(dayId, roomId);
   }
@@ -45,7 +47,7 @@ export class AgendaService {
     return this.sortEvents(events);
   }
 
-  saveEvent(event: Partial<AgendaEvent>): Promise<AgendaEvent> {
+  saveEvent(event: AgendaEvent | Omit<AgendaEvent, 'id'>): Promise<AgendaEvent> {
     const day = fromGameDayId(event.dayId);
     if (day === null || !event?.durationInMinutes) {
       throw new Error('Unable to save event : ' + event);
@@ -55,16 +57,16 @@ export class AgendaService {
       ...event,
       startTime: getStartTime(day!, event.start!),
       endTime: getEndTime(day!, event.start!, event.durationInMinutes),
-    } as Partial<AgendaEvent>;
+    } as AgendaEvent | Omit<AgendaEvent, 'id'>;
 
-    if (event.id) {
+    if ('id' in event && event['id'] !== undefined) {
       return this.api.updateEvent(enriched);
     } else {
       return this.api.saveEvent(enriched);
     }
   }
 
-  async deleteEvent(eventId: string): Promise<void> {
+  async deleteEvent(eventId: AgendaEventId): Promise<void> {
     await this.api
       .deleteEvent(eventId);
     return await subscriptionService.unsubscribeAll(eventId);

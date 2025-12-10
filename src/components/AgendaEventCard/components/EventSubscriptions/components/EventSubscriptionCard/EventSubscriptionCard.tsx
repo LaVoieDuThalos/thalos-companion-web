@@ -3,7 +3,7 @@ import { Colors } from '../../../../../../constants/Colors.ts';
 import { useUser } from '../../../../../../hooks/useUser.ts';
 import type {
   AgendaEvent,
-  EventSubscription,
+  EventSubscription, EventSubscriptionStatus,
 } from '../../../../../../model/AgendaEvent.ts';
 import CustomCard from '../../../../../common/CustomCard/CustomCard.tsx';
 import Icon from '../../../../../common/Icon.tsx';
@@ -15,7 +15,7 @@ type EventSubscriptionProps = {
   sub: EventSubscription;
   userSubscription?: EventSubscription;
   onUnsubscribe: (subId: string) => void;
-  onUpdateSubscription: (sub: EventSubscription, status: string) => void;
+  onUpdateSubscription: (sub: EventSubscription, status: EventSubscriptionStatus) => void;
 };
 
 export default function EventSubscriptionCard({

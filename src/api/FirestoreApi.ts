@@ -12,15 +12,21 @@ import {
   setDoc,
   where,
 } from '@firebase/firestore';
-import type { AgendaEvent, EventSubscription } from '../model/AgendaEvent';
+import type {
+  AgendaEvent,
+  AgendaEventId,
+  EventSubscription,
+  EventSubscriptionId,
+  EventSubscriptionStatus,
+} from '../model/AgendaEvent';
 import type { DayCounts } from '../model/Counting';
-import type { OpenCloseRoom } from '../model/Room';
+import type { OpenCloseRoom, RoomId } from '../model/Room';
 import type {
   RoomKey,
   RoomKeyHistory,
-  RoomKeyHistoryEntry,
+  RoomKeyHistoryEntry, RoomKeyId,
 } from '../model/RoomKey';
-import type { User } from '../model/User';
+import type { User, UserId } from '../model/User';
 import type { ApiService } from './Api';
 import {
   mapAgendaEventToDto,
@@ -30,6 +36,7 @@ import {
 } from './Mappers';
 
 import { FirebaseDb } from '../../firebaseConfig';
+import type { GameDayId } from '../model/GameDay.ts';
 
 const Collections = {
   USERS: 'users',
@@ -73,7 +80,7 @@ class FirestoreApi implements ApiService {
   }
 
   // Recherche l'utilisateur par son identifiant
-  async findUserById(userId: string): Promise<User | null> {
+  async findUserById(userId: UserId): Promise<User | null> {
     console.log('FS findUserById()', userId);
     const res = await getDoc(doc(FirebaseDb, Collections.USERS, userId));
     return res.data()
@@ -86,7 +93,7 @@ class FirestoreApi implements ApiService {
   // Recherche l'utilisateur par son nom en excluant ceux avec les identifiants mentionnés dans 'excludeIds'
   async findUserByName(
     name: string,
-    excludeIds: string[] = []
+    excludeIds: UserId[] = []
   ): Promise<User[]> {
     console.log('FS findUserByName()', name, excludeIds);
     const q = query(
@@ -116,14 +123,14 @@ class FirestoreApi implements ApiService {
   /* Gestion des events *******************************************************/
 
   // Recherche un event par son identifiant
-  async findEventById(eventId: string): Promise<AgendaEvent | null> {
+  async findEventById(eventId: AgendaEventId): Promise<AgendaEvent | null> {
     console.log('findEventById()', eventId);
     const res = await getDoc(doc(FirebaseDb, Collections.EVENTS, eventId));
     return res.data() ? mapDtoToAgendaEvent(res.id, res.data()) : null;
   }
 
   // Recherche tous les events pour une journée donnée
-  async findEventsByDayId(dayId: string): Promise<AgendaEvent[]> {
+  async findEventsByDayId(dayId: GameDayId): Promise<AgendaEvent[]> {
     console.log('findEventsByDayId()', dayId);
     const q = query(
       collection(FirebaseDb, Collections.EVENTS),
@@ -153,8 +160,8 @@ class FirestoreApi implements ApiService {
 
   // Recherche tous les events prévus dans une salle et une journée donnée
   async findEventsByDayIdAndRoomId(
-    dayId: string,
-    roomId: string
+    dayId: GameDayId,
+    roomId: RoomId
   ): Promise<AgendaEvent[]> {
     console.log('findEventsByDayIdAndRoomId()', dayId, roomId);
     const q = query(
@@ -174,7 +181,7 @@ class FirestoreApi implements ApiService {
   }
 
   // Enregistre un event et le retourne avec son nouvel identifiant s'il a été crée
-  async saveEvent(event: Partial<AgendaEvent>): Promise<AgendaEvent> {
+  async saveEvent(event: AgendaEvent | Omit<AgendaEvent, 'id'>): Promise<AgendaEvent> {
     console.log('saveEvent()', event);
     const res = await addDoc(
       collection(FirebaseDb, Collections.EVENTS),
@@ -189,7 +196,7 @@ class FirestoreApi implements ApiService {
   }
 
   // Mise à jour d'un event et le retourne
-  async updateEvent(event: Partial<AgendaEvent>): Promise<AgendaEvent> {
+  async updateEvent(event: AgendaEvent): Promise<AgendaEvent> {
     console.log('updateEvent()', event);
     if (event && event.id) {
       await setDoc(
@@ -208,7 +215,7 @@ class FirestoreApi implements ApiService {
   }
 
   // Supprime un event avec son identifiant
-  deleteEvent(eventId: string): Promise<void> {
+  deleteEvent(eventId: AgendaEventId): Promise<void> {
     console.log('deleteEvent()', eventId);
     return deleteDoc(doc(FirebaseDb, Collections.EVENTS, eventId));
   }
@@ -223,7 +230,7 @@ class FirestoreApi implements ApiService {
   }
 
   // Recherche un badge par son identifiant
-  async findKeyById(keyId: string): Promise<RoomKey | null> {
+  async findKeyById(keyId: RoomKeyId): Promise<RoomKey | null> {
     console.log('findKeyById()');
     const result = await getDoc(doc(FirebaseDb, Collections.KEYS, keyId));
     return result.data() ? mapDtoToRoomKey(result.id, result.data()) : null;
@@ -242,7 +249,7 @@ class FirestoreApi implements ApiService {
 
   // Recherche l'historique des échanges d'un badge
   // maxLog : Nombre de log à récupérer
-  async findKeyHistory(keyId: string, maxLog = 10): Promise<RoomKeyHistory> {
+  async findKeyHistory(keyId: RoomKeyId, maxLog = 10): Promise<RoomKeyHistory> {
     console.log('findKeyHistory()', keyId);
     const q = query(
       collection(FirebaseDb, Collections.KEY_HISTORY),
@@ -269,7 +276,7 @@ class FirestoreApi implements ApiService {
   }
 
   // Recherche le comptage pour une journée donnée
-  async getCountings(dayId: string): Promise<DayCounts | null> {
+  async getCountings(dayId: GameDayId): Promise<DayCounts | null> {
     console.log('getCountings()');
     const result = await getDoc(doc(FirebaseDb, Collections.COUNTINGS, dayId));
     return result.data() ? ({ ...result.data() } as DayCounts) : null;
@@ -279,7 +286,7 @@ class FirestoreApi implements ApiService {
 
   // Recherche les configs open/close pour une journée donnée
   async findOpenCloseConfiguration(
-    dayId: string
+    dayId: GameDayId
   ): Promise<OpenCloseRoom | null> {
     console.log('findOpenCloseConfiguration()');
     const result = await getDoc(doc(FirebaseDb, Collections.DAYS, dayId));
@@ -296,7 +303,7 @@ class FirestoreApi implements ApiService {
 
   // Recherche toutes les inscriptions d'un event
   async findAllSubscriptionsOfEvent(
-    eventId: string
+    eventId: AgendaEventId
   ): Promise<EventSubscription[]> {
     console.log('findAllSubscriptionsOfEvent', eventId);
     const q = query(
@@ -315,13 +322,13 @@ class FirestoreApi implements ApiService {
   }
 
   // Enregistre une désinscripton d'un utilisateur sur un event
-  unsubscribeUserToEvent(subId: string): Promise<void> {
+  unsubscribeUserToEvent(subId: EventSubscriptionId): Promise<void> {
     console.log('subscribeUserToEvent', subId);
     return deleteDoc(doc(FirebaseDb, Collections.SUBSCRIPTIONS, subId));
   }
 
   // Supprime toutes les inscriptions d'un event
-  async unsubscribeAll(eventId: string): Promise<void> {
+  async unsubscribeAll(eventId: AgendaEventId): Promise<void> {
     console.log('unsubscribeAll', eventId);
 
     const q = query(
@@ -337,7 +344,7 @@ class FirestoreApi implements ApiService {
   // Mise à jour du statut d'une inscription d'un utilisateur sur un event
   updateSubscriptionStatus(
     sub: EventSubscription,
-    status: string
+    status: EventSubscriptionStatus
   ): Promise<void> {
     console.log('updateSubscriptionStatus', sub, status);
     return setDoc(doc(FirebaseDb, Collections.SUBSCRIPTIONS, sub.id), {

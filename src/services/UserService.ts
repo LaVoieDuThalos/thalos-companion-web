@@ -1,5 +1,5 @@
 import { API, type ApiService } from '../api/Api';
-import type { User } from '../model/User';
+import type { User, UserId } from '../model/User';
 
 class UserService {
   private api: ApiService;
@@ -10,7 +10,7 @@ class UserService {
 
   findUserByName(
     name: string | undefined,
-    excludeUserIds: string[] = []
+    excludeUserIds: UserId[] = []
   ): Promise<User[]> {
     if (!name) {
       return Promise.reject('Name not provided');
@@ -18,7 +18,7 @@ class UserService {
     return this.api.findUserByName(name, excludeUserIds);
   }
 
-  getUserById(userId: string): Promise<User | null> {
+  getUserById(userId: UserId): Promise<User | null> {
     return this.api.findUserById(userId);
   }
 

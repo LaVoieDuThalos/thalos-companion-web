@@ -1,6 +1,12 @@
 import { API, type ApiService } from '../api/Api';
-import type { AgendaEvent, EventSubscription } from '../model/AgendaEvent';
-import type { User } from '../model/User';
+import type {
+  AgendaEvent,
+  AgendaEventId,
+  EventSubscription,
+  EventSubscriptionId,
+  EventSubscriptionStatus,
+} from '../model/AgendaEvent';
+import type { User, UserId } from '../model/User';
 import { uuid } from '../utils/Utils';
 
 export class SubscriptionService {
@@ -11,14 +17,14 @@ export class SubscriptionService {
   }
 
   alreadySubscribed(
-    userId: string,
+    userId: UserId,
     subscriptions: EventSubscription[]
   ): boolean {
     return subscriptions.findIndex((s) => s.user.id === userId) >= 0;
   }
 
   findSubscriptionOfUser(
-    userId: string,
+    userId: UserId,
     subscriptions: EventSubscription[]
   ): EventSubscription | undefined {
     return subscriptions.find((s) => s.user.id === userId);
@@ -64,17 +70,17 @@ export class SubscriptionService {
     }
   }
 
-  unsubscribe(subscriptionId: string): Promise<void> {
+  unsubscribe(subscriptionId: EventSubscriptionId): Promise<void> {
     return this.api.unsubscribeUserToEvent(subscriptionId);
   }
 
-  unsubscribeAll(eventId: string): Promise<void> {
+  unsubscribeAll(eventId: AgendaEventId): Promise<void> {
     return this.api.unsubscribeAll(eventId);
   }
 
   updateSubscriptionStatus(
     subscription: EventSubscription,
-    status: string
+    status: EventSubscriptionStatus
   ): Promise<void> {
     return this.api.updateSubscriptionStatus(subscription, status);
   }

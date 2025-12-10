@@ -1,8 +1,9 @@
 import { useContext } from 'react';
-import { findRoleById, type Role } from '../constants/Roles.ts';
+import { findRoleById} from '../constants/Roles.ts';
 import { UserContext } from '../contexts/UserContext';
 import type { User } from '../model/User';
 import { settingsService } from '../services/SettingsService.ts';
+import type { Role } from '../model/Role.ts';
 
 export function useUser(): {
   user: User;
