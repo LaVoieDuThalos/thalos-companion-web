@@ -13,12 +13,12 @@ class CalendarService {
     return date.toJSON().slice(0, 10);
   }
 
-  buildDaysFromDate(start: Date, limit = 31): GameDay[] {
+  buildDaysFromDate(start: Date, limit = 31, allDays = false): GameDay[] {
     const current = start;
     current.setHours(12);
     const result: GameDay[] = [];
     for (let i = 0; i < limit; i++) {
-      if (this.gameDays.includes(start.getDay())) {
+      if (allDays || this.gameDays.includes(start.getDay())) {
         result.push({
           id: this.buildDayId(current),
           date: new Date(current),

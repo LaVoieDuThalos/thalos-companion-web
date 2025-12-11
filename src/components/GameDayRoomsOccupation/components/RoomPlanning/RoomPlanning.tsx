@@ -1,15 +1,19 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
-import './RoomPlanning.scss';
-import type { GameDay } from '../../../../model/GameDay.ts';
-import type { AgendaEvent } from '../../../../model/AgendaEvent.ts';
-import { clamp, eventIsInTimeSlot, fromRoomId } from '../../../../utils/Utils.ts';
-import { calendarService } from '../../../../services/CalendarService.ts';
-import Icon from '../../../common/Icon.tsx';
-import CustomCard from '../../../common/CustomCard/CustomCard.tsx';
-import Tag from '../../../common/Tag/Tag.tsx';
 import { TOUTE_LA_SALLE } from '../../../../constants/Rooms.ts';
+import type { AgendaEvent } from '../../../../model/AgendaEvent.ts';
+import type { GameDay } from '../../../../model/GameDay.ts';
+import { calendarService } from '../../../../services/CalendarService.ts';
+import {
+  clamp,
+  eventIsInTimeSlot,
+  fromRoomId,
+} from '../../../../utils/Utils.ts';
+import CustomCard from '../../../common/CustomCard/CustomCard.tsx';
+import Icon from '../../../common/Icon.tsx';
+import Tag from '../../../common/Tag/Tag.tsx';
+import './RoomPlanning.scss';
 
 type Props = {
   roomId: string;
@@ -136,10 +140,13 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
   };
 
   const computeTop = (event: AgendaEvent, events: AgendaEvent[]) => {
-    const index = events.indexOf(event);
+    const eventsWithCollision = events.filter((e) =>
+      eventIsInTimeSlot(event, e.startTime!, e.endTime!)
+    );
+    const index = eventsWithCollision.indexOf(event);
     let top = 0;
     for (let i = 0; i < index; i++) {
-      top += events[i].tables || 1;
+      top += eventsWithCollision[i].tables || 1;
     }
     return top;
   };
@@ -212,19 +219,35 @@ export default function RoomPlanning({ day, roomId, events }: Props) {
             className="event"
             style={layoutEvent(event, computeTop(event, eventsVisibles))}
           >
-            <div>
+            <div
+              className={
+                event.tables != undefined && event.tables <= 1
+                  ? 'header-row'
+                  : 'header-block'
+              }
+            >
               <Tag
                 color={event!.activity!.style.backgroundColor}
                 textColor={event!.activity!.style.color}
               >
                 <span>{event!.activity!.name}</span>
               </Tag>
+              {event.tables !== undefined && event.tables <= 1 ? (
+                <div>
+                  <strong>{event.start}</strong> - {event.title} - [
+                  {event.room?.name}] (
+                  {event.tables !== TOUTE_LA_SALLE
+                    ? `${event.tables} table${(event.tables || 0) > 1 ? 's' : ''}`
+                    : 'Toute la salle'}
+                  )
+                </div>
+              ) : null}
             </div>
             <div>
               <strong>{event.start}</strong> - {event.title} - [
               {event.room?.name}] (
               {event.tables !== TOUTE_LA_SALLE
-                ? `${event.tables} table${event.tables || 0 > 1 ? 's' : ''}`
+                ? `${event.tables} table${(event.tables || 0) > 1 ? 's' : ''}`
                 : 'Toute la salle'}
               )
             </div>

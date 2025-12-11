@@ -1,6 +1,5 @@
 import type { GameDay } from '../../model/GameDay';
 import { getWeekNumber } from '../../utils/Utils';
-import Icon from '../common/Icon';
 
 import './RoomPriorities.scss';
 
@@ -10,7 +9,6 @@ type Props = {
 export default function RoomPriorities({ day }: Props) {
   return (
     <div className="room-priorities">
-      <Icon icon="room_preferences" iconSize={22} />
       {/* Semaines paires Fig=Grande salle, Algéco=JDS */}
       <div className="room-priority">
         <span className="room-main-annexe">Grande salle & Annexe :</span>

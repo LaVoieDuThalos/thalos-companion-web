@@ -1,6 +1,6 @@
 import { API, type ApiService } from '../api/Api';
-import { ACTIVITIES, JDR } from '../constants/Activities';
-import { ROOMS, SALLE_JDR } from '../constants/Rooms';
+import { ACTIVITIES, EVENEMENT, JDR } from '../constants/Activities';
+import { AUTRE_SALLE, ROOMS, SALLE_JDR } from '../constants/Rooms';
 import type { Activity } from '../model/Activity';
 import type { GameDay } from '../model/GameDay';
 import type { OpenCloseRoom, Room } from '../model/Room';
@@ -33,9 +33,8 @@ class RoomService {
     const activitiesInRoomsA = this.getActivitiesPriorityOfDay(day);
     const roomsA = ROOMS.filter((r) => r.week === 'A');
     const roomsB = ROOMS.filter((r) => r.week === 'B');
-    const activityFoundInRoomsA = activitiesInRoomsA.findIndex(
-      (act) => act.id === activityId
-    ) >= 0;
+    const activityFoundInRoomsA =
+      activitiesInRoomsA.findIndex((act) => act.id === activityId) >= 0;
     return activityFoundInRoomsA ? roomsA : roomsB;
   }
 
@@ -49,6 +48,9 @@ class RoomService {
       return false;
     }
     if (activityId === JDR.id && roomId === SALLE_JDR.id) {
+      return true;
+    }
+    if (roomId === AUTRE_SALLE.id || activityId === EVENEMENT.id) {
       return true;
     }
     const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day);

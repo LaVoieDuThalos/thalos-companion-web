@@ -20,10 +20,9 @@ export class AgendaService {
 
   async findEventsOfDay(
     dayId: string,
-    excludeEventIds: string[] = [],
+    excludeEventIds: string[] = []
   ): Promise<AgendaEvent[]> {
-    const events = await this.api
-      .findEventsByDayId(dayId);
+    const events = await this.api.findEventsByDayId(dayId);
     const events_1 = events.filter((e) => excludeEventIds.indexOf(e.id) < 0);
     return this.sortEvents(events_1);
   }
@@ -65,8 +64,7 @@ export class AgendaService {
   }
 
   async deleteEvent(eventId: string): Promise<void> {
-    await this.api
-      .deleteEvent(eventId);
+    await this.api.deleteEvent(eventId);
     return await subscriptionService.unsubscribeAll(eventId);
   }
 }
