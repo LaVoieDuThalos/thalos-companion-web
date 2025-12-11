@@ -5,6 +5,7 @@ import type { AgendaEvent } from '../model/AgendaEvent';
 import type { RoomKey } from '../model/RoomKey';
 import type { User } from '../model/User';
 import { fromActivityId, fromGameDayId, fromRoomId } from '../utils/Utils';
+import type { UserDto } from '../dto/User.ts';
 
 export const mapDtoToAgendaEvent = (
   id: string,
@@ -46,12 +47,18 @@ export const mapAgendaEventToDto = (
   };
 };
 
-export const mapDtoToUser = (id: string, json: any): User => {
-  return {
-    ...json,
-    id,
-  } as User;
-};
+export function toUsers(dtos: UserDto[]): User[] {
+  return dtos.map(toUser);
+}
+
+export function toUser(dto: UserDto): User {
+  if(dto === undefined) {
+    return undefined;
+  }
+  return ({
+    ...dto
+  } as User);
+}
 
 export const mapDtoToRoomKey = (id: string, json: any): RoomKey => {
   return {

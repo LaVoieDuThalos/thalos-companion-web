@@ -5,68 +5,67 @@ import type {
   EventSubscriptionId,
   EventSubscriptionStatus,
 } from '../model/AgendaEvent';
-import type { DayCounts } from '../model/Counting';
-import type { OpenCloseRoom, RoomId } from '../model/Room';
-import type {
-  RoomKey,
-  RoomKeyHistory,
-  RoomKeyHistoryEntry, RoomKeyId,
+import type { RoomId } from '../model/Room';
+import type {RoomKeyId,
 } from '../model/RoomKey';
-import type { User, UserId } from '../model/User';
+import type { UserId } from '../model/User';
 import { firestoreApi } from './FirestoreApi';
-import { mockServerApi } from './MockServerApi';
 import type { GameDayId } from '../model/GameDay.ts';
+import type { UserDto } from './dto/User.ts';
+import type { AgendaEventDto, EventSubscriptionDto } from './dto/AgendaEvent.ts';
+import type { RoomKeyDto, RoomKeyHistoryDto, RoomKeyHistoryEntryDto } from './dto/Keys.ts';
+import type { DayCountsDto } from './dto/Countings.ts';
+import type { OpenCloseRoomDto } from './dto/Room.ts';
 
 // Interface avec le backend (Firestore ou autre)
 export interface ApiService {
   /* Gestion utilisateur ******************************************************/
-  findAllUsers: (withEmptyName: boolean) => Promise<User[]>;
-  findUserById: (userId: UserId) => Promise<User | null>;
-  findUserByName: (name: string, excludeUserIds: UserId[]) => Promise<User[]>;
-  saveOrUpdateUser: (user: User) => Promise<User>;
+  findAllUsers: (withEmptyName: boolean) => Promise<UserDto[]>;
+  findUserById: (userId: UserId) => Promise<UserDto | null>;
+  findUserByName: (name: string, excludeUserIds: UserId[]) => Promise<UserDto[]>;
+  saveOrUpdateUser: (user: UserDto) => Promise<UserDto>;
 
   /* Gestion des events *******************************************************/
-  findEventById: (eventId: AgendaEventId) => Promise<AgendaEvent | null>;
-  findEventsByDayId: (dayId: GameDayId) => Promise<AgendaEvent[]>;
-  findAllEventsOfMonth: (year: number, month: number) => Promise<AgendaEvent[]>;
+  findEventById: (eventId: AgendaEventId) => Promise<AgendaEventDto | null>;
+  findEventsByDayId: (dayId: GameDayId) => Promise<AgendaEventDto[]>;
+  findAllEventsOfMonth: (year: number, month: number) => Promise<AgendaEventDto[]>;
   findEventsByDayIdAndRoomId: (
     dayId: GameDayId,
     roomId: RoomId
-  ) => Promise<AgendaEvent[]>;
-  findAllEvents: () => Promise<AgendaEvent[]>;
-  saveEvent: (event: AgendaEvent | Omit<AgendaEvent, 'id'>) => Promise<AgendaEvent>;
-  updateEvent: (event: AgendaEvent) => Promise<AgendaEvent>;
+  ) => Promise<AgendaEventDto[]>;
+  findAllEvents: () => Promise<AgendaEventDto[]>;
+  saveEvent: (event: AgendaEventDto) => Promise<AgendaEventDto>;
+  updateEvent: (event: AgendaEventDto) => Promise<AgendaEventDto>;
   deleteEvent: (eventId: AgendaEventId) => Promise<void>;
 
   /* Gestion des badges *******************************************************/
-  findAllKeys: () => Promise<RoomKey[]>;
-  findKeyById: (keyId: RoomKeyId) => Promise<RoomKey | null>;
-  updateKey: (key: RoomKey) => Promise<RoomKey>;
-  findKeyHistory: (keyId: RoomKeyId) => Promise<RoomKeyHistory>;
-  addToKeyHistory: (entry: RoomKeyHistoryEntry) => Promise<RoomKeyHistory>;
+  findAllKeys: () => Promise<RoomKeyDto[]>;
+  findKeyById: (keyId: RoomKeyId) => Promise<RoomKeyDto | null>;
+  updateKey: (key: RoomKeyDto) => Promise<RoomKeyDto>;
+  findKeyHistory: (keyId: RoomKeyId) => Promise<RoomKeyHistoryDto>;
+  addToKeyHistory: (entry: RoomKeyHistoryEntryDto) => Promise<RoomKeyHistoryDto>;
 
   /* Comptage *****************************************************************/
-  saveCountings: (counts: DayCounts) => Promise<void>;
-  getCountings: (dayId: GameDayId) => Promise<DayCounts | null>;
+  saveCountings: (counts: DayCountsDto) => Promise<void>;
+  getCountings: (dayId: GameDayId) => Promise<DayCountsDto | null>;
 
   /* Ouverture/Fermeture de la salle ******************************************/
-  findOpenCloseConfiguration: (dayId: GameDayId) => Promise<OpenCloseRoom | null>;
-  saveOpenCloseConfiguration: (config: OpenCloseRoom) => Promise<void>;
+  findOpenCloseConfiguration: (dayId: GameDayId) => Promise<OpenCloseRoomDto | null>;
+  saveOpenCloseConfiguration: (config: OpenCloseRoomDto) => Promise<void>;
 
   /* Gestion des inscriptions *************************************************/
   findAllSubscriptionsOfEvent: (
     eventId: AgendaEventId
-  ) => Promise<EventSubscription[]>;
-  subscribeUserToEvent: (sub: EventSubscription) => Promise<void>;
+  ) => Promise<EventSubscriptionDto[]>;
+  subscribeUserToEvent: (sub: EventSubscriptionDto) => Promise<void>;
   unsubscribeUserToEvent: (subId: EventSubscriptionId) => Promise<void>;
   unsubscribeAll: (eventId: AgendaEventId) => Promise<void>;
   updateSubscriptionStatus: (
-    sub: EventSubscription,
+    sub: EventSubscriptionDto,
     status: EventSubscriptionStatus
   ) => Promise<void>;
 }
 
-const apiMode = import.meta.env.VITE_API || 'firebase';
+//const apiMode = import.meta.env.VITE_API || 'firebase';
 
-export const API =
-  apiMode.trim().toLowerCase() === 'mock_server' ? mockServerApi : firestoreApi;
+export const API: ApiService = firestoreApi;
