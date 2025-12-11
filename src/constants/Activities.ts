@@ -19,6 +19,15 @@ export const JDR = {
   style: { color: 'white', backgroundColor: Colors.blue },
 };
 
+export const CREATION_LUDIQUE = {
+  id: 'creation',
+  name: 'Création ludique',
+  filterable: true,
+  countable: true,
+  referent: true,
+  style: { color: 'black', backgroundColor: Colors.yellow },
+};
+
 export const WARHAMMER_40K = {
   id: 'w40k',
   name: 'Warhammer 40K',

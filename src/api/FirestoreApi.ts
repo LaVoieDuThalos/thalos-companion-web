@@ -50,7 +50,7 @@ const FieldNames = {
   KEY_ID: 'keyId',
   DATE: 'date',
   EVENT_ID: 'eventId',
-  SUBSCRIBED_AT: 'subscribedAt'
+  SUBSCRIBED_AT: 'subscribedAt',
 };
 
 class FirestoreApi implements ApiService {
@@ -139,12 +139,15 @@ class FirestoreApi implements ApiService {
     year: number,
     month: number
   ): Promise<AgendaEvent[]> {
-    console.log('findAllEventsOfMonth()', month);
+    console.log('findAllEventsOfMonth()', year, month);
+
+    const monthStr = `${month}`.padStart(2, '0');
+
     const q = query(
       collection(FirebaseDb, Collections.EVENTS),
       and(
-        where(FieldNames.DAY_ID, '>=', `${year}-${month}-01`),
-        where(FieldNames.DAY_ID, '<=', `${year}-${month}-31`)
+        where(FieldNames.DAY_ID, '>=', `${year}-${monthStr}-01`),
+        where(FieldNames.DAY_ID, '<=', `${year}-${monthStr}-31`)
       )
     );
     const results = await getDocs(q);

@@ -88,7 +88,6 @@ export default function EventForm({
   const booleanFields = ['withSubscriptions'];
 
   const updateForm = (field: string, event: Event) => {
-    console.log('UpdateForm', field, event);
     if (field === 'dayId' && event.target.value === 'moreDays') {
       setMoreDays(true);
       return;

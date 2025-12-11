@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 
+import IconButton from '../../components/common/IconButton/IconButton.tsx';
 import { Months } from '../../constants/Months';
 import { type AgendaEvent } from '../../model/AgendaEvent';
 import { type GameDay } from '../../model/GameDay';
 import { agendaService } from '../../services/AgendaService';
 import { calendarService } from '../../services/CalendarService';
+import { getAllEventsOfDay } from '../../utils/AgendaUtils.ts';
 import { firstDateOfMonth } from '../../utils/Utils';
 import './AgendaPage.scss';
-import { getAllEventsOfDay } from '../../utils/AgendaUtils.ts';
-import IconButton from '../../components/common/IconButton/IconButton.tsx';
 import GameDayCard from './components/GameDayCard/GameDayCard.tsx';
 
 const JANUARY = 0;
@@ -39,7 +39,9 @@ export default function AgendaPage() {
 
     agendaService
       .findEventsOfMonth(current.getFullYear(), current.getMonth() + 1)
-      .then((events) => setEventsOfMonth(events));
+      .then((events) => {
+        setEventsOfMonth(events);
+      });
   }, [current]);
 
   return (
