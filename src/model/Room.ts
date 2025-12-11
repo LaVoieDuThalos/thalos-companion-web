@@ -1,5 +1,9 @@
+import type { ShortUser } from './User.ts';
+import type { GameDayId } from './GameDay.ts';
+import type { OpenHours } from './AgendaEvent.ts';
+
 export interface Room {
-  id: string;
+  id: RoomId;
   name: string;
   capacity?: number;
   week?: 'A' | 'B';
@@ -7,14 +11,12 @@ export interface Room {
 }
 
 export interface OpenCloseRoom {
-  dayId: string;
-  opener?: {
-    id: string;
-    name: string;
-  };
-  openAt: string;
-  closer?: {
-    id: string;
-    name: string;
-  };
+  dayId: GameDayId;
+  opener?: Badger;
+  openAt: OpenHours;
+  closer?: Badger;
 }
+
+export type RoomId = string;
+
+export type Badger = ShortUser;

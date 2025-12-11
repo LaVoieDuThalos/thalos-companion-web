@@ -1,11 +1,13 @@
 import { API, type ApiService } from '../api/Api';
 import { EVENEMENT } from '../constants/Activities';
-import { ROLE_BUREAU, type Role } from '../constants/Roles';
+import { ROLE_BUREAU } from '../constants/Roles';
 import { StorageKeys } from '../constants/StorageKeys';
 import type { User } from '../model/User';
 import type { UserPreferences } from '../model/UserPreferences';
 import { fromActivityId } from '../utils/Utils';
 import { StorageService } from './StorageService';
+import type { Role } from '../model/Role.ts';
+import type { ActivityId } from '../model/Activity.ts';
 
 class SettingsService {
   private api: ApiService;
@@ -14,7 +16,7 @@ class SettingsService {
     this.api = api;
   }
 
-  async save(user: Partial<User>): Promise<User> {
+  async save(user: User): Promise<User> {
     await this.api.saveOrUpdateUser({
       id: user.id,
       name: user.name?.trim(),
@@ -40,7 +42,7 @@ class SettingsService {
     }
   }
 
-  activityVisible(prefs: User | UserPreferences | null, activityId: string): boolean {
+  activityVisible(prefs: User | UserPreferences | null, activityId: ActivityId): boolean {
     if (prefs === null) {
       return true;
     }

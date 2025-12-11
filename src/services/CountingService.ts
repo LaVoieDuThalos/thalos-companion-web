@@ -1,5 +1,6 @@
 import { API, type ApiService } from '../api/Api';
 import type { DayCounts } from '../model/Counting';
+import type { GameDayId } from '../model/GameDay.ts';
 
 class CountingService {
   private api: ApiService;
@@ -12,7 +13,7 @@ class CountingService {
     return this.api.saveCountings(counts);
   }
 
-  getCounting(dayId: string): Promise<DayCounts | null> {
+  getCounting(dayId: GameDayId): Promise<DayCounts | null> {
     return this.api.getCountings(dayId);
   }
 }

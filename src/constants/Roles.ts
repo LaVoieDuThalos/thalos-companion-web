@@ -1,9 +1,5 @@
 import { ACTIVITIES } from './Activities';
-
-export interface Role {
-  id: string;
-  label: string;
-}
+import type { Role } from '../model/Role.ts';
 
 export function findRoleById(roleId: string): Role | undefined {
   return ROLES.find((r) => r.id === roleId);

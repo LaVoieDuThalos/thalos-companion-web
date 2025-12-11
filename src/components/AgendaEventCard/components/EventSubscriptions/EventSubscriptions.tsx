@@ -8,7 +8,7 @@ import {
 import { useUser } from '../../../../hooks/useUser.ts';
 import type {
   AgendaEvent,
-  EventSubscription,
+  EventSubscription, EventSubscriptionStatus,
 } from '../../../../model/AgendaEvent.ts';
 import { subscriptionService } from '../../../../services/SubscriptionService.ts';
 import CustomCard from '../../../common/CustomCard/CustomCard.tsx';
@@ -65,7 +65,7 @@ export default function EventSubscriptions({ event }: Props) {
     );
   };
 
-  const updateSubscription = (sub: EventSubscription, status: string) => {
+  const updateSubscription = (sub: EventSubscription, status: EventSubscriptionStatus) => {
     subscriptionService.updateSubscriptionStatus(sub, status).then(() => {
       callRefresh();
     })

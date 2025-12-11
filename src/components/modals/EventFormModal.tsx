@@ -225,7 +225,7 @@ export default function EventFormModal({
                 },
               } as LastModification)
             : null,
-      } as Partial<AgendaEvent>)
+      } as AgendaEvent | Omit<AgendaEvent, 'id'>)
       .then((res) => {
         setSaving(false);
         if (onSuccess) {

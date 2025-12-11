@@ -1,12 +1,12 @@
 import { API, type ApiService } from '../api/Api';
 import { ACTIVITIES, JDR } from '../constants/Activities';
 import { ROOMS, SALLE_JDR } from '../constants/Rooms';
-import type { Activity } from '../model/Activity';
-import type { GameDay } from '../model/GameDay';
-import type { OpenCloseRoom, Room } from '../model/Room';
+import type { Activity, ActivityId } from '../model/Activity';
+import type { GameDay, GameDayId } from '../model/GameDay';
+import type { OpenCloseRoom, Room, RoomId } from '../model/Room';
 import { fromGameDayId, getWeekNumber } from '../utils/Utils';
 
-class RoomService {
+export class RoomService {
   private api: ApiService;
   hours: string[] = [];
 
@@ -18,21 +18,21 @@ class RoomService {
     }
   }
 
-  getActivitiesPriorityOfDay(day: GameDay): Activity[] {
+  getActivitiesPriorityOfDay(day: GameDay, activities = ACTIVITIES): Activity[] {
     return getWeekNumber(day.date) % 2 === 0
-      ? ACTIVITIES.filter((act) => act.figurines)
-      : ACTIVITIES.filter((act) => !act.figurines);
+      ? activities.filter((act) => act.figurines)
+      : activities.filter((act) => !act.figurines);
   }
 
-  chooseMeARoomForActivityAndDay(activityId: string, day: GameDay): Room {
-    const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day);
+  chooseMeARoomForActivityAndDay(activityId: ActivityId, day: GameDay, rooms = ROOMS): Room {
+    const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day, rooms);
     return roomsChosen[0];
   }
 
-  getPrioritiesRoomsForActivity(activityId: string, day: GameDay): Room[] {
+  getPrioritiesRoomsForActivity(activityId: ActivityId, day: GameDay, rooms = ROOMS): Room[] {
     const activitiesInRoomsA = this.getActivitiesPriorityOfDay(day);
-    const roomsA = ROOMS.filter((r) => r.week === 'A');
-    const roomsB = ROOMS.filter((r) => r.week === 'B');
+    const roomsA = rooms.filter((r) => r.week === 'A');
+    const roomsB = rooms.filter((r) => r.week === 'B');
     const activityFoundInRoomsA = activitiesInRoomsA.findIndex(
       (act) => act.id === activityId
     ) >= 0;
@@ -40,9 +40,9 @@ class RoomService {
   }
 
   isActivityAllowedInRoom(
-    activityId: string,
-    dayId: string,
-    roomId: string
+    activityId: ActivityId,
+    dayId: GameDayId,
+    roomId: RoomId
   ): boolean {
     const day = fromGameDayId(dayId);
     if (!day) {
@@ -55,7 +55,7 @@ class RoomService {
     return roomsChosen.map((r) => r.id).indexOf(roomId) >= 0;
   }
 
-  async getOpenCloseConfig(dayId: string): Promise<OpenCloseRoom> {
+  async getOpenCloseConfig(dayId: GameDayId): Promise<OpenCloseRoom> {
     const result = await this.api.findOpenCloseConfiguration(dayId);
     if (result == null) {
       return {

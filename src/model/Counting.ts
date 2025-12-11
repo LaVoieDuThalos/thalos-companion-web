@@ -1,7 +1,9 @@
+import type { GameDayId } from './GameDay.ts';
+
 type Counts = { [key: string]: number };
 
 export interface DayCounts {
-  dayId: string;
+  dayId: GameDayId;
   afternoon?: Counts;
   night?: Counts;
 }
