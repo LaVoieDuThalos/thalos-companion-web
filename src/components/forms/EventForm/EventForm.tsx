@@ -1,7 +1,12 @@
 import { Alert, Button, Form, Image } from 'react-bootstrap';
 import { ACTIVITIES, EVENEMENT, JDR } from '../../../constants/Activities';
 import { Durations } from '../../../constants/Durations';
-import { ROOMS, SALLE_DU_LAC, TOUTE_LA_SALLE } from '../../../constants/Rooms';
+import {
+  AUTRE_SALLE,
+  ROOMS,
+  SALLE_DU_LAC,
+  TOUTE_LA_SALLE,
+} from '../../../constants/Rooms';
 import { calendarService } from '../../../services/CalendarService';
 import { hasError, type CustomFormProps } from '../../../utils/FormUtils';
 import { fromGameDayId, fromRoomId, printGameDay } from '../../../utils/Utils';
@@ -11,8 +16,10 @@ import {
 } from '../../modals/EventFormModal';
 
 import { useState } from 'react';
+import 'react-datepicker/dist/react-datepicker.css';
 import { EVENT_SUBSCRIPTION_MODES } from '../../../constants/EventSubscriptionModes';
 import { Globals } from '../../../constants/Globals';
+import { ROLE_BUREAU } from '../../../constants/Roles.ts';
 import { useUser } from '../../../hooks/useUser';
 import type { Room } from '../../../model/Room';
 import type { TablesAvailables } from '../../../services/BookingService';
@@ -24,7 +31,6 @@ import NumberInput from '../../common/NumberInput/NumberInput';
 import RichEditor from '../../common/RichEditor/RichEditor';
 import RoomPriorities from '../../RoomPriorities/RoomPriorities';
 import './EventForm.scss';
-
 type Event = { target: { value: string } };
 
 function buildTables(room: Room | null, availableTables: number): number[] {
@@ -71,15 +77,22 @@ export default function EventForm({
       formData.description !== ''
   );
 
-  const days = calendarService.buildDaysFromDate(new Date(), 60);
+  const [moreDays, setMoreDays] = useState(false);
+
+  const days = calendarService.buildDaysFromDate(new Date(), 60, moreDays);
   const hours = calendarService.hours();
   const durations = Durations;
-  const { user } = useUser();
+  const { user, hasRole } = useUser();
 
   const integerFields = ['durationInMinutes', 'tables', 'maxSubscriptions'];
   const booleanFields = ['withSubscriptions'];
 
   const updateForm = (field: string, event: Event) => {
+    console.log('UpdateForm', field, event);
+    if (field === 'dayId' && event.target.value === 'moreDays') {
+      setMoreDays(true);
+      return;
+    }
     if (field === 'roomId') {
       // reset tables selection when room changes
       formData.tables = 0;
@@ -145,6 +158,7 @@ export default function EventForm({
               {printGameDay(day)}
             </option>
           ))}
+          <option value={'moreDays'}>Plus de dates ...</option>
         </Form.Select>
         {state?.submitted && hasError(errors, 'dateIsEmpty') ? (
           <FormError error="La date est obligatoire" />
@@ -172,7 +186,10 @@ export default function EventForm({
         ) : null}
 
         {formData.start &&
-        isUnusualSchedule(formData.dayId, parseInt(formData.start)) ? (
+        isUnusualSchedule(formData.dayId, parseInt(formData.start)) &&
+        (formData.roomId === undefined ||
+          (formData.roomId !== AUTRE_SALLE.id &&
+            formData.activityId !== EVENEMENT.id)) ? (
           <Alert variant="warning">
             <Icon icon="warning" iconSize={22} />
             Vous avez indiqué une horaire hors ouverture normale de la salle.
@@ -280,7 +297,7 @@ export default function EventForm({
             (room) =>
               (room.id !== SALLE_DU_LAC.id ||
                 formData.activityId === EVENEMENT.id) &&
-              !room.virtual
+              (!room.virtual || hasRole(ROLE_BUREAU))
           ).map((r) => {
             const tables = availableTables[r.id];
             return (
@@ -291,7 +308,9 @@ export default function EventForm({
                 data-room-occupied={tables === 0}
               >
                 {r.name} - (
-                {tables === undefined || tables === TOUTE_LA_SALLE
+                {tables === undefined ||
+                tables === TOUTE_LA_SALLE ||
+                r.id === AUTRE_SALLE.id
                   ? 'Disponible'
                   : tables === 0
                     ? 'Complet'
@@ -327,40 +346,42 @@ export default function EventForm({
       </Form.Group>
 
       {/* Tables ------------------------------------------------------------- */}
-      <Form.Group className="mb-3" controlId="eventForm.TableNumberInput">
-        <Form.Label>Tables</Form.Label>
-        <Form.Select
-          size="lg"
-          disabled={disabled}
-          value={formData.tables}
-          onChange={(e) => updateForm('tables', e)}
-        >
-          <option>-</option>
-          {buildTables(
-            fromRoomId(formData.roomId),
-            availableTables[formData.roomId]
-          ).map((t) => (
-            <option
-              key={t}
-              value={t}
-              disabled={
-                !!formData.roomId &&
-                t > availableTables[formData.roomId] &&
-                t != TOUTE_LA_SALLE
-              }
-            >
-              {t === TOUTE_LA_SALLE
-                ? 'Toute la salle'
-                : t === 1
-                  ? `1 table`
-                  : `${t} tables`}
-            </option>
-          ))}
-        </Form.Select>
-        {state?.submitted && hasError(errors, 'tablesIsEmpty') ? (
-          <FormError error="Le nombre de tables est obligatoire" />
-        ) : null}
-      </Form.Group>
+      {formData.roomId !== AUTRE_SALLE.id && (
+        <Form.Group className="mb-3" controlId="eventForm.TableNumberInput">
+          <Form.Label>Tables</Form.Label>
+          <Form.Select
+            size="lg"
+            disabled={disabled}
+            value={formData.tables}
+            onChange={(e) => updateForm('tables', e)}
+          >
+            <option>-</option>
+            {buildTables(
+              fromRoomId(formData.roomId),
+              availableTables[formData.roomId]
+            ).map((t) => (
+              <option
+                key={t}
+                value={t}
+                disabled={
+                  !!formData.roomId &&
+                  t > availableTables[formData.roomId] &&
+                  t != TOUTE_LA_SALLE
+                }
+              >
+                {t === TOUTE_LA_SALLE
+                  ? 'Toute la salle'
+                  : t === 1
+                    ? `1 table`
+                    : `${t} tables`}
+              </option>
+            ))}
+          </Form.Select>
+          {state?.submitted && hasError(errors, 'tablesIsEmpty') ? (
+            <FormError error="Le nombre de tables est obligatoire" />
+          ) : null}
+        </Form.Group>
+      )}
 
       <div className="inscriptions-section">
         {/* Inscriptions ------------------------------------------------------------- */}

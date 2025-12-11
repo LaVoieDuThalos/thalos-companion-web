@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { JDR } from '../../constants/Activities';
+import { EVENEMENT, JDR } from '../../constants/Activities';
 import { Colors } from '../../constants/Colors';
 import { JUSQUA_LA_FERMETURE } from '../../constants/Durations';
 import type { EventCreationMode } from '../../constants/EventCreationWizard';
 import { MODE_AUTO_BY_REGISTRATION_DATE } from '../../constants/EventSubscriptionModes';
-import { TOUTE_LA_SALLE } from '../../constants/Rooms';
+import { AUTRE_SALLE, TOUTE_LA_SALLE } from '../../constants/Rooms';
 import { useAlert } from '../../hooks/useAlert';
 import { useUser } from '../../hooks/useUser';
 import type {
@@ -134,7 +134,10 @@ function validateForm(
     gameMasterIsInvalid:
       formData.activityId === JDR.id &&
       !Validators.allowedCharacters(formData.title),
-    tablesIsEmpty: isZero(formData.tables),
+    tablesIsEmpty:
+      isZero(formData.tables) &&
+      formData.roomId !== AUTRE_SALLE.id &&
+      formData.activityId !== EVENEMENT.id,
     discordChannelIsInvalid: Validators.notStartsWith(
       formData.discordChannel,
       'https://discord.com/channels'
@@ -197,7 +200,9 @@ export default function EventFormModal({
     agendaService
       .saveEvent({
         ...formData,
-        withSubscriptions: formData.withSubscriptions !== undefined && formData.withSubscriptions,
+        withSubscriptions:
+          formData.withSubscriptions !== undefined &&
+          formData.withSubscriptions,
         subscriptionMode:
           formData.withSubscriptions !== undefined
             ? formData.subscriptionMode

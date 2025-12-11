@@ -128,6 +128,7 @@ export function eventIsInTimeSlot(
   return (
     (eventStartTime <= start && eventEndTime <= end && eventEndTime > start) ||
     (eventStartTime >= start && eventStartTime < end && eventEndTime >= end) ||
+    (eventStartTime >= start && eventEndTime < end) ||
     (eventStartTime <= start && eventEndTime >= end)
   );
 }

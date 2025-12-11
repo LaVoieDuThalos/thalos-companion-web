@@ -63,6 +63,13 @@
 
       -webkit-box-shadow: 0px 0px 9px 1px rgba(0, 0, 0, 0.14);
       box-shadow: 0px 0px 9px 1px rgba(0, 0, 0, 0.14);
+
+      .header-row {
+        display: flex;
+        gap: 5px;
+        align-content: center;
+        justify-content: center;
+      }
     }
   }
 }
