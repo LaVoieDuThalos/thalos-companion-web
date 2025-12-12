@@ -1,6 +1,6 @@
 import { API, type ApiService } from '../api/Api';
 import { EVENEMENT } from '../constants/Activities';
-import { ROLE_BUREAU, type Role } from '../constants/Roles';
+import { type Role } from '../constants/Roles';
 import { StorageKeys } from '../constants/StorageKeys';
 import type { User } from '../model/User';
 import type { UserPreferences } from '../model/UserPreferences';
@@ -45,7 +45,7 @@ class SettingsService {
       return true;
     }
     const activity = fromActivityId(activityId);
-    if (activity?.id === EVENEMENT.id && this.hasRole(prefs, ROLE_BUREAU)) {
+    if (activity?.id === EVENEMENT.id) {
       return true;
     } else if (activity?.id !== EVENEMENT.id && !activity?.filterable) {
       return true;

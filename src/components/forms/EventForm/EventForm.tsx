@@ -245,6 +245,7 @@ export default function EventForm({
           <option>-</option>
           {ACTIVITIES.filter((act) =>
             settingsService.activityVisible(user.preferences || {}, act.id)
+            && (act.id != EVENEMENT.id || hasRole(ROLE_BUREAU))
           ).map((act) => (
             <option key={act.id} value={act.id}>
               {act.name}
