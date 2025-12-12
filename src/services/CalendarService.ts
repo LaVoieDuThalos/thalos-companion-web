@@ -13,7 +13,7 @@ class CalendarService {
     return date.toJSON().slice(0, 10);
   }
 
-  buildDaysFromDate(start: Date, limit = 31, allDays = false): GameDay[] {
+  buildDaysFromDate(start: Date, limit = 31, allDays = false, extraDays: GameDay[] = []): GameDay[] {
     const current = start;
     current.setHours(12);
     const result: GameDay[] = [];
@@ -27,7 +27,13 @@ class CalendarService {
 
       current.setDate(current.getDate() + 1);
     }
-    return result;
+
+    extraDays.filter(day => day !== undefined && result.findIndex(d => day.id === d.id) < 0)
+      .forEach(day => {
+      result.push(day);
+    })
+
+    return result.sort((a, b) => a.id.localeCompare(b.id));
   }
 
   hours(startHour = 9, mins = [30], addMidnight = false, max = 24): string[] {

@@ -31,6 +31,7 @@ import NumberInput from '../../common/NumberInput/NumberInput';
 import RichEditor from '../../common/RichEditor/RichEditor';
 import RoomPriorities from '../../RoomPriorities/RoomPriorities';
 import './EventForm.scss';
+import type { GameDay } from '../../../model/GameDay.ts';
 type Event = { target: { value: string } };
 
 function buildTables(room: Room | null, availableTables: number): number[] {
@@ -79,7 +80,12 @@ export default function EventForm({
 
   const [moreDays, setMoreDays] = useState(false);
 
-  const days = calendarService.buildDaysFromDate(new Date(), 60, moreDays);
+  let extraDays: GameDay[] = []
+  if(formData.dayId !== undefined && formData.dayId !== HYPHEN_EMPTY_OPTION) {
+    extraDays = [fromGameDayId(formData.dayId)!];
+  }
+
+  const days = calendarService.buildDaysFromDate(new Date(), 60, moreDays, extraDays);
   const hours = calendarService.hours();
   const durations = Durations;
   const { user, hasRole } = useUser();
