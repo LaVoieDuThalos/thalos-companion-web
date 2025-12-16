@@ -9,7 +9,7 @@ type Props<T> = {
   keyExtractor: (item: T) => string;
   renderSectionHeader: (section: SectionListItem<T>) => ReactNode;
   ListEmptyComponent?: ReactNode;
-  renderItem: (item: T) => ReactNode;
+  renderItem: (item: T, index: number) => ReactNode;
   ListHeaderComponent?: React.ReactElement;
   ListFooterComponent?: React.ReactElement;
 };
@@ -30,9 +30,9 @@ export default function SectionList<T>({
           <div key={section.title}>
             <div>{renderSectionHeader(section)}</div>
             <div>
-              {section.data.map((it) => (
+              {section.data.map((it, index) => (
                 <div key={keyExtractor(it)} className="section-item">
-                  {renderItem(it)}
+                  {renderItem(it, index)}
                 </div>
               ))}
             </div>

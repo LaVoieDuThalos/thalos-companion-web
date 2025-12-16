@@ -5,6 +5,7 @@ import './CustomCard.scss';
 
 type Props = Omit<CardProps, 'style'> & {
   style?: Styles;
+  even?: boolean;
   clickable?: boolean;
 };
 
@@ -18,7 +19,7 @@ export default function CustomCard({
   return (
     <Card
       {...props}
-      className={`custom-card ${className} ${props.onClick && clickable ? 'clickable' : ''}`}
+      className={`custom-card ${className} ${props.onClick && clickable ? 'clickable' : ''} ${props.even ? 'even' : 'odd'}`}
       style={{
         ...concatStyles(style),
       }}

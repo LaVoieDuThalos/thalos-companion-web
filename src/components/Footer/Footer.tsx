@@ -1,5 +1,5 @@
 import { ButtonGroup } from 'react-bootstrap';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { ROLE_OUVREUR } from '../../constants/Roles';
 import { useUser } from '../../hooks/useUser';
 import { settingsService } from '../../services/SettingsService';
@@ -8,6 +8,7 @@ import './Footer.scss';
 
 export default function Footer() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, loading } = useUser();
 
   const isOuvreur =
@@ -21,14 +22,16 @@ export default function Footer() {
         <IconButton
           icon="home"
           label=""
-          variant="secondary"
+          iconSize={40}
+          variant={location.pathname === '/' ? 'danger' : 'secondary'}
           onClick={() => navigate('/')}
         />
 
         <IconButton
           icon="calendar_month"
           label=""
-          variant="secondary"
+          iconSize={40}
+          variant={location.pathname.startsWith('/agenda') ? 'danger' : 'secondary'}
           onClick={() => navigate('/agenda')}
         />
 
@@ -36,7 +39,8 @@ export default function Footer() {
           <IconButton
             icon="key"
             label=""
-            variant="secondary"
+            variant={location.pathname.startsWith('/keys') ? 'danger' : 'secondary'}
+            iconSize={40}
             onClick={() => navigate('/keys')}
           />
         ) : null}
@@ -44,7 +48,8 @@ export default function Footer() {
         <IconButton
           icon="info"
           label=""
-          variant="secondary"
+          variant={location.pathname.startsWith('/about') ? 'danger' : 'secondary'}
+          iconSize={40}
           onClick={() => navigate('/about')}
         />
       </ButtonGroup>

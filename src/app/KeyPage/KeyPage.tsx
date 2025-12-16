@@ -54,7 +54,7 @@ export default function KeyPage() {
   return (
     <div className="main-content">
       <UserSelectModal
-        title={`A qui donner ${key?.name} ?`}
+        title={`A qui affecter le badge ${key?.name} ?`}
         show={userSelectModalVisible}
         onCancel={() => setUserSelectModalVisible(false)}
         onSuccess={(user) => updateOwner(user)}
@@ -66,7 +66,7 @@ export default function KeyPage() {
           <div className="key-owner">{key?.owner ? key.owner.name : '?'}</div>
           <div className="key-actions">
             <Button onClick={() => setUserSelectModalVisible(true)}>
-              Donner à ...
+              Assigner à ...
             </Button>
           </div>
         </div>

@@ -30,23 +30,18 @@ export default function Header() {
     <>
       <Navbar expand="lg" className="justify-content-between">
         <Navbar.Brand href={Globals.BASE_URL + '/'} style={{}}>
-          <Image src={Globals.BASE_URL + '/icon100.png'} width={'40vw'}/>
-          {/*
-            <img
-              alt="Logo"
-              src={Globals.BASE_URL + '/icon100.png'}
-              width="40"
-              height="40"
-              className="d-inline-block align-top"
-            />*/
-          }{' '}
+          <Image src={Globals.BASE_URL + '/icon100.png'} width={'50vw'}/>
           <span className="app-title">La Voie du Thalos</span>
         </Navbar.Brand>
 
         <Row style={{}}>
           <IconButton
             icon="add"
-            label="Créer"
+            label=""
+            color={Colors.red2}
+            variant="light"
+            iconSize={40}
+            fontSize={10}
             onClick={() => setEventFormModalVisible(true)}
           ></IconButton>
 

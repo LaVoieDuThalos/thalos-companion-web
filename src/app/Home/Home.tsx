@@ -18,6 +18,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [sections, setSections] = useState<SectionListItem<AgendaEvent>[]>([]);
   const needARefresh = appContext.refreshs['home.events'];
+  let evenOrOdd = 0;
 
   useEffect(() => {
     setLoading(true);
@@ -48,7 +49,7 @@ export default function HomePage() {
               <span className="section-title">{it.title}</span>
             )}
             renderItem={(it) => (
-              <AgendaEventCard event={it} options={{ hideDate: true }} />
+              <AgendaEventCard event={it} even={evenOrOdd++ % 2 === 0} options={{ hideDate: true }} />
             )}
           ></SectionList>
         </>

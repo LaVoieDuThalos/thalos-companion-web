@@ -7,6 +7,7 @@ type Props = ButtonProps & {
   label?: string;
   variant?: string;
   iconSize?: number;
+  fontSize?: number;
   onClick: () => void;
 };
 
@@ -14,6 +15,7 @@ export default function IconButton({
   icon,
   label,
   iconSize,
+  fontSize,
   onClick,
   ...rest
 }: Props) {
@@ -30,7 +32,7 @@ export default function IconButton({
       >
         {icon}
       </span>
-      {label ? <span>{label}</span> : null}
+      {label ? <span style={fontSize ? { fontSize: `${fontSize}px` }: {}}>{label}</span> : null}
     </Button>
   );
 }

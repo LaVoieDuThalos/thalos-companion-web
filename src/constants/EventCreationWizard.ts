@@ -4,7 +4,6 @@ import { AOS, AUBERGE_ESPAGNOLE, JDR, WARHAMMER_40K } from './Activities';
 import { JUSQUA_LA_FERMETURE } from './Durations';
 import {
   MODE_AUTO_BY_REGISTRATION_DATE,
-  MODE_MANUAL,
 } from './EventSubscriptionModes';
 import { TOUTE_LA_SALLE } from './Rooms';
 
@@ -41,7 +40,7 @@ export const CREATION_MODES: EventCreationMode[] = [
         tables: 8,
         withSubscriptions: true,
         maxSubscriptions: 4,
-        subscriptionMode: MODE_MANUAL.id,
+        subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
   },
@@ -67,7 +66,7 @@ export const CREATION_MODES: EventCreationMode[] = [
         tables: 8,
         withSubscriptions: true,
         maxSubscriptions: 4,
-        subscriptionMode: MODE_MANUAL.id,
+        subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
   },
@@ -93,7 +92,7 @@ export const CREATION_MODES: EventCreationMode[] = [
         tables: 2,
         withSubscriptions: true,
         maxSubscriptions: 1,
-        subscriptionMode: MODE_MANUAL.id,
+        subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
   },
@@ -119,7 +118,7 @@ export const CREATION_MODES: EventCreationMode[] = [
         tables: 2,
         withSubscriptions: true,
         maxSubscriptions: 1,
-        subscriptionMode: MODE_MANUAL.id,
+        subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
   },

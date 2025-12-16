@@ -35,6 +35,7 @@ type Props = {
   onPress?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  even?: boolean;
 };
 
 export default function AgendaEventCard({
@@ -42,6 +43,7 @@ export default function AgendaEventCard({
   complete,
   showButtons,
   options,
+  even,
   onEdit,
   onDelete,
 }: Props) {
@@ -85,6 +87,7 @@ export default function AgendaEventCard({
   return (
     <CustomCard
       className="agenda-event-card"
+      even={even}
       onClick={() => {
         if (!complete) {
           navigate(`/events/${event.id}`);
@@ -189,14 +192,17 @@ export default function AgendaEventCard({
           <Label icon="location_on" color="gray" size={20}>
             <span>{event.room.name}</span>
           </Label>
-          <Label icon="table_restaurant" color="gray" size={20}>
-            <span>
-              x{' '}
-              {event.tables !== TOUTE_LA_SALLE
-                ? `${event.tables}`
-                : 'Toute la salle'}
-            </span>
-          </Label>
+
+          {
+            event.tables !== undefined && event.tables > 0? <Label icon="table_restaurant" color="gray" size={20}>
+              <span>
+                x{' '}
+                {event.tables !== TOUTE_LA_SALLE
+                  ? `${event.tables}`
+                  : 'Toute la salle'}
+              </span>
+            </Label> : null
+          }
         </Row>
       ) : null}
 
@@ -206,7 +212,7 @@ export default function AgendaEventCard({
 
       {showButtons ? (
         <>
-          <hr/>
+          <hr />
           <div className="buttons">
             {event.discordChannel && (
               <a href={event.discordChannel} target="_blank">
