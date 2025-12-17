@@ -61,7 +61,7 @@ export default function AgendaEventCard({
     const role = findRoleById('referent.' + event.activity?.id);
     const hasRoleReferent = role !== undefined && hasRole(role);
     return (
-      (user !== undefined && event.creator?.id === user.id) || hasRole(ROLE_BUREAU) || hasRoleReferent
+      (!!user && event.creator?.id === user.id) || hasRole(ROLE_BUREAU) || hasRoleReferent
     );
   };
 
