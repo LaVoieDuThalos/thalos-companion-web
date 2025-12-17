@@ -1,7 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter } from 'react-router';
-import { RouterProvider } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router';
 
 import App from './App';
 import HomePage from './app/Home/Home';
@@ -14,65 +13,26 @@ import GameDayPage from './app/GameDayPage/GameDayPage';
 import KeyPage from './app/KeyPage/KeyPage';
 import AgendaPage from './app/AgendaPage/AgendaPage.tsx';
 
-const router = createBrowserRouter(
-  [
-    {
-      path: '/',
-      element: <App />,
-      children: [
-        {
-          path: '/',
-          element: <HomePage />,
-        },
-        {
-          path: '/about',
-          element: <AboutPage />,
-        },
-        {
-          path: '/agenda',
-          children: [
-            {
-              path: '/agenda/',
-              element: <AgendaPage />,
-            },
-            {
-              path: '/agenda/:dayId',
-              element: <GameDayPage />,
-            },
-          ],
-        },
-        {
-          path: '/keys',
-          children: [
-            {
-              path: '/keys',
-              element: <KeysPage />,
-            },
-            {
-              path: '/keys/:keyId',
-              element: <KeyPage />,
-            },
-          ],
-        },
-        {
-          path: '/events',
-          children: [
-            {
-              path: '/events/:eventId',
-              element: <EventDetailsPage />,
-            },
-          ],
-        },
-      ],
-    },
-  ],
-  {
-    basename: '/thalos-companion-web',
-  }
-);
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<App/>} children={[
+          <Route path="/" element={<HomePage />} />,
+          <Route path="/about" element={ <AboutPage />} />,
+          <Route path="/agenda" children={[
+            <Route path="/agenda" element={<AgendaPage />}/>,
+            <Route path="/agenda/:dayId" element={<GameDayPage />}/>
+          ]} />,
+          <Route path="/keys" children={[
+            <Route path="/keys" element={<KeysPage />}/>,
+            <Route path="/keys/:keyId" element={<KeyPage />}/>,
+          ]} />,
+          <Route path="/events" children={[
+            <Route path="/events/:eventId" element={<EventDetailsPage />}/>,
+          ]}/>
+        ]} />
+      </Routes>
+    </HashRouter>
   </StrictMode>
 );
