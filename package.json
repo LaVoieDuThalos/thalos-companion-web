@@ -13,7 +13,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint src",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "clear-empty-users": "node --env-file=.env scripts/clear-empty-users.js"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-react": "^11.0.0",

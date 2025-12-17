@@ -24,7 +24,6 @@ getDocs(collection(db, 'users'))
     result.docs
       .filter(doc => doc.data().name === undefined)
       .forEach(doc => {
-        console.log(doc.data())
         batch.delete(doc.ref);
         count++;
     })).then(() => batch.commit())
