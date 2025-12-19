@@ -30,7 +30,7 @@ function App() {
               <div
                 style={{
                   position: 'absolute',
-                  top: height + 38,
+                  top: height + 40,
                   width: '100%',
                   maxWidth: 1280,
                 }}

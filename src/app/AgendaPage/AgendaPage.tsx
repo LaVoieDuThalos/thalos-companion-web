@@ -10,14 +10,21 @@ import { getAllEventsOfDay } from '../../utils/AgendaUtils.ts';
 import { firstDateOfMonth } from '../../utils/Utils';
 import './AgendaPage.scss';
 import GameDayCard from './components/GameDayCard/GameDayCard.tsx';
+import { roomService } from '../../services/RoomService.ts';
+import type { OpenCloseRoom } from '../../model/Room.ts';
 
 const JANUARY = 0;
 const DECEMBER = 11;
+
+function getOpenCloseOfDay(dayId: string, data: OpenCloseRoom[]): OpenCloseRoom | undefined {
+  return data.find(d => d.dayId === dayId);
+}
 
 export default function AgendaPage() {
   const [current, setCurrent] = useState(firstDateOfMonth());
   const [days, setDays] = useState<GameDay[]>([]);
   const [eventsOfMonth, setEventsOfMonth] = useState<AgendaEvent[]>([]);
+  const [openCloseOfMonth, setOpenCloseOfMonth] = useState<OpenCloseRoom[]>([]);
 
   const incMonth = (inc: number) => {
     const month = current.getMonth() + inc;
@@ -42,6 +49,9 @@ export default function AgendaPage() {
       .then((events) => {
         setEventsOfMonth(events);
       });
+
+    roomService.getOpenCloseConfigOfMonth(current.getFullYear(), current.getMonth() + 1)
+      .then(openCloseOfMonth => setOpenCloseOfMonth(openCloseOfMonth));
   }, [current]);
 
   return (
@@ -59,6 +69,7 @@ export default function AgendaPage() {
             key={day.id}
             day={day}
             events={getAllEventsOfDay(day.id, eventsOfMonth)}
+            openClose={getOpenCloseOfDay(day.id, openCloseOfMonth)}
           />
         ))}
       </div>

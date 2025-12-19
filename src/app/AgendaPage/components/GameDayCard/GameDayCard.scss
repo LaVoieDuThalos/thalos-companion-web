@@ -8,7 +8,19 @@
   }
   .game-day-card-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    .day {
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      font-weight: bold;
+      color: $secondary;
+    }
+  }
+
+  .open-close-room-infos {
+    color: $primary;
+    font-weight: bold;
   }
 }
 

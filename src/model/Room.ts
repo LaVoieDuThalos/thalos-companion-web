@@ -17,4 +17,5 @@ export interface OpenCloseRoom {
     id: string;
     name: string;
   };
+  validated?: boolean;
 }

@@ -216,6 +216,11 @@ class MockServerApi implements ApiService {
     return Promise.resolve(null);
   }
 
+  findOpenCloseConfigurationOfMonth(fullYear: number, month: number):Promise<OpenCloseRoom[]> {
+    console.log('findOpenCloseConfigurationOfMonth', fullYear, month);
+    return Promise.resolve([]);
+  }
+
   saveOpenCloseConfiguration(config: OpenCloseRoom): Promise<void> {
     console.log('saveOpenCloseConfiguration', config);
     return Promise.resolve();

@@ -67,7 +67,7 @@ export default function GameDayPlanning({ day, events }: Props) {
               size={20}
               styles={{ fontWeight: 'bold', color: Colors.red }}
             >
-              {openClose?.openAt}
+              {openClose?.openAt} {openClose?.validated ? '(confirmée)' : '? (pas encore confirmée)'}
             </Label>
             {openClose?.opener &&
             settingsService.hasRole(user.user.preferences, ROLE_OUVREUR) ? (

@@ -12,6 +12,10 @@ import type {
 import ModalPage from '../../common/ModalPage/ModalPage';
 import View from '../../common/View';
 import './UserSelectModal.scss';
+import { ROLE_OUVREUR } from '../../../constants/Roles.ts';
+import Label from '../../common/Label.tsx';
+import type { RoomKey } from '../../../model/RoomKey.ts';
+import { keyService } from '../../../services/KeyService.ts';
 
 type Props = ModalPageProps & {
   onSuccess: (user: User) => void;
@@ -19,11 +23,12 @@ type Props = ModalPageProps & {
   onCancel: () => void;
 };
 
-function UserCard({ user }: { user: User }) {
+function UserCard({ user, roomKeys }: { user: User, roomKeys?: RoomKey[] }) {
   return (
     <div className="user">
       <Icon icon="person" color={Colors.gray} iconSize={30} />
       <span className="name">{user.name}</span>
+      {roomKeys ? roomKeys.map(key => <span key={key.id} className="room-key">{key.name}</span>) : null}
     </div>
   );
 }
@@ -35,6 +40,7 @@ export default function UserSelectModal({
 }: Props) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
+  const [keys, setKeys] = useState<RoomKey[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -45,6 +51,8 @@ export default function UserSelectModal({
         setLoading(false);
       })
       .catch(() => setLoading(false));
+
+    keyService.findAllKeys().then(keys => setKeys(keys));
   }, []);
 
   const ACTIONS: ModalAction[] = [
@@ -67,11 +75,22 @@ export default function UserSelectModal({
         </View>
       ) : null}
       <div className="users">
-        {users.map((user) => (
+        <Label>Ouvreurs / Ouvreuses déclarés</Label>
+        {users
+          .filter(u => u.preferences?.roles?.includes(ROLE_OUVREUR.id))
+          .map((user) => (
           <CustomCard clickable onClick={() => onSuccess(user)}>
-            <UserCard user={user} />
+            <UserCard user={user}  roomKeys={keys.filter(k => k.owner?.id === user.id)}/>
           </CustomCard>
         ))}
+        <Label>Autres utilisateurs</Label>
+        {users
+          .filter(u => !u.preferences?.roles?.includes(ROLE_OUVREUR.id))
+          .map((user) => (
+            <CustomCard clickable onClick={() => onSuccess(user)}>
+              <UserCard user={user}  roomKeys={keys.filter(k => k.owner?.id === user.id)}/>
+            </CustomCard>
+          ))}
       </div>
     </ModalPage>
   );

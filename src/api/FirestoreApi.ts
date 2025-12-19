@@ -289,6 +289,21 @@ class FirestoreApi implements ApiService {
     return result.data() ? ({ ...result.data() } as OpenCloseRoom) : null;
   }
 
+  async findOpenCloseConfigurationOfMonth(year: number, month: number): Promise<OpenCloseRoom[]> {
+    console.log('findOpenCloseConfigurationOfMonth()', year, month);
+    const monthStr = `${month}`.padStart(2, '0');
+
+    const q = query(
+      collection(FirebaseDb, Collections.DAYS),
+      and(
+        where(FieldNames.DAY_ID, '>=', `${year}-${monthStr}-01`),
+        where(FieldNames.DAY_ID, '<=', `${year}-${monthStr}-31`)
+      )
+    );
+    const results = await getDocs(q);
+    return results.docs.map((doc) => doc.data() as OpenCloseRoom);
+  }
+
   // Enregistre une config open/close pour une journée
   saveOpenCloseConfiguration(config: OpenCloseRoom): Promise<void> {
     console.log('saveOpenCloseConfiguration()');

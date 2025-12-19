@@ -16,6 +16,7 @@ import type {
 import ModalPage from '../../common/ModalPage/ModalPage';
 
 import './OpenCloseRoomConfigModal.scss';
+import { ROLE_OUVREUR } from '../../../constants/Roles.ts';
 
 type Props = ModalPageProps & {
   day: GameDay;
@@ -67,7 +68,7 @@ export default function OpenCloseRoomConfigModal({
       onClick: () => {
         setLoading(true);
         roomService
-          .saveOpenCloseConfig(model)
+          .saveOpenCloseConfig({...model, validated: true} as OpenCloseRoom)
           .then(() => {
             onSuccess();
             setLoading(false);
@@ -147,11 +148,22 @@ export default function OpenCloseRoomConfigModal({
               onChange={({ target: { value } }) => onOpenerChange(value)}
             >
               <option>-</option>
-              {users.map((usr) => (
+              <optgroup label="Ouvreurs/Ouvreuses">
+                {users.filter(u => u.preferences?.roles?.includes(ROLE_OUVREUR.id)).map(usr => (
+                  <option key={usr.id} value={usr.id}>
+                    {usr.name}
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="Autres utilisateurs">
+                {users
+                .filter(u => !u.preferences?.roles?.includes(ROLE_OUVREUR.id)).map((usr) => (
                 <option key={usr.id} value={usr.id}>
                   {usr.name}
                 </option>
               ))}
+              </optgroup>
+
             </Form.Select>
           </Form.Group>
         </CustomCard>

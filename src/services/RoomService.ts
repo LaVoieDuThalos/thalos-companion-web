@@ -72,5 +72,9 @@ class RoomService {
   saveOpenCloseConfig(config: OpenCloseRoom): Promise<void> {
     return this.api.saveOpenCloseConfiguration(config);
   }
+
+  getOpenCloseConfigOfMonth(fullYear: number, month: number) {
+    return this.api.findOpenCloseConfigurationOfMonth(fullYear, month);
+  }
 }
 export const roomService = new RoomService(API);

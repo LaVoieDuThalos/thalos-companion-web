@@ -44,6 +44,7 @@ export interface ApiService {
 
   /* Ouverture/Fermeture de la salle ******************************************/
   findOpenCloseConfiguration: (dayId: string) => Promise<OpenCloseRoom | null>;
+  findOpenCloseConfigurationOfMonth(fullYear: number, month: number): Promise<OpenCloseRoom[]>;
   saveOpenCloseConfiguration: (config: OpenCloseRoom) => Promise<void>;
 
   /* Gestion des inscriptions *************************************************/
