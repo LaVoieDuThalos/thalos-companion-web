@@ -1,10 +1,10 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Colors } from '../../constants/Colors';
 import { durationToString } from '../../constants/Durations';
 import { TOUTE_LA_SALLE } from '../../constants/Rooms';
 import { AlertActions, AlertContext } from '../../contexts/AlertsContext';
-import type { AgendaEvent } from '../../model/AgendaEvent';
+import type { AgendaEvent, EventSubscription } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
 import { printGameDay } from '../../utils/Utils';
 import CustomCard from '../common/CustomCard/CustomCard';
@@ -22,6 +22,8 @@ import RichEditor from '../common/RichEditor/RichEditor';
 import type { StyleSheet } from '../common/Types';
 import './AgendaEventCard.scss';
 import EventSubscriptions from './components/EventSubscriptions/EventSubscriptions.tsx';
+import { subscriptionService } from '../../services/SubscriptionService.ts';
+import AvailableSeats from './components/AvailableSeats/AvailableSeats.tsx';
 
 export type Options = {
   hideDate?: boolean;
@@ -61,7 +63,9 @@ export default function AgendaEventCard({
     const role = findRoleById('referent.' + event.activity?.id);
     const hasRoleReferent = role !== undefined && hasRole(role);
     return (
-      (!!user && event.creator?.id === user.id) || hasRole(ROLE_BUREAU) || hasRoleReferent
+      (!!user && event.creator?.id === user.id) ||
+      hasRole(ROLE_BUREAU) ||
+      hasRoleReferent
     );
   };
 
@@ -83,6 +87,15 @@ export default function AgendaEventCard({
       ]
     );
   };
+
+  const [subscriptions, setSubscriptions] = useState<EventSubscription[]>([]);
+  useEffect(() => {
+    if (event.withSubscriptions) {
+      subscriptionService
+        .findAllSubscriptionsOfEvent(event)
+        .then((subs) => setSubscriptions(subs));
+    }
+  }, []);
 
   return (
     <CustomCard
@@ -143,6 +156,10 @@ export default function AgendaEventCard({
         <span>?</span>
       )}
 
+      {event.withSubscriptions ? (
+        <AvailableSeats event={event} subscriptions={subscriptions} />
+      ) : null}
+
       {/* Creator */}
       {complete ? (
         <View>
@@ -193,16 +210,16 @@ export default function AgendaEventCard({
             <span>{event.room.name}</span>
           </Label>
 
-          {
-            event.tables !== undefined && event.tables > 0? <Label icon="table_restaurant" color="gray" size={20}>
+          {event.tables !== undefined && event.tables > 0 ? (
+            <Label icon="table_restaurant" color="gray" size={20}>
               <span>
                 x{' '}
                 {event.tables !== TOUTE_LA_SALLE
                   ? `${event.tables}`
                   : 'Toute la salle'}
               </span>
-            </Label> : null
-          }
+            </Label>
+          ) : null}
         </Row>
       ) : null}
 
