@@ -31,6 +31,9 @@ export interface AgendaEvent {
   startTime?: number;
   endTime?: number;
   roomId?: string;
+  otherRoomName?: string;
+  otherRoomAddress?: string;
+  otherRoomMapUrl?: string;
   room?: Room;
   gameMaster?: string;
   tables?: number;

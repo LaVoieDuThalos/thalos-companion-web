@@ -1,4 +1,7 @@
-import type { AgendaEvent, EventSubscription, } from '../../../../model/AgendaEvent.ts';
+import type {
+  AgendaEvent,
+  EventSubscription,
+} from '../../../../model/AgendaEvent.ts';
 import { Badge } from 'react-bootstrap';
 
 type Props = {

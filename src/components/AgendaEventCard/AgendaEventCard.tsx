@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Colors } from '../../constants/Colors';
 import { durationToString } from '../../constants/Durations';
-import { TOUTE_LA_SALLE } from '../../constants/Rooms';
+import { AUTRE_SALLE, TOUTE_LA_SALLE } from '../../constants/Rooms';
 import { AlertActions, AlertContext } from '../../contexts/AlertsContext';
 import type { AgendaEvent, EventSubscription } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
@@ -96,6 +96,12 @@ export default function AgendaEventCard({
         .then((subs) => setSubscriptions(subs));
     }
   }, []);
+
+  const roomName =
+    event.room !== undefined && event.roomId !== AUTRE_SALLE.id
+      ? event.room.name
+      : event.otherRoomName +
+        (event.otherRoomAddress ? ' - ' + event.otherRoomAddress : '');
 
   return (
     <CustomCard
@@ -207,7 +213,13 @@ export default function AgendaEventCard({
       {event.room ? (
         <Row style={styles.location}>
           <Label icon="location_on" color="gray" size={20}>
-            <span>{event.room.name}</span>
+            {event.roomId === AUTRE_SALLE.id && event.otherRoomMapUrl !== '' ? (
+              <a href={event.otherRoomMapUrl} target="_blank">
+                {roomName}
+              </a>
+            ) : (
+              <span>{roomName}</span>
+            )}
           </Label>
 
           {event.tables !== undefined && event.tables > 0 ? (

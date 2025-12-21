@@ -8,35 +8,13 @@ import { MODE_AUTO_BY_REGISTRATION_DATE } from '../../constants/EventSubscriptio
 import { AUTRE_SALLE, TOUTE_LA_SALLE } from '../../constants/Rooms';
 import { useAlert } from '../../hooks/useAlert';
 import { useUser } from '../../hooks/useUser';
-import type {
-  AgendaEvent,
-  EventSubscription,
-  LastModification,
-} from '../../model/AgendaEvent';
+import type { AgendaEvent, EventSubscription, LastModification, } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
-import {
-  bookingService,
-  type TablesAvailables,
-} from '../../services/BookingService';
-import {
-  isFormValid,
-  Validators,
-  type FormState,
-  type ValidationErrors,
-} from '../../utils/FormUtils';
-import {
-  fromGameDayId,
-  fromRoomId,
-  getEndTime,
-  getStartTime,
-  isEmpty,
-  isZero,
-} from '../../utils/Utils';
+import { bookingService, type TablesAvailables, } from '../../services/BookingService';
+import { type FormState, isFormValid, type ValidationErrors, Validators, } from '../../utils/FormUtils';
+import { fromGameDayId, fromRoomId, getEndTime, getStartTime, isEmpty, isZero, } from '../../utils/Utils';
 import ActivityIndicator from '../common/ActivityIndicator';
-import type {
-  ModalAction,
-  ModalPageProps,
-} from '../common/ModalPage/ModalPage';
+import type { ModalAction, ModalPageProps, } from '../common/ModalPage/ModalPage';
 import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
 import EventCreateWizard from '../EventCreateWizard/EventCreateWizard';
@@ -52,6 +30,9 @@ export type FormData = {
   gameMaster?: string;
   roomId: string;
   roomIsAvailable: boolean;
+  otherRoomName?: string;
+  otherRoomAddress?: string;
+  otherRoomMapUrl?: string;
   tables: number;
   durationInMinutes: number;
   description?: string;
@@ -142,6 +123,10 @@ function validateForm(
       formData.discordChannel,
       'https://discord.com/channels'
     ),
+    otherRoomMapUrlIsInvalid: Validators.notStartsWith(
+      formData.otherRoomMapUrl,
+      'https://'
+    ),
     imgIsInvalid: Validators.notStartsWith(formData.img, 'https://'),
   };
 }
@@ -164,6 +149,9 @@ export default function EventFormModal({
         : JUSQUA_LA_FERMETURE.valueInMinutes,
       roomId: event && event.room ? event.room?.id : HYPHEN_EMPTY_OPTION,
       roomIsAvailable: false,
+      otherRoomName: '',
+      otherRoomAddress: '',
+      otherRoomMapUrl: '',
       activityId:
         event && event.activity ? event.activity?.id : HYPHEN_EMPTY_OPTION,
       gameMaster: event ? event.gameMaster : '',

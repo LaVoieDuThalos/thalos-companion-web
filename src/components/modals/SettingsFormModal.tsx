@@ -7,8 +7,8 @@ import type { User } from '../../model/User';
 import { settingsService } from '../../services/SettingsService';
 import { userService } from '../../services/UserService';
 import {
-  isFormValid,
   type FormState,
+  isFormValid,
   type ValidationErrors,
 } from '../../utils/FormUtils';
 import { isEmpty } from '../../utils/Utils';

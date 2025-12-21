@@ -8,11 +8,11 @@ import {
   TOUTE_LA_SALLE,
 } from '../../../constants/Rooms';
 import { calendarService } from '../../../services/CalendarService';
-import { hasError, type CustomFormProps } from '../../../utils/FormUtils';
+import { type CustomFormProps, hasError } from '../../../utils/FormUtils';
 import { fromGameDayId, fromRoomId, printGameDay } from '../../../utils/Utils';
 import {
-  HYPHEN_EMPTY_OPTION,
   type FormData,
+  HYPHEN_EMPTY_OPTION,
 } from '../../modals/EventFormModal';
 
 import { useState } from 'react';
@@ -32,6 +32,7 @@ import RichEditor from '../../common/RichEditor/RichEditor';
 import RoomPriorities from '../../RoomPriorities/RoomPriorities';
 import './EventForm.scss';
 import type { GameDay } from '../../../model/GameDay.ts';
+
 type Event = { target: { value: string } };
 
 function buildTables(room: Room | null, availableTables: number): number[] {
@@ -80,12 +81,17 @@ export default function EventForm({
 
   const [moreDays, setMoreDays] = useState(false);
 
-  let extraDays: GameDay[] = []
-  if(formData.dayId !== undefined && formData.dayId !== HYPHEN_EMPTY_OPTION) {
+  let extraDays: GameDay[] = [];
+  if (formData.dayId !== undefined && formData.dayId !== HYPHEN_EMPTY_OPTION) {
     extraDays = [fromGameDayId(formData.dayId)!];
   }
 
-  const days = calendarService.buildDaysFromDate(new Date(), 60, moreDays, extraDays);
+  const days = calendarService.buildDaysFromDate(
+    new Date(),
+    60,
+    moreDays,
+    extraDays
+  );
   const hours = calendarService.hours();
   const durations = Durations;
   const { user, hasRole } = useUser();
@@ -243,9 +249,10 @@ export default function EventForm({
           onChange={(e) => updateForm('activityId', e)}
         >
           <option>-</option>
-          {ACTIVITIES.filter((act) =>
-            settingsService.activityVisible(user.preferences || {}, act.id)
-            && (act.id != EVENEMENT.id || hasRole(ROLE_BUREAU))
+          {ACTIVITIES.filter(
+            (act) =>
+              settingsService.activityVisible(user.preferences || {}, act.id) &&
+              (act.id != EVENEMENT.id || hasRole(ROLE_BUREAU))
           ).map((act) => (
             <option key={act.id} value={act.id}>
               {act.name}
@@ -350,6 +357,47 @@ export default function EventForm({
           <FormError error="L'activité choisie n'est pas prioritaire dans cette salle." />
         ) : null}
       </Form.Group>
+
+      {/* Autre salle ---------------------------------------------------------*/}
+      {formData.roomId === AUTRE_SALLE.id && (
+        <>
+          <Form.Group className="mb-3" controlId="eventForm.otherRoomName">
+            <Form.Label>Nom de la salle</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder=""
+              className="other-room-name"
+              disabled={disabled}
+              value={formData.otherRoomName}
+              onChange={(e) => updateForm('otherRoomName', e)}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="eventForm.otherRoomAddress">
+            <Form.Label>Adresse de la salle</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder=""
+              className="other-room-address"
+              disabled={disabled}
+              value={formData.otherRoomAddress}
+              onChange={(e) => updateForm('otherRoomAddress', e)}
+            />
+            <span>Url du plan</span> :
+            <Form.Control
+              type="text"
+              placeholder="Url du plan (Google map, open maps, etc..)"
+              className="other-room-map-url"
+              disabled={disabled}
+              value={formData.otherRoomMapUrl}
+              onChange={(e) => updateForm('otherRoomMapUrl', e)}
+            />
+            {state?.submitted &&
+            hasError(errors, 'otherRoomMapUrlIsInvalid') ? (
+              <FormError error="L'URL est invalide. Elle doit commencer par 'https://" />
+            ) : null}
+          </Form.Group>
+        </>
+      )}
 
       {/* Tables ------------------------------------------------------------- */}
       {formData.roomId !== AUTRE_SALLE.id && (
