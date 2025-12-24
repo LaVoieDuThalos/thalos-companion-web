@@ -18,7 +18,7 @@ export const SALLE_JDR = {
   id: 'jdr',
   name: 'Salle JDR',
   capacity: 2,
-}
+};
 
 export const AUTRE_SALLE: Room = {
   id: 'autre',
@@ -26,26 +26,32 @@ export const AUTRE_SALLE: Room = {
   virtual: true,
 };
 
+export const ALGECO: Room = {
+  id: 'algeco',
+  name: 'Algéco',
+  capacity: 10,
+  week: 'B',
+};
+
+export const SALLE_ANNEXE: Room = {
+  id: 'annexe',
+  name: 'Salle Annexe',
+  capacity: 8,
+  week: 'A',
+};
+
+export const GRANDE_SALLE: Room = {
+  id: 'main',
+  name: 'Grande Salle',
+  capacity: 10,
+  week: 'A',
+};
+
 export const ROOMS: Room[] = [
-  {
-    id: 'main',
-    name: 'Grande Salle',
-    capacity: 10,
-    week: 'A',
-  },
+  GRANDE_SALLE,
   SALLE_JDR,
-  {
-    id: 'annexe',
-    name: 'Salle Annexe',
-    capacity: 8,
-    week: 'A',
-  },
-  {
-    id: 'algeco',
-    name: 'Algéco',
-    capacity: 10,
-    week: 'B',
-  },
+  SALLE_ANNEXE,
+  ALGECO,
   SALLE_DU_LAC,
   AUTRE_SALLE,
 ];

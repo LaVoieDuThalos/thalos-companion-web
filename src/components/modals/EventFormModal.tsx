@@ -159,6 +159,7 @@ export default function EventFormModal({
       description: event ? event.description : '',
       discordChannel: event ? event.discordChannel : '',
       img: event ? event.img : '',
+      maxSubscriptions: 0,
       ...event,
     }) satisfies FormData;
 

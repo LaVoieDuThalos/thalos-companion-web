@@ -1,11 +1,15 @@
 import { calendarService } from '../services/CalendarService';
 import { roomService } from '../services/RoomService';
-import { AOS, AUBERGE_ESPAGNOLE, JDR, WARHAMMER_40K } from './Activities';
-import { JUSQUA_LA_FERMETURE } from './Durations';
 import {
-  MODE_AUTO_BY_REGISTRATION_DATE,
-} from './EventSubscriptionModes';
-import { TOUTE_LA_SALLE } from './Rooms';
+  AOS,
+  AUBERGE_ESPAGNOLE,
+  BLOODBOWL,
+  JDR,
+  WARHAMMER_40K,
+} from './Activities';
+import { JUSQUA_LA_FERMETURE } from './Durations';
+import { MODE_AUTO_BY_REGISTRATION_DATE } from './EventSubscriptionModes';
+import { ALGECO, TOUTE_LA_SALLE } from './Rooms';
 
 type InitFormData = { [key: string]: unknown };
 
@@ -30,23 +34,24 @@ export const CREATION_MODES: EventCreationMode[] = [
         activityId,
         day
       );
+      const tables = roomChosen.id === ALGECO.id ? 4 : 6;
       return {
-        title: 'Rencontres Warhammer 40k',
+        title: 'Rencontres 40k',
         activityId: activityId,
         dayId: day.id,
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
-        tables: 8,
+        tables,
         withSubscriptions: true,
-        maxSubscriptions: 4,
+        maxSubscriptions: tables / 2,
         subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
   },
   {
     id: 'w40kNextSaturday',
-    label: 'Rencontre Warhammer 40K Samedi prochain',
+    label: 'Rencontre 40K Samedi prochain',
     color: WARHAMMER_40K.style.color,
     backgroundColor: WARHAMMER_40K.style.backgroundColor,
     formDataFn: () => {
@@ -56,16 +61,17 @@ export const CREATION_MODES: EventCreationMode[] = [
         activityId,
         day
       );
+      const tables = roomChosen.id === ALGECO.id ? 4 : 6;
       return {
-        title: 'Rencontres Warhammer 40k',
+        title: 'Rencontres 40k',
         activityId: activityId,
         dayId: day.id,
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
-        tables: 8,
+        tables,
         withSubscriptions: true,
-        maxSubscriptions: 4,
+        maxSubscriptions: tables / 2,
         subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
@@ -77,22 +83,20 @@ export const CREATION_MODES: EventCreationMode[] = [
     backgroundColor: AOS.style.backgroundColor,
     formDataFn: () => {
       const day = calendarService.nextFridayGameDay();
-      const activityId = 'aos';
+      const activityId = AOS.id;
       const roomChosen = roomService.chooseMeARoomForActivityAndDay(
         activityId,
         day
       );
       return {
-        title: 'Rencontres Warhammer AoS',
+        title: 'Rencontres AoS',
         activityId: activityId,
         dayId: day.id,
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
         tables: 2,
-        withSubscriptions: true,
-        maxSubscriptions: 1,
-        subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
+        withSubscriptions: false,
       };
     },
   },
@@ -103,22 +107,68 @@ export const CREATION_MODES: EventCreationMode[] = [
     backgroundColor: AOS.style.backgroundColor,
     formDataFn: () => {
       const day = calendarService.nextSaturdayGameDay();
-      const activityId = 'aos';
+      const activityId = AOS.id;
       const roomChosen = roomService.chooseMeARoomForActivityAndDay(
         activityId,
         day
       );
       return {
-        title: 'Rencontres Warhammer AoS',
+        title: 'Rencontres AoS',
         activityId: activityId,
         dayId: day.id,
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
         tables: 2,
-        withSubscriptions: true,
-        maxSubscriptions: 1,
-        subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
+      };
+    },
+  },
+
+  {
+    id: 'bbNextFriday',
+    label: 'Rencontre BloodBowl Vendredi prochain',
+    color: BLOODBOWL.style.color,
+    backgroundColor: BLOODBOWL.style.backgroundColor,
+    formDataFn: () => {
+      const day = calendarService.nextFridayGameDay();
+      const activityId = BLOODBOWL.id;
+      const roomChosen = roomService.chooseMeARoomForActivityAndDay(
+        activityId,
+        day
+      );
+      return {
+        title: 'Rencontre Blood bowl',
+        activityId: BLOODBOWL.id,
+        dayId: day.id,
+        start: '20h',
+        roomId: roomChosen.id,
+        durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
+        tables: 1,
+        withSubscriptions: false,
+      };
+    },
+  },
+  {
+    id: 'bbNextSaturday',
+    label: 'Rencontre Blood bowl Samedi prochain',
+    color: BLOODBOWL.style.color,
+    backgroundColor: BLOODBOWL.style.backgroundColor,
+    formDataFn: () => {
+      const day = calendarService.nextSaturdayGameDay();
+      const activityId = BLOODBOWL.id;
+      const roomChosen = roomService.chooseMeARoomForActivityAndDay(
+        activityId,
+        day
+      );
+      return {
+        title: 'Rencontres AoS',
+        activityId: activityId,
+        dayId: day.id,
+        start: '20h',
+        roomId: roomChosen.id,
+        durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
+        tables: 1,
+        withSubscriptions: false,
       };
     },
   },
