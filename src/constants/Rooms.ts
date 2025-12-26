@@ -29,21 +29,21 @@ export const AUTRE_SALLE: Room = {
 export const ALGECO: Room = {
   id: 'algeco',
   name: 'Algéco',
-  capacity: 10,
+  capacity: 8,
   week: 'B',
 };
 
 export const SALLE_ANNEXE: Room = {
   id: 'annexe',
   name: 'Salle Annexe',
-  capacity: 8,
+  capacity: 4,
   week: 'A',
 };
 
 export const GRANDE_SALLE: Room = {
   id: 'main',
   name: 'Grande Salle',
-  capacity: 10,
+  capacity: 8,
   week: 'A',
 };
 
