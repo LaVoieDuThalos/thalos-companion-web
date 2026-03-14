@@ -14,7 +14,8 @@
     "lint": "eslint src",
     "preview": "vite preview",
     "prepare": "husky",
-    "clear-empty-users": "node --env-file=.env scripts/clear-empty-users.js"
+    "clear-empty-users": "node --env-file=.env scripts/clear-empty-users.js",
+    "export-countings": "node --env-file=.env scripts/export-countings.js"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-react": "^11.0.0",

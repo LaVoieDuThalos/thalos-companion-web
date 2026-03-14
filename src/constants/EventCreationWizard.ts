@@ -1,6 +1,12 @@
 import { calendarService } from '../services/CalendarService';
 import { roomService } from '../services/RoomService';
-import { AOS, AUBERGE_ESPAGNOLE, BLOODBOWL, JDR, WARHAMMER_40K, } from './Activities';
+import {
+  AOS,
+  AUBERGE_ESPAGNOLE,
+  BLOODBOWL,
+  JDR,
+  WARHAMMER_40K,
+} from './Activities';
 import { JUSQUA_LA_FERMETURE } from './Durations';
 import { MODE_AUTO_BY_REGISTRATION_DATE } from './EventSubscriptionModes';
 import { ALGECO, TOUTE_LA_SALLE } from './Rooms';
