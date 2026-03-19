@@ -1,6 +1,6 @@
 import { API, type ApiService } from '../api/Api';
 import type { AgendaEvent } from '../model/AgendaEvent';
-import { fromGameDayId, getEndTime, getStartTime } from '../utils/Utils';
+import { fromGameDayId, getEndTime, getStartTime, printDate, } from '../utils/Utils';
 import { subscriptionService } from './SubscriptionService';
 
 export class AgendaService {
@@ -39,8 +39,15 @@ export class AgendaService {
     return this.api.findEventsByDayIdAndRoomId(dayId, roomId);
   }
 
-  async findAllEvents(): Promise<AgendaEvent[]> {
-    const events = await this.api.findAllEvents();
+  async findAllEvents(
+    from: Date | undefined = undefined
+  ): Promise<AgendaEvent[]> {
+    let events: AgendaEvent[];
+    if (from === undefined) {
+      events = await this.api.findAllEvents(printDate(new Date()));
+    } else {
+      events = await this.api.findAllEvents(printDate(from));
+    }
     return this.sortEvents(events);
   }
 

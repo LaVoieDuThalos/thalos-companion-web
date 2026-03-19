@@ -228,7 +228,7 @@ export default function EventFormModal({
           user != null && event?.id == null
             ? {
                 id: user.id,
-                name: user.name,
+                name: `${user.name}`,
               }
             : event?.creator,
         lastModification:
@@ -237,7 +237,7 @@ export default function EventFormModal({
                 date: new Date().toISOString(),
                 user: {
                   id: user.id,
-                  name: user.name,
+                  name: `${user.name}`,
                 },
               } as LastModification)
             : null,

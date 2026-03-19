@@ -14,7 +14,7 @@ import { useUser } from '../../hooks/useUser.ts';
 export default function HomePage() {
   const appContext = useContext(AppContext);
 
-  const {user, activityVisible} = useUser();
+  const { user, activityVisible } = useUser();
   const [loading, setLoading] = useState(false);
   const [sections, setSections] = useState<SectionListItem<AgendaEvent>[]>([]);
   const needARefresh = appContext.refreshs['home.events'];
@@ -22,10 +22,16 @@ export default function HomePage() {
 
   useEffect(() => {
     setLoading(true);
-    agendaService.findAllEvents()
+
+    agendaService
+      .findAllEvents()
       .then((events) => {
         const eventsByDate = events
-          .filter((e) => (e.activityId && activityVisible(e.activityId)) || e.creator?.id === user.id)
+          .filter(
+            (e) =>
+              (e.activityId && activityVisible(e.activityId)) ||
+              e.creator?.id === user.id
+          )
           .map(mapEventToSectionListItem)
           .reduce(reduceEventsByDate, []);
         setSections(eventsByDate);
@@ -49,19 +55,26 @@ export default function HomePage() {
               <span className="section-title">{it.title}</span>
             )}
             renderItem={(it) => (
-              <AgendaEventCard event={it} even={evenOrOdd++ % 2 === 0} options={{ hideDate: true }} />
+              <AgendaEventCard
+                event={it}
+                even={evenOrOdd++ % 2 === 0}
+                options={{ hideDate: true }}
+              />
             )}
           ></SectionList>
         </>
-      ) : <p>Chargement en cours ...</p>}
+      ) : (
+        <p>Chargement en cours ...</p>
+      )}
     </View>
   );
 }
 
-const mapEventToSectionListItem = (e: AgendaEvent) => ({
-  title: printGameDay(e.day).toUpperCase(),
-  data: [e],
-} as SectionListItem<AgendaEvent>)
+const mapEventToSectionListItem = (e: AgendaEvent) =>
+  ({
+    title: printGameDay(e.day).toUpperCase(),
+    data: [e],
+  }) as SectionListItem<AgendaEvent>;
 
 const reduceEventsByDate = (
   acc: SectionListItem<AgendaEvent>[],

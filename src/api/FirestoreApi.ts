@@ -170,9 +170,18 @@ class FirestoreApi implements ApiService {
   }
 
   // Recherche tous les events enregistrés
-  async findAllEvents(): Promise<AgendaEvent[]> {
-    console.log('findAllEvents()');
-    const results = await getDocs(collection(FirebaseDb, Collections.EVENTS));
+  async findAllEvents(from: string | undefined): Promise<AgendaEvent[]> {
+    console.log('findAllEvents()', from);
+    let results = undefined;
+    if (from !== undefined) {
+      const q = query(
+        collection(FirebaseDb, Collections.EVENTS),
+        where('dayId', '>=', from)
+      );
+      results = await getDocs(q);
+    } else {
+      results = await getDocs(collection(FirebaseDb, Collections.EVENTS));
+    }
     return results.docs.map((doc) => mapDtoToAgendaEvent(doc.id, doc.data()));
   }
 
@@ -289,7 +298,10 @@ class FirestoreApi implements ApiService {
     return result.data() ? ({ ...result.data() } as OpenCloseRoom) : null;
   }
 
-  async findOpenCloseConfigurationOfMonth(year: number, month: number): Promise<OpenCloseRoom[]> {
+  async findOpenCloseConfigurationOfMonth(
+    year: number,
+    month: number
+  ): Promise<OpenCloseRoom[]> {
     console.log('findOpenCloseConfigurationOfMonth()', year, month);
     const monthStr = `${month}`.padStart(2, '0');
 

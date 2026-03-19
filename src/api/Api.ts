@@ -26,7 +26,7 @@ export interface ApiService {
     dayId: string,
     roomId: string
   ) => Promise<AgendaEvent[]>;
-  findAllEvents: () => Promise<AgendaEvent[]>;
+  findAllEvents: (from: string | undefined) => Promise<AgendaEvent[]>;
   saveEvent: (event: Partial<AgendaEvent>) => Promise<AgendaEvent>;
   updateEvent: (event: Partial<AgendaEvent>) => Promise<AgendaEvent>;
   deleteEvent: (eventId: string) => Promise<void>;
@@ -44,7 +44,10 @@ export interface ApiService {
 
   /* Ouverture/Fermeture de la salle ******************************************/
   findOpenCloseConfiguration: (dayId: string) => Promise<OpenCloseRoom | null>;
-  findOpenCloseConfigurationOfMonth(fullYear: number, month: number): Promise<OpenCloseRoom[]>;
+  findOpenCloseConfigurationOfMonth(
+    fullYear: number,
+    month: number
+  ): Promise<OpenCloseRoom[]>;
   saveOpenCloseConfiguration: (config: OpenCloseRoom) => Promise<void>;
 
   /* Gestion des inscriptions *************************************************/

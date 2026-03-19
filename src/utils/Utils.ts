@@ -77,6 +77,11 @@ export function formatDate(isoDate: string): string {
   );
 }
 
+export function printDate(d: Date): string {
+  const month = d.getMonth() + 1;
+  return `${d.getFullYear()}-${month < 10 ? '0' + month : month}-${d.getDate() < 10 ? '0' + d.getDate() : d.getDate()}`;
+}
+
 export function parseHour(hour: string): string {
   const hh = hour.toUpperCase().split('H');
   if (
