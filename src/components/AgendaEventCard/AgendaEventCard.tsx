@@ -24,6 +24,7 @@ import './AgendaEventCard.scss';
 import EventSubscriptions from './components/EventSubscriptions/EventSubscriptions.tsx';
 import { subscriptionService } from '../../services/SubscriptionService.ts';
 import AvailableSeats from './components/AvailableSeats/AvailableSeats.tsx';
+import { useCopyToClipboard } from '../../hooks/useCopyToClipboard.ts';
 
 export type Options = {
   hideDate?: boolean;
@@ -103,6 +104,13 @@ export default function AgendaEventCard({
       : event.otherRoomName +
         (event.otherRoomAddress ? ' - ' + event.otherRoomAddress : '');
 
+  const { copyToClipboard } = useCopyToClipboard();
+
+  async function copyLink() {
+    await copyToClipboard(window.location.href);
+    return false;
+  }
+
   return (
     <CustomCard
       className="agenda-event-card"
@@ -116,13 +124,24 @@ export default function AgendaEventCard({
       style={{ borderLeftColor: event.activity?.style.backgroundColor }}
     >
       {event.activity ? (
-        <Row>
+        <Row style={{ justifyContent: 'space-between' }}>
           <Tag
             color={event.activity.style.backgroundColor}
             textColor={event.activity.style.color}
           >
             <span style={styles.activityName}>{event.activity.name}</span>
           </Tag>
+
+          {complete && (
+            <IconButton
+              icon={'link'}
+              onClick={() => copyLink()}
+              iconSize={20}
+              title={'Copier le lien'}
+              color={'info'}
+              variant={'light'}
+            />
+          )}
         </Row>
       ) : null}
 
