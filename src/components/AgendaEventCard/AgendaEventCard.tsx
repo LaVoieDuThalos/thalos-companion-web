@@ -42,6 +42,21 @@ type Props = {
   even?: boolean;
 };
 
+function createMiniatureStyle(event: AgendaEvent, complete: boolean | undefined): React.CSSProperties {
+  if(complete) {
+    return {}
+  }
+  return {    
+    backgroundImage: event.activity?.defaultImg ? `url(${event.activity.defaultImg})` : undefined,    
+    backgroundPositionY: '30px',
+    backgroundPosition: 'left',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'contain',
+    backgroundBlendMode: complete ? 'darken' : 'multiply',
+  };
+
+}
+
 export default function AgendaEventCard({
   event,
   complete,
@@ -129,10 +144,10 @@ export default function AgendaEventCard({
         }
       }}
       clickable={!complete}
-      style={{ borderLeftColor: event.activity?.style.backgroundColor }}
+      style={{ borderLeftColor: event.activity?.style.backgroundColor, ...createMiniatureStyle(event, complete) }}
     >
       {event.activity ? (
-        <Row style={{ justifyContent: 'space-between' }}>
+        <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <Tag
             color={event.activity.style.backgroundColor}
             textColor={event.activity.style.color}
@@ -140,6 +155,7 @@ export default function AgendaEventCard({
             <span style={styles.activityName}>{event.activity.name}</span>
           </Tag>
 
+     
           {complete && (
             <div style={{ display: 'flex', gap: 5 }}>
               <IconButton

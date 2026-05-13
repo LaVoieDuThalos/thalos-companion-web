@@ -5,5 +5,6 @@ export interface Activity {
   countable?: boolean;
   figurines?: boolean;
   referent?: boolean;
+  defaultImg?: string;
   style: { color: string; backgroundColor: string };
 }

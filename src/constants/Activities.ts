@@ -8,6 +8,7 @@ export const JDS_ACTIVITY = {
   countable: true,
   referent: true,
   style: { color: 'black', backgroundColor: Colors.orange },
+  defaultImg: '/images/jds.jpg'
 } as Activity;
 
 export const JDR = {
@@ -16,6 +17,7 @@ export const JDR = {
   filterable: true,
   countable: true,
   referent: true,
+  defaultImg: '/images/jdr.jpg',
   style: { color: 'white', backgroundColor: Colors.blue },
 };
 
@@ -35,6 +37,7 @@ export const WARHAMMER_40K = {
   countable: true,
   figurines: true,
   referent: true,
+  defaultImg: 'images/w40k.jpg',
   style: { color: 'white', backgroundColor: Colors.purple },
 };
 
@@ -45,6 +48,7 @@ export const AOS = {
   countable: true,
   figurines: true,
   referent: true,
+  defaultImg: 'images/aos.jpg',
   style: { color: 'white', backgroundColor: Colors.green },
 };
 
@@ -55,6 +59,7 @@ export const BLOODBOWL = {
   countable: true,
   figurines: true,
   referent: true,
+  defaultImg: 'images/bb.jpg',
   style: { color: 'white', backgroundColor: Colors.red2 },
 };
 
@@ -65,6 +70,7 @@ export const SHATTERPOINT = {
   countable: true,
   figurines: true,
   referent: true,
+  defaultImg: 'images/shat.jpg',
   style: { color: 'white', backgroundColor: Colors.red2 },
 };
 
@@ -74,6 +80,7 @@ export const ESCAPE_GAME = {
   filterable: true,
   countable: true,
   referent: true,
+  defaultImg: 'images/escape.jpg',
   style: { color: 'black', backgroundColor: Colors.orange2 },
 };
 
@@ -83,6 +90,7 @@ export const MURDER_PARTY = {
   filterable: true,
   countable: true,
   referent: true,
+  defaultImg: 'images/murder.jpg',
   style: { color: 'black', backgroundColor: Colors.lightgreen },
 };
 
@@ -91,24 +99,28 @@ export const PEINTURE_DE_FIGURINES = {
   name: 'Peinture de figurines',
   filterable: true,
   countable: true,
+  defaultImg: 'images/paint.jpg',
   style: { color: 'white', backgroundColor: Colors.green },
 };
 
 export const REUNION = {
   id: 'reunion',
   name: 'Réunion',
+  defaultImg: 'images/reunion.jpg',
   style: { color: 'white', backgroundColor: Colors.black2 },
 };
 
 export const AUBERGE_ESPAGNOLE = {
   id: 'ae',
   name: 'Auberge Espagnole',
+  defaultImg: 'images/ae.jpg',
   style: { color: 'black', backgroundColor: Colors.yellow },
 };
 
 export const EVENEMENT = {
   id: 'event',
   name: 'Evènement',
+  defaultImg: 'images/event.jpg',
   style: { color: 'white', backgroundColor: Colors.green },
 };
 
