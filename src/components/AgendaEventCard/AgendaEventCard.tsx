@@ -46,13 +46,14 @@ function createMiniatureStyle(event: AgendaEvent, complete: boolean | undefined)
   if(complete) {
     return {}
   }
-  return {    
+  return {                      
+    flexShrink: '0',    
+/*    maskImage: 'linear-gradient(to left, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0))',    */
     backgroundImage: event.activity?.defaultImg ? `url(${event.activity.defaultImg})` : undefined,    
-    backgroundPositionY: '30px',
     backgroundPosition: 'left',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'contain',
-    backgroundBlendMode: complete ? 'darken' : 'multiply',
+    backgroundBlendMode: complete ? 'darken' : 'multiply',    
   };
 
 }
@@ -147,14 +148,14 @@ export default function AgendaEventCard({
       style={{ borderLeftColor: event.activity?.style.backgroundColor, ...createMiniatureStyle(event, complete) }}
     >
       {event.activity ? (
-        <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+        <><Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+
           <Tag
             color={event.activity.style.backgroundColor}
             textColor={event.activity.style.color}
           >
             <span style={styles.activityName}>{event.activity.name}</span>
           </Tag>
-
      
           {complete && (
             <div style={{ display: 'flex', gap: 5 }}>
@@ -177,6 +178,7 @@ export default function AgendaEventCard({
             </div>
           )}
         </Row>
+        </>
       ) : null}
 
       {/* Date  */}
