@@ -11,12 +11,18 @@ import Row from '../common/Row';
 import EventFormModal from '../modals/EventFormModal';
 import SettingsFormModal from '../modals/SettingsFormModal';
 import './Header.scss';
+import { ROLE_BUREAU } from '../../constants/Roles';
+import CountingFormModal from '../modals/CountingFormModal/CountingFormModal';
+import { printGameDay } from '../../utils/Utils';
+import { calendarService } from '../../services/CalendarService';
 
 export default function Header() {
   const appContext = useContext(AppContext);
-  const { user, setUser } = useUser();
+  const { user, setUser, hasRole } = useUser();
   const [eventFormModalVisible, setEventFormModalVisible] = useState(false);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+  const [countingFormModalVisible, setCountingFormModalVisible] =
+    useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -25,6 +31,8 @@ export default function Header() {
       setSettingsModalVisible(true);
     }
   }, []);
+
+  const today = calendarService.now();
 
   return (
     <>
@@ -35,12 +43,24 @@ export default function Header() {
         </Navbar.Brand>
 
         <Row style={{}}>
+
+          {hasRole(ROLE_BUREAU) && calendarService.isGameDay(today.date) && (
+            <IconButton
+              icon="123"
+              label=""
+              color={Colors.red2}
+              variant="light"
+              iconSize={30}
+            fontSize={10}
+            onClick={() => setCountingFormModalVisible(true)}
+          ></IconButton>) }
+
           <IconButton
             icon="add"
             label=""
             color={Colors.red2}
             variant="light"
-            iconSize={40}
+            iconSize={30}
             fontSize={10}
             onClick={() => setEventFormModalVisible(true)}
           ></IconButton>
@@ -48,7 +68,7 @@ export default function Header() {
           <IconButton
             icon="settings"
             color={Colors.white}
-            iconSize={40}
+            iconSize={30}
             onClick={() => setSettingsModalVisible(true)}
           />
         </Row>
@@ -83,6 +103,19 @@ export default function Header() {
             }}
           />
         ) : null}
+
+        {hasRole(ROLE_BUREAU) && calendarService.isGameDay(today.date) ? (
+        <CountingFormModal
+          dayId={today.id}
+          title={`Comptage : ${printGameDay(today)}`}
+          show={countingFormModalVisible}
+          onCancel={() => setCountingFormModalVisible(false)}
+          onSuccess={() => {
+            setCountingFormModalVisible(false);            
+          }}
+        />
+      ) : null}
+
       </Navbar>
     </>
   );

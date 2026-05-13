@@ -36,6 +36,14 @@ class CalendarService {
     return result.sort((a, b) => a.id.localeCompare(b.id));
   }
 
+  now(): GameDay {
+    const now = new Date();
+    return {
+      id: this.buildDayId(now),
+      date: now,
+    } as GameDay;
+  }
+
   hours(startHour = 9, mins = [30], addMidnight = false, max = 24): string[] {
     const results = [];
     for (let h = startHour; h < max; h++) {
@@ -46,6 +54,10 @@ class CalendarService {
       results.push('Min.');
     }
     return results;
+  }
+
+  isGameDay(date: Date): boolean {
+    return this.gameDays.includes(date.getDay());
   }
 
   nextGameDay(current: GameDay): GameDay {
