@@ -19,7 +19,7 @@ import type {
 } from '../common/ModalPage/ModalPage';
 import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
-import SettingsForm from '../forms/SettingsForm/SettingsForm';
+import { SettingsForm } from '../forms/SettingsForm/SettingsForm';
 
 type SettingsFormData = User;
 
