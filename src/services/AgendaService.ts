@@ -1,4 +1,5 @@
 import { API, type ApiService } from '../api/Api';
+import { HYPHEN_EMPTY_OPTION } from '../components/modals/EventFormModal';
 import type { AgendaEvent } from '../model/AgendaEvent';
 import { fromGameDayId, getEndTime, getStartTime, printDate, } from '../utils/Utils';
 import { subscriptionService } from './SubscriptionService';
@@ -73,6 +74,20 @@ export class AgendaService {
   async deleteEvent(eventId: string): Promise<void> {
     await this.api.deleteEvent(eventId);
     return await subscriptionService.unsubscribeAll(eventId);
+  }
+
+  duplicateEvent(event: AgendaEvent | undefined): AgendaEvent | undefined {
+     if(event === undefined) {
+        return undefined;
+      }
+      return {
+        ...event,
+        dayId: HYPHEN_EMPTY_OPTION,
+        start: HYPHEN_EMPTY_OPTION,
+        roomId: undefined,
+        tables: undefined,    
+        id: ''
+      }
   }
 }
 

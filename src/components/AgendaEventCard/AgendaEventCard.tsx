@@ -38,6 +38,7 @@ type Props = {
   onPress?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  onDuplicate?: () => void;
   even?: boolean;
 };
 
@@ -49,6 +50,7 @@ export default function AgendaEventCard({
   even,
   onEdit,
   onDelete,
+  onDuplicate
 }: Props) {
   const navigate = useNavigate();
   const { user, hasRole } = useUser();
@@ -111,6 +113,12 @@ export default function AgendaEventCard({
     return false;
   }
 
+  function duplicateEvent() {
+    if (onDuplicate) {
+      onDuplicate();
+    }
+  }
+
   return (
     <CustomCard
       className="agenda-event-card"
@@ -133,14 +141,24 @@ export default function AgendaEventCard({
           </Tag>
 
           {complete && (
-            <IconButton
-              icon={'link'}
-              onClick={() => copyLink()}
-              iconSize={20}
-              title={'Copier le lien'}
-              color={'info'}
-              variant={'light'}
-            />
+            <div style={{ display: 'flex', gap: 5 }}>
+              <IconButton
+                icon={'content_copy'}
+                onClick={() => duplicateEvent()}
+                iconSize={20}
+                title={'Copier l\'évènement'}
+                color={'info'}
+                variant={'light'}
+              />
+              <IconButton
+                icon={'link'}
+                onClick={() => copyLink()}
+                iconSize={20}
+                title={'Copier le lien'}
+                color={'info'}
+                variant={'light'}
+              />
+            </div>
           )}
         </Row>
       ) : null}

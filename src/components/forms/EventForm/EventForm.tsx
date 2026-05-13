@@ -200,7 +200,7 @@ export default function EventForm({
         isUnusualSchedule(formData.dayId, parseInt(formData.start)) &&
         (formData.roomId === undefined ||
           (formData.roomId !== AUTRE_SALLE.id &&
-            formData.activityId !== EVENEMENT.id)) ? (
+            formData.activityId !== EVENEMENT.id && formData.dayId !== HYPHEN_EMPTY_OPTION)) ? (
           <Alert variant="warning">
             <Icon icon="warning" iconSize={22} />
             Vous avez indiqué une horaire hors ouverture normale de la salle.
