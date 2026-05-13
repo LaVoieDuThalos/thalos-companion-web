@@ -46,14 +46,16 @@ function createMiniatureStyle(event: AgendaEvent, complete: boolean | undefined)
   if(complete) {
     return {}
   }
-  return {                      
-    flexShrink: '0',    
-/*    maskImage: 'linear-gradient(to left, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0))',    */
+  return {             
+    position: 'absolute',
+    zIndex: 0,        
+    
+    borderRadius: '10px',
+    /*maskImage: 'linear-gradient(to left, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0))',    */
     backgroundImage: event.activity?.defaultImg ? `url(${event.activity.defaultImg})` : undefined,    
     backgroundPosition: 'left',
     backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
-    backgroundBlendMode: complete ? 'darken' : 'multiply',    
+    backgroundSize: 'contain'    
   };
 
 }
@@ -145,10 +147,10 @@ export default function AgendaEventCard({
         }
       }}
       clickable={!complete}
-      style={{ borderLeftColor: event.activity?.style.backgroundColor, ...createMiniatureStyle(event, complete) }}
+      style={{ borderLeftColor: event.activity?.style.backgroundColor}}
     >
       {event.activity ? (
-        <><Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+        <><Row style={{ justifyContent: 'space-between', alignItems: 'center', zIndex: 1 }}>
 
           <Tag
             color={event.activity.style.backgroundColor}
@@ -178,6 +180,7 @@ export default function AgendaEventCard({
             </div>
           )}
         </Row>
+        <div style={createMiniatureStyle(event, complete)}>&nbsp;</div>
         </>
       ) : null}
 
