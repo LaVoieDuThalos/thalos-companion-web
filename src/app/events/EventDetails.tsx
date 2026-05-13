@@ -14,12 +14,19 @@ export default function EventDetailsPage() {
   const [event, setEvent] = useState<AgendaEvent | undefined>(undefined);
   const [eventFormModalVisible, setEventFormModalVisible] = useState(false);
   const [refresh, setRefresh] = useState('');
+  const [isDuplication, setIsDuplication] = useState(false);
 
   const onDeleteEvent = () => {
     navigate('/');
   };
 
   const onEditEvent = () => {
+    setIsDuplication(false);
+    setEventFormModalVisible(true);
+  };
+
+  const onDuplicateEvent = () => {
+    setIsDuplication(true);
     setEventFormModalVisible(true);
   };
 
@@ -41,7 +48,8 @@ export default function EventDetailsPage() {
         <EventFormModal
           show
           onCancel={() => setEventFormModalVisible(false)}
-          event={event}
+          event={isDuplication ? agendaService.duplicateEvent(event) : event}
+          duplication={isDuplication}
           onSuccess={(event) => {
             setEventFormModalVisible(false);
             setRefresh(new Date().toISOString());
@@ -57,6 +65,7 @@ export default function EventDetailsPage() {
           showButtons={true}
           onDelete={onDeleteEvent}
           onEdit={onEditEvent}
+          onDuplicate={onDuplicateEvent}
         />
       )}
     </>

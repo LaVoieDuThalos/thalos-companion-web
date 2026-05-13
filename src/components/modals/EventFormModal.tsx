@@ -73,6 +73,7 @@ type Props = ModalPageProps & {
   roomId?: string;
   activityId?: string;
   event?: AgendaEvent;
+  duplication?: boolean;
   onSuccess?: (event: AgendaEvent) => void;
   onCancel?: () => void;
 };
@@ -158,6 +159,7 @@ export default function EventFormModal({
   event,
   onSuccess,
   onCancel,
+  duplication,
   ...props
 }: Props) {
   const emptyForm = () =>
@@ -327,7 +329,7 @@ export default function EventFormModal({
       onHide={onCancel}
       options={{
         title: props.title || 'Créer un nouvel évènement',
-        actions: eventTemplate || formData.id ? ACTIONS : [],
+        actions: eventTemplate || formData.id || duplication ? ACTIONS : [],
       }}
     >
       {saving ? (
@@ -337,7 +339,7 @@ export default function EventFormModal({
       ) : null}
       {!saving ? (
         <>
-          {eventTemplate === undefined && !formData.id && (
+          {eventTemplate === undefined && !formData.id && !duplication && (
             <EventCreateWizard
               onSelect={(mode) => {
                 setEventTemplate(mode);
@@ -355,7 +357,7 @@ export default function EventFormModal({
               {eventTemplate.label}
             </Button>
           )}
-          {(eventTemplate || formData.id) && (
+          {(eventTemplate || formData.id || duplication) && (
             <EventForm
               formData={formData}
               availableTables={availablesTables}
