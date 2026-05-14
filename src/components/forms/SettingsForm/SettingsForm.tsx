@@ -119,25 +119,30 @@ export function SettingsForm({ disabled, ...props }: CustomFormProps<User>) {
       <hr />
       <div>
         <strong>Calendrier personnalisé (Expérimental)</strong>
+        <div className="alert alert-secondary" role="alert">
+          <p>
+            Vous trouverez ci-dessous les liens pour intégrer les évènements de
+            l'application sur votre calendrier préféré.
+          </p>
+          <p>
+            <Image src={'icons/google-calendar.png'} width={'32px'} /> Pour
+            Google Agenda, il faudra le faire depuis un ordinateur en utilisant
+            "<strong>A partir de l'URL ...</strong>" et renseignant l'url
+            ci-dessous.
+          </p>
+        </div>
         <div style={{ display: 'flex', gap: 5, padding: '10px' }}>
-          <a
-            className="btn btn-outline-secondary"
-            href={createIcsUrl('google', user.id)}
-            target="_blank"
-            role="button"
-          >
-            <Image src={'icons/google-calendar.png'} width={'32px'} />
-            Google Agenda
-          </a>
-
-          <a
-            className="btn btn-outline-secondary"
-            href={createIcsUrl('apple', user.id)}
-            target="_blank"
-            role="button"
-          >
-            <Image src={'icons/apple-logo.png'} width={'32px'} /> Apple
-          </a>
+          {/*
+            <a
+              className="btn btn-outline-secondary"
+              href={createIcsUrl('google', user.id)}
+              target="_blank"
+              role="button"
+            >
+              <Image src={'icons/google-calendar.png'} width={'32px'} />
+              Google Agenda
+            </a>
+          */}
 
           <a
             className="btn btn-outline-secondary"
@@ -148,10 +153,19 @@ export function SettingsForm({ disabled, ...props }: CustomFormProps<User>) {
             <Image src={'icons/ics-format.png'} width={'32px'} />
             Fichier iCal
           </a>
+
+          <a
+            className="btn btn-outline-secondary"
+            href={createIcsUrl('apple', user.id)}
+            target="_blank"
+            role="button"
+          >
+            <Image src={'icons/apple-logo.png'} width={'32px'} /> Apple
+          </a>
         </div>
         <div>
           <div role="button" style={{ display: 'flex' }}>
-            {createIcsUrl('ics', user.id)}
+            URL : {createIcsUrl('ics', user.id)}
             &nbsp;
             <IconButton
               icon={'content_copy'}
