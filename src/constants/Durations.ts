@@ -37,6 +37,14 @@ export const Durations: Duration[] = [
     valueInMinutes: 240,
     label: '4h',
   },
+  {
+    valueInMinutes: 300,
+    label: '5h',
+  },
+  {
+    valueInMinutes: 360,
+    label: '6h',
+  },
   JUSQUA_LA_FERMETURE,
 ];
 
