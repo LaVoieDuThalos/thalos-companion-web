@@ -1,6 +1,6 @@
 import { API, type ApiService } from '../api/Api';
-import { ACTIVITIES, EVENEMENT, JDR } from '../constants/Activities';
-import { AUTRE_SALLE, ROOMS, SALLE_JDR } from '../constants/Rooms';
+import { ACTIVITIES, AOS, EVENEMENT, JDR } from '../constants/Activities';
+import { AUTRE_SALLE, ROOMS, SALLE_ANNEXE, SALLE_JDR } from '../constants/Rooms';
 import type { Activity } from '../model/Activity';
 import type { GameDay } from '../model/GameDay';
 import type { OpenCloseRoom, Room } from '../model/Room';
@@ -26,6 +26,10 @@ class RoomService {
 
   chooseMeARoomForActivityAndDay(activityId: string, day: GameDay): Room {
     const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day);
+    // Cas particulier pour AoS qui se joue dans la salle annexe qd les figurines ont la grande salle
+    if(activityId === AOS.id && roomsChosen.indexOf(SALLE_ANNEXE) >= 0) {
+      return SALLE_ANNEXE;
+    }
     return roomsChosen[0];
   }
 

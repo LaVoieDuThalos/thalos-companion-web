@@ -34,7 +34,8 @@ export const CREATION_MODES: EventCreationMode[] = [
         activityId,
         day
       );
-      const tables = roomChosen.id === ALGECO.id ? 4 : 6;
+      const tables = roomChosen.id === ALGECO.id ? 6 : TOUTE_LA_SALLE;
+      const maxSubscriptions = roomChosen.id === ALGECO.id ? 3 : 5;
       return {
         title: 'Rencontres 40k',
         activityId: activityId,
@@ -44,7 +45,7 @@ export const CREATION_MODES: EventCreationMode[] = [
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
         tables,
         withSubscriptions: true,
-        maxSubscriptions: tables / 2,
+        maxSubscriptions: maxSubscriptions,
         subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
@@ -61,7 +62,8 @@ export const CREATION_MODES: EventCreationMode[] = [
         activityId,
         day
       );
-      const tables = roomChosen.id === ALGECO.id ? 4 : 6;
+      const tables = roomChosen.id === ALGECO.id ? 6 : TOUTE_LA_SALLE;
+      const maxSubscriptions = roomChosen.id === ALGECO.id ? 3 : 5;
       return {
         title: 'Rencontres 40k',
         activityId: activityId,
@@ -71,7 +73,7 @@ export const CREATION_MODES: EventCreationMode[] = [
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
         tables,
         withSubscriptions: true,
-        maxSubscriptions: tables / 2,
+        maxSubscriptions: maxSubscriptions,
         subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
