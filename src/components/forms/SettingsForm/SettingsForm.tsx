@@ -33,7 +33,7 @@ export function SettingsForm({ disabled, ...props }: CustomFormProps<User>) {
   const { copyToClipboard } = useCopyToClipboard();
 
   const tabs = [
-    { name: 'activities', title: 'Activities' },
+    { name: 'activities', title: 'Activités' },
     { name: 'roles', title: 'Rôles' },
   ];
 
