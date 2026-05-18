@@ -146,7 +146,7 @@ export function SettingsForm({ disabled, ...props }: CustomFormProps<User>) {
 
           <a
             className="btn btn-outline-secondary"
-            href={createIcsUrl('ics', user.id)}
+            href={createIcsUrl('ics', user?.id)}
             target="_blank"
             role="button"
           >
@@ -156,7 +156,7 @@ export function SettingsForm({ disabled, ...props }: CustomFormProps<User>) {
 
           <a
             className="btn btn-outline-secondary"
-            href={createIcsUrl('apple', user.id)}
+            href={createIcsUrl('apple', user?.id)}
             target="_blank"
             role="button"
           >
@@ -165,7 +165,7 @@ export function SettingsForm({ disabled, ...props }: CustomFormProps<User>) {
         </div>
         <div>
           <div role="button" style={{ display: 'flex' }}>
-            URL : {createIcsUrl('ics', user.id)}
+            URL : {createIcsUrl('ics', user?.id)}
             &nbsp;
             <IconButton
               icon={'content_copy'}

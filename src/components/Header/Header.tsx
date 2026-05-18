@@ -73,6 +73,8 @@ export default function Header() {
           />
         </Row>
 
+      </Navbar>
+      
         {eventFormModalVisible ? (
           <EventFormModal
             show={true}
@@ -115,8 +117,6 @@ export default function Header() {
           }}
         />
       ) : null}
-
-      </Navbar>
     </>
   );
 }
