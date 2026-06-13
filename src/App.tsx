@@ -6,11 +6,8 @@ import Header from './components/Header/Header';
 import AlertContextProvider from './contexts/AlertsContext';
 import AppContextProvider from './contexts/AppContext';
 import { UserContextProvider } from './contexts/UserContext';
-import { useDimensions } from './hooks/useDimensions.ts';
 
 function App() {
-  const [, height] = useDimensions();
-
   return (
     <>
       <AppContextProvider>
@@ -19,12 +16,7 @@ function App() {
             <div className="content">
               <Header />
               <Alerts />
-              <div
-                className="outlet"
-                style={{
-                  height,
-                }}
-              >
+              <div className="outlet">
                 <Outlet />
               </div>
               <div
