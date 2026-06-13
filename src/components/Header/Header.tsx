@@ -133,7 +133,8 @@ export default function Header() {
         />
       ) : null}
 
-      {hasRole(ROLE_BUREAU) && calendarService.isGameDay(today.date) ? (
+      {(hasRole(ROLE_BUREAU) || hasRole(ROLE_OUVREUR)) &&
+      calendarService.isGameDay(today.date) ? (
         <CountingFormModal
           dayId={today.id}
           title={`Comptage : ${printGameDay(today)}`}

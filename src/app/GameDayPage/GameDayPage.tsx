@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router';
 import IconButton from '../../components/common/IconButton/IconButton';
 import CountingFormModal from '../../components/modals/CountingFormModal/CountingFormModal';
 import EventFormModal from '../../components/modals/EventFormModal';
-import { ROLE_BUREAU } from '../../constants/Roles';
+import { ROLE_BUREAU, ROLE_OUVREUR } from '../../constants/Roles';
 import { AppContext } from '../../contexts/AppContext';
 import { useUser } from '../../hooks/useUser';
 import type { AgendaEvent } from '../../model/AgendaEvent';
@@ -81,7 +81,7 @@ export default function GameDayPage() {
         }}
       />
 
-      {day && hasRole(ROLE_BUREAU) ? (
+      {day && (hasRole(ROLE_BUREAU) || hasRole(ROLE_OUVREUR)) ? (
         <CountingFormModal
           dayId={day?.id}
           title={`Comptage : ${printGameDay(day)}`}
@@ -109,12 +109,14 @@ export default function GameDayPage() {
       <Alert variant="info">{day ? <RoomPriorities day={day} /> : null}</Alert>
 
       {/* Comptages */}
-      {day && isPassed(day?.id) && hasRole(ROLE_BUREAU) && (
-        <CountingsCard
-          day={day}
-          onClick={() => setCountingFormModalVisible(true)}
-        />
-      )}
+      {day &&
+        isPassed(day?.id) &&
+        (hasRole(ROLE_BUREAU) || hasRole(ROLE_OUVREUR)) && (
+          <CountingsCard
+            day={day}
+            onClick={() => setCountingFormModalVisible(true)}
+          />
+        )}
 
       {/* Programme / Occupation des salles */}
       <GameDayPageTabs day={day} events={events} loading={loading} />
