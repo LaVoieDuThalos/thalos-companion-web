@@ -42,7 +42,7 @@ export default function Header() {
     <>
       <Offcanvas show={show} onHide={handleClose} placement="end">
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Menu</Offcanvas.Title>
+          <Offcanvas.Title>Bonjour {user?.name || ''},</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <div
