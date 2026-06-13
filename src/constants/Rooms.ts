@@ -47,12 +47,20 @@ export const GRANDE_SALLE: Room = {
   week: 'A',
 };
 
+export const CASTAGORA: Room = {
+  id: 'castagora',
+  name: 'Castagora',
+  capacity: 20,
+  week: 'A',
+};
+
 export const ROOMS: Room[] = [
   GRANDE_SALLE,
   SALLE_JDR,
   SALLE_ANNEXE,
   ALGECO,
   SALLE_DU_LAC,
+  CASTAGORA,
   AUTRE_SALLE,
 ];
 
