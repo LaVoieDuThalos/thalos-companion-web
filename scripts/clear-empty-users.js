@@ -1,10 +1,10 @@
-import { initializeApp } from 'firebase/app';
 import {
   collection,
   getDocs,
   getFirestore,
   writeBatch,
 } from '@firebase/firestore';
+import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
   apiKey: process.env.VITE_FIRESTORE_API_KEY,
@@ -33,6 +33,5 @@ getDocs(collection(db, 'users'))
       })
   )
   .then(() => batch.commit())
-  .then(() => console.log(count + ' user(s) deleted'));
-
-process.exit(0);
+  .then(() => console.log(count + ' user(s) deleted'))
+  .then(() => process.exit());
