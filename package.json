@@ -15,7 +15,8 @@
     "preview": "vite preview",
     "prepare": "husky",
     "clear-empty-users": "node --env-file=.env scripts/clear-empty-users.js",
-    "export-countings": "node --env-file=.env scripts/export-countings.js"
+    "export-countings": "node --env-file=.env scripts/export-countings.js",
+    "list-users": "node --env-file=.env scripts/list-users.js"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-react": "^11.0.0",
