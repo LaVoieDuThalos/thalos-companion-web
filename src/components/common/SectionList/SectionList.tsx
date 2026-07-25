@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 
 import './SectionList.scss';
 
-export type SectionListItem<T> = { title: string; data: T[] };
+export type SectionListItem<T> = { id: string; title: string; data: T[] };
 
 type Props<T> = {
   sections: SectionListItem<T>[];

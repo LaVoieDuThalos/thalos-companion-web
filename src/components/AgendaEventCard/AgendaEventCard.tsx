@@ -6,7 +6,7 @@ import { AUTRE_SALLE, TOUTE_LA_SALLE } from '../../constants/Rooms';
 import { AlertActions, AlertContext } from '../../contexts/AlertsContext';
 import type { AgendaEvent, EventSubscription } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
-import { printGameDay } from '../../utils/Utils';
+import { isGameDay, isGameDayDraft, printGameDay } from '../../utils/Utils';
 import CustomCard from '../common/CustomCard/CustomCard';
 import IconButton from '../common/IconButton/IconButton';
 import Label from '../common/Label';
@@ -14,7 +14,7 @@ import Row from '../common/Row';
 import Tag from '../common/Tag/Tag';
 import View from '../common/View';
 
-import { Image } from 'react-bootstrap';
+import { Alert, Image } from 'react-bootstrap';
 import { Globals } from '../../constants/Globals';
 import { findRoleById, ROLE_BUREAU } from '../../constants/Roles.ts';
 import { useUser } from '../../hooks/useUser.ts';
@@ -25,6 +25,7 @@ import EventSubscriptions from './components/EventSubscriptions/EventSubscriptio
 import { subscriptionService } from '../../services/SubscriptionService.ts';
 import AvailableSeats from './components/AvailableSeats/AvailableSeats.tsx';
 import { useCopyToClipboard } from '../../hooks/useCopyToClipboard.ts';
+import Icon from '../common/Icon.tsx';
 
 export type Options = {
   hideDate?: boolean;
@@ -50,7 +51,7 @@ export default function AgendaEventCard({
   even,
   onEdit,
   onDelete,
-  onDuplicate
+  onDuplicate,
 }: Props) {
   const navigate = useNavigate();
   const { user, hasRole } = useUser();
@@ -146,7 +147,7 @@ export default function AgendaEventCard({
                 icon={'content_copy'}
                 onClick={() => duplicateEvent()}
                 iconSize={20}
-                title={'Copier l\'évènement'}
+                title={"Copier l'évènement"}
                 color={'info'}
                 variant={'light'}
               />
@@ -166,13 +167,23 @@ export default function AgendaEventCard({
       {/* Date  */}
       {event.day && !options?.hideDate ? (
         <div className="card-item">
-          <Link
-            to={'/agenda/' + event.day.id}
-            className="test-date"
-            style={styles.eventDateText}
-          >
-            {printGameDay(event.day)}
-          </Link>
+          {isGameDayDraft(event.day) && (
+            <Alert variant="warning">
+              <div className="error-message">
+                <Icon icon="warning" iconSize={20} />
+                <span>Date pas encore définie</span>
+              </div>
+            </Alert>
+          )}
+          {isGameDay(event.day) && (
+            <Link
+              to={'/agenda/' + event.day.id}
+              className="test-date"
+              style={styles.eventDateText}
+            >
+              {printGameDay(event.day)}
+            </Link>
+          )}
         </div>
       ) : null}
 
@@ -191,8 +202,14 @@ export default function AgendaEventCard({
       {event.start ? (
         <Row style={{ justifyContent: 'center' }}>
           <Label icon="schedule" color="gray" size={20}>
-            <span>{event.start}</span>
-            {duration ? <span> ({`${duration.label}`})</span> : null}
+            {event.start === Globals.DRAFT_ID ? (
+              'Pas encore définie'
+            ) : (
+              <>
+                <span>{event.start}</span>
+                {duration ? <span> ({`${duration.label}`})</span> : null}
+              </>
+            )}
           </Label>
         </Row>
       ) : (

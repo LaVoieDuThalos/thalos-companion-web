@@ -21,6 +21,7 @@ import { EVENT_SUBSCRIPTION_MODES } from '../../../constants/EventSubscriptionMo
 import { Globals } from '../../../constants/Globals';
 import { ROLE_BUREAU } from '../../../constants/Roles.ts';
 import { useUser } from '../../../hooks/useUser';
+import type { GameDay } from '../../../model/GameDay.ts';
 import type { Room } from '../../../model/Room';
 import type { TablesAvailables } from '../../../services/BookingService';
 import { roomService } from '../../../services/RoomService';
@@ -31,7 +32,6 @@ import NumberInput from '../../common/NumberInput/NumberInput';
 import RichEditor from '../../common/RichEditor/RichEditor';
 import RoomPriorities from '../../RoomPriorities/RoomPriorities';
 import './EventForm.scss';
-import type { GameDay } from '../../../model/GameDay.ts';
 
 type Event = { target: { value: string } };
 
@@ -164,12 +164,17 @@ export default function EventForm({
           onChange={(e) => updateForm('dayId', e)}
         >
           <option>-</option>
-          {days.map((day) => (
-            <option key={day.id} value={day.id}>
-              {printGameDay(day)}
-            </option>
-          ))}
-          <option value={'moreDays'}>Plus de dates ...</option>
+          <option key={Globals.DRAFT_ID} value={Globals.DRAFT_ID}>
+            Je ne sais pas encore
+          </option>
+          <optgroup label="Dates disponibles">
+            {days.map((day) => (
+              <option key={day.id} value={day.id}>
+                {printGameDay(day)}
+              </option>
+            ))}
+            <option value={'moreDays'}>Plus de dates ...</option>
+          </optgroup>
         </Form.Select>
         {state?.submitted && hasError(errors, 'dateIsEmpty') ? (
           <FormError error="La date est obligatoire" />
@@ -186,11 +191,16 @@ export default function EventForm({
           onChange={(e) => updateForm('start', e)}
         >
           <option>-</option>
-          {hours.map((hh) => (
-            <option key={hh} value={hh}>
-              {hh}
-            </option>
-          ))}
+          <option key={Globals.DRAFT_ID} value={Globals.DRAFT_ID}>
+            Je ne sais pas encore
+          </option>
+          <optgroup label="Heures disponibles">
+            {hours.map((hh) => (
+              <option key={hh} value={hh}>
+                {hh}
+              </option>
+            ))}
+          </optgroup>
         </Form.Select>
         {state?.submitted && hasError(errors, 'startHourIsEmpty') ? (
           <FormError error="L&lsquo;heure de début est obligatoire" />
@@ -200,7 +210,8 @@ export default function EventForm({
         isUnusualSchedule(formData.dayId, parseInt(formData.start)) &&
         (formData.roomId === undefined ||
           (formData.roomId !== AUTRE_SALLE.id &&
-            formData.activityId !== EVENEMENT.id && formData.dayId !== HYPHEN_EMPTY_OPTION)) ? (
+            formData.activityId !== EVENEMENT.id &&
+            formData.dayId !== HYPHEN_EMPTY_OPTION)) ? (
           <Alert variant="warning">
             <Icon icon="warning" iconSize={22} />
             Vous avez indiqué une horaire hors ouverture normale de la salle.
@@ -293,70 +304,72 @@ export default function EventForm({
       )}
 
       {/* Salle ------------------------------------------------------------- */}
-      <Form.Group className="mb-3" controlId="eventForm.RoomInput">
-        <Form.Label>Salle</Form.Label>
-        <Form.Select
-          size="lg"
-          disabled={
-            disabled ||
-            formData.dayId === HYPHEN_EMPTY_OPTION ||
-            formData.start === HYPHEN_EMPTY_OPTION
-          }
-          value={formData.roomId}
-          onChange={(e) => updateForm('roomId', e)}
-        >
-          <option>-</option>
-          {ROOMS.filter(
-            (room) =>
-              (room.id !== SALLE_DU_LAC.id ||
-                formData.activityId === EVENEMENT.id) &&
-              (!room.virtual || hasRole(ROLE_BUREAU))
-          ).map((r) => {
-            const tables = availableTables[r.id];
-            return (
-              <option
-                key={r.id}
-                value={r.id}
-                disabled={tables === 0 && !r.virtual}
-                data-room-occupied={tables === 0}
-              >
-                {r.name} - (
-                {tables === undefined ||
-                tables === TOUTE_LA_SALLE ||
-                r.id === AUTRE_SALLE.id
-                  ? 'Disponible'
-                  : tables === 0
-                    ? 'Complet'
-                    : tables === r.capacity
-                      ? 'Disponible'
-                      : `Reste ${tables} / ${r.capacity} tables`}
-                )
-              </option>
-            );
-          })}
-        </Form.Select>
-        {formData.roomId !== HYPHEN_EMPTY_OPTION &&
-        !roomService.isActivityAllowedInRoom(
-          formData.activityId,
-          formData.dayId,
-          formData.roomId
-        ) ? (
-          <Alert variant="warning">
-            <Icon icon="warning" iconSize={20} /> Attention, cette activité
-            n'est pas prioritaire dans cette salle cette semaine :{' '}
-            <RoomPriorities day={fromGameDayId(formData.dayId)!} />
-          </Alert>
-        ) : null}
-        {state?.submitted && hasError(errors, 'roomIsEmpty') ? (
-          <FormError error="La salle est obligatoire" />
-        ) : null}
-        {state?.submitted && hasError(errors, 'roomIsOccupied') ? (
-          <FormError error="La salle n'est pas disponible pour ce créneau" />
-        ) : null}
-        {state?.submitted && hasError(errors, 'nonPriorityActivity') ? (
-          <FormError error="L'activité choisie n'est pas prioritaire dans cette salle." />
-        ) : null}
-      </Form.Group>
+      {formData.dayId !== Globals.DRAFT_ID && (
+        <Form.Group className="mb-3" controlId="eventForm.RoomInput">
+          <Form.Label>Salle</Form.Label>
+          <Form.Select
+            size="lg"
+            disabled={
+              disabled ||
+              formData.dayId === HYPHEN_EMPTY_OPTION ||
+              formData.start === HYPHEN_EMPTY_OPTION
+            }
+            value={formData.roomId}
+            onChange={(e) => updateForm('roomId', e)}
+          >
+            <option>-</option>
+            {ROOMS.filter(
+              (room) =>
+                (room.id !== SALLE_DU_LAC.id ||
+                  formData.activityId === EVENEMENT.id) &&
+                (!room.virtual || hasRole(ROLE_BUREAU))
+            ).map((r) => {
+              const tables = availableTables[r.id];
+              return (
+                <option
+                  key={r.id}
+                  value={r.id}
+                  disabled={tables === 0 && !r.virtual}
+                  data-room-occupied={tables === 0}
+                >
+                  {r.name} - (
+                  {tables === undefined ||
+                  tables === TOUTE_LA_SALLE ||
+                  r.id === AUTRE_SALLE.id
+                    ? 'Disponible'
+                    : tables === 0
+                      ? 'Complet'
+                      : tables === r.capacity
+                        ? 'Disponible'
+                        : `Reste ${tables} / ${r.capacity} tables`}
+                  )
+                </option>
+              );
+            })}
+          </Form.Select>
+          {formData.roomId !== HYPHEN_EMPTY_OPTION &&
+          !roomService.isActivityAllowedInRoom(
+            formData.activityId,
+            formData.dayId,
+            formData.roomId
+          ) ? (
+            <Alert variant="warning">
+              <Icon icon="warning" iconSize={20} /> Attention, cette activité
+              n'est pas prioritaire dans cette salle cette semaine :{' '}
+              <RoomPriorities day={fromGameDayId(formData.dayId)!} />
+            </Alert>
+          ) : null}
+          {state?.submitted && hasError(errors, 'roomIsEmpty') ? (
+            <FormError error="La salle est obligatoire" />
+          ) : null}
+          {state?.submitted && hasError(errors, 'roomIsOccupied') ? (
+            <FormError error="La salle n'est pas disponible pour ce créneau" />
+          ) : null}
+          {state?.submitted && hasError(errors, 'nonPriorityActivity') ? (
+            <FormError error="L'activité choisie n'est pas prioritaire dans cette salle." />
+          ) : null}
+        </Form.Group>
+      )}
 
       {/* Autre salle ---------------------------------------------------------*/}
       {formData.roomId === AUTRE_SALLE.id && (

@@ -1,7 +1,13 @@
 import { API, type ApiService } from '../api/Api';
 import { HYPHEN_EMPTY_OPTION } from '../components/modals/EventFormModal';
 import type { AgendaEvent } from '../model/AgendaEvent';
-import { fromGameDayId, getEndTime, getStartTime, printDate, } from '../utils/Utils';
+import {
+  fromGameDayId,
+  getEndTime,
+  getStartTime,
+  isGameDayDraft,
+  printDate,
+} from '../utils/Utils';
 import { subscriptionService } from './SubscriptionService';
 
 export class AgendaService {
@@ -58,10 +64,14 @@ export class AgendaService {
       throw new Error('Unable to save event : ' + event);
     }
 
+    const isDraft = isGameDayDraft(day);
+
     const enriched = {
       ...event,
-      startTime: getStartTime(day!, event.start!),
-      endTime: getEndTime(day!, event.start!, event.durationInMinutes),
+      startTime: isDraft ? 0 : getStartTime(day!, event.start!),
+      endTime: isDraft
+        ? 0
+        : getEndTime(day!, event.start!, event.durationInMinutes),
     } as Partial<AgendaEvent>;
 
     if (event.id) {
@@ -77,17 +87,17 @@ export class AgendaService {
   }
 
   duplicateEvent(event: AgendaEvent | undefined): AgendaEvent | undefined {
-     if(event === undefined) {
-        return undefined;
-      }
-      return {
-        ...event,
-        dayId: HYPHEN_EMPTY_OPTION,
-        start: HYPHEN_EMPTY_OPTION,
-        roomId: undefined,
-        tables: undefined,    
-        id: ''
-      }
+    if (event === undefined) {
+      return undefined;
+    }
+    return {
+      ...event,
+      dayId: HYPHEN_EMPTY_OPTION,
+      start: HYPHEN_EMPTY_OPTION,
+      roomId: undefined,
+      tables: undefined,
+      id: '',
+    };
   }
 }
 

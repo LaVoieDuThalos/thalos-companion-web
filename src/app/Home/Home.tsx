@@ -7,9 +7,11 @@ import { AppContext } from '../../contexts/AppContext';
 import type { AgendaEvent } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
 
-import { printGameDay } from '../../utils/Utils';
+import { isGameDay, printGameDay } from '../../utils/Utils';
 import './Home.scss';
 import { useUser } from '../../hooks/useUser.ts';
+import { Tab, Tabs } from 'react-bootstrap';
+import { Globals } from '../../constants/Globals.ts';
 
 export default function HomePage() {
   const appContext = useContext(AppContext);
@@ -17,7 +19,15 @@ export default function HomePage() {
   const { user, activityVisible } = useUser();
   const [loading, setLoading] = useState(false);
   const [sections, setSections] = useState<SectionListItem<AgendaEvent>[]>([]);
+  const [waitingSections, setWaitingSections] = useState<
+    SectionListItem<AgendaEvent>[]
+  >([]);
   const needARefresh = appContext.refreshs['home.events'];
+  const [key, setKey] = useState('planned');
+  const [draftSection, setDraftSection] = useState<
+    SectionListItem<AgendaEvent> | undefined
+  >(undefined);
+
   let evenOrOdd = 0;
 
   useEffect(() => {
@@ -34,7 +44,22 @@ export default function HomePage() {
           )
           .map(mapEventToSectionListItem)
           .reduce(reduceEventsByDate, []);
-        setSections(eventsByDate);
+        setSections(
+          eventsByDate.filter((section) => section.id !== Globals.DRAFT_ID)
+        );
+        setWaitingSections(
+          eventsByDate
+            .map((section) => ({
+              ...section,
+              data: section.data.filter((e) => !!e.withSubscriptions),
+            }))
+            .filter((section) => section.data.length > 0)
+        );
+        setDraftSection(
+          eventsByDate.find(
+            (section) => section.id === Globals.DRAFT_ID
+          ) as SectionListItem<AgendaEvent>
+        );
         setLoading(false);
       })
       .catch((error) => {
@@ -47,21 +72,72 @@ export default function HomePage() {
     <View>
       {!loading ? (
         <>
-          {sections.length === 0 ? <p>Aucun évènement prévu</p> : null}
-          <SectionList
-            sections={sections}
-            keyExtractor={(it) => it.id}
-            renderSectionHeader={(it) => (
-              <span className="section-title">{it.title}</span>
-            )}
-            renderItem={(it) => (
-              <AgendaEventCard
-                event={it}
-                even={evenOrOdd++ % 2 === 0}
-                options={{ hideDate: true }}
-              />
-            )}
-          ></SectionList>
+          {sections.length === 0 && !loading ? (
+            <p>Aucun évènement prévu</p>
+          ) : loading ? (
+            'Chargement en cours ...'
+          ) : null}
+          <Tabs
+            id="controlled-tab-example"
+            className="mb-3"
+            activeKey={key}
+            onSelect={(k) => setKey(k)}
+            fill
+          >
+            <Tab eventKey="planned" title={`Planifiés`}>
+              <SectionList
+                sections={sections}
+                keyExtractor={(it) => it.id}
+                renderSectionHeader={(it) => (
+                  <span className="section-title">{it.title}</span>
+                )}
+                renderItem={(it) => (
+                  <AgendaEventCard
+                    event={it}
+                    even={evenOrOdd++ % 2 === 0}
+                    options={{ hideDate: true }}
+                  />
+                )}
+              ></SectionList>
+            </Tab>
+            <Tab
+              eventKey="non-plan"
+              title={`Non planifiés (${draftSection?.data.length || 0})`}
+            >
+              {draftSection === undefined && (
+                <p>Aucun évènement en cours de planification</p>
+              )}
+              {draftSection !== undefined && (
+                <div>
+                  {draftSection.data.map((it) => (
+                    <div key={it.id} className="section-item">
+                      <AgendaEventCard
+                        event={it}
+                        even={evenOrOdd++ % 2 === 0}
+                        options={{ hideDate: true }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Tab>
+            <Tab eventKey="waiting-for-players" title="En attente de joueurs">
+              <SectionList
+                sections={waitingSections}
+                keyExtractor={(it) => it.id}
+                renderSectionHeader={(it) => (
+                  <span className="section-title">{it.title}</span>
+                )}
+                renderItem={(it) => (
+                  <AgendaEventCard
+                    event={it}
+                    even={evenOrOdd++ % 2 === 0}
+                    options={{ hideDate: true }}
+                  />
+                )}
+              ></SectionList>
+            </Tab>
+          </Tabs>
         </>
       ) : (
         <p>Chargement en cours ...</p>
@@ -72,7 +148,10 @@ export default function HomePage() {
 
 const mapEventToSectionListItem = (e: AgendaEvent) =>
   ({
-    title: printGameDay(e.day).toUpperCase(),
+    id: e.day.id,
+    title: isGameDay(e.day)
+      ? printGameDay(e.day).toUpperCase()
+      : 'Non planifié',
     data: [e],
   }) as SectionListItem<AgendaEvent>;
 

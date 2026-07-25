@@ -3,11 +3,12 @@ import {
   EVENT_SUBSCRIPTION_MODES,
   type EventSubscriptionMode,
 } from '../constants/EventSubscriptionModes';
+import { Globals } from '../constants/Globals';
 import { DaysOfWeek, Months } from '../constants/Months';
 import { ROOMS } from '../constants/Rooms';
 import type { Activity } from '../model/Activity';
 import type { AgendaEvent } from '../model/AgendaEvent';
-import type { GameDay } from '../model/GameDay';
+import type { GameDay, GameDayDraft } from '../model/GameDay';
 import type { Room } from '../model/Room';
 
 export function isEmpty(
@@ -35,9 +36,17 @@ export function fromActivityId(
   return activities.find((a) => a.id === id) ?? null;
 }
 
-export function fromGameDayId(id: string | undefined): GameDay | null {
+export function fromGameDayId(
+  id: string | 'draft' | undefined
+): GameDay | GameDayDraft | null {
   if (!id) {
     return null;
+  }
+  if (id === Globals.DRAFT_ID) {
+    return {
+      id,
+      draft: true,
+    } as GameDayDraft;
   }
   const date = new Date(id);
   return {
@@ -58,12 +67,18 @@ export function isPassed(day: string): boolean {
   return now.getTime() - d.getTime() > 0;
 }
 
-export function printGameDay(gameDay: GameDay): string {
-  const day = DaysOfWeek[gameDay.date.getDay()];
-  const dom = gameDay.date.getDate();
-  const month = Months[gameDay.date.getMonth()];
-  const yyyy = gameDay.date.getFullYear();
-  return `${day} ${dom} ${month} ${yyyy}`;
+export function printGameDay(gameDay: GameDay | GameDayDraft): string {
+  if ('draft' in gameDay && gameDay.draft) {
+    return 'Je ne sais pas';
+  } else if ('date' in gameDay) {
+    const day = DaysOfWeek[gameDay.date.getDay()];
+    const dom = gameDay.date.getDate();
+    const month = Months[gameDay.date.getMonth()];
+    const yyyy = gameDay.date.getFullYear();
+    return `${day} ${dom} ${month} ${yyyy}`;
+  } else {
+    return '';
+  }
 }
 
 export function formatDate(isoDate: string): string {
@@ -136,6 +151,16 @@ export function eventIsInTimeSlot(
     (eventStartTime >= start && eventEndTime < end) ||
     (eventStartTime <= start && eventEndTime >= end)
   );
+}
+
+export function isGameDayDraft(
+  gameDay: GameDay | GameDayDraft
+): gameDay is GameDayDraft {
+  return 'draft' in gameDay && gameDay.draft;
+}
+
+export function isGameDay(gameDay: GameDay | GameDayDraft): gameDay is GameDay {
+  return !isGameDayDraft(gameDay);
 }
 
 export function fromRoomId(

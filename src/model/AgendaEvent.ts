@@ -48,3 +48,7 @@ export interface AgendaEvent {
   maxSubscriptions?: number;
   subscriptionMode?: EventSubscriptionModes;
 }
+
+export interface AgendaEventDraft extends Omit<AgendaEvent, 'day' | 'room'> {
+  draft: boolean;
+}

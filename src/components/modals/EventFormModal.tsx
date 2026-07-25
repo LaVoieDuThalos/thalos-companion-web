@@ -41,6 +41,7 @@ import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
 import EventCreateWizard from '../EventCreateWizard/EventCreateWizard';
 import EventForm from '../forms/EventForm/EventForm';
+import { Globals } from '../../constants/Globals';
 
 export type FormData = {
   id?: string;
@@ -82,10 +83,14 @@ export const EMPTY_OPTION = '';
 export const HYPHEN_EMPTY_OPTION = '-';
 
 function isRoomAvailable(
+  dayId: string,
   roomId: string,
   requestedTables: number,
   availablesTables: TablesAvailables
 ): boolean {
+  if (dayId === Globals.DRAFT_ID) {
+    return true;
+  }
   const room = fromRoomId(roomId);
   if (!room) {
     return false;
@@ -117,6 +122,7 @@ function validateForm(
     durationIsEmpty: isZero(formData.durationInMinutes),
     roomIsEmpty: isEmpty(formData.roomId, [EMPTY_OPTION, HYPHEN_EMPTY_OPTION]),
     roomIsOccupied: !isRoomAvailable(
+      formData.dayId,
       formData.roomId,
       formData.tables,
       availablesTables
@@ -297,6 +303,9 @@ export default function EventFormModal({
 
   const updateAvailablesTablesByRooms = useCallback((_formData: FormData) => {
     const gameDay = fromGameDayId(_formData.dayId);
+    if (gameDay && 'draft' in gameDay) {
+      return;
+    }
     const startTime = gameDay ? getStartTime(gameDay, _formData.start) : 0;
     const endTime = gameDay
       ? getEndTime(gameDay, _formData.start, _formData.durationInMinutes - 1)
