@@ -52,7 +52,10 @@ export default function Header() {
               color={Colors.red2}
               variant="primary"
               size="lg"
-              onClick={() => setEventFormModalVisible(true)}
+              onClick={() => {
+                setEventFormModalVisible(true);
+                setShow(false);
+              }}
               style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
             >
               <Icon icon="add" iconSize={30} />
@@ -63,7 +66,10 @@ export default function Header() {
               color={Colors.white}
               variant="secondary"
               style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
-              onClick={() => setSettingsModalVisible(true)}
+              onClick={() => {
+                setSettingsModalVisible(true);
+                setShow(false);
+              }}
             >
               <Icon icon="settings" iconSize={30} />
               Préférences
@@ -74,7 +80,10 @@ export default function Header() {
                 <Button
                   color={Colors.red2}
                   variant="secondary"
-                  onClick={() => setCountingFormModalVisible(true)}
+                  onClick={() => {
+                    setCountingFormModalVisible(true);
+                    setShow(false);
+                  }}
                   style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
                 >
                   <Icon icon="123" iconSize={30} />
