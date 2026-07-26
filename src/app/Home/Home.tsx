@@ -12,6 +12,8 @@ import './Home.scss';
 import { useUser } from '../../hooks/useUser.ts';
 import { Tab, Tabs } from 'react-bootstrap';
 import { Globals } from '../../constants/Globals.ts';
+import Icon from '../../components/common/Icon.tsx';
+import IconWithPill from '../../components/IconWithPill/IconWithPill.tsx';
 
 type TABS = 'planned' | 'non-planned' | 'waiting-for-players';
 
@@ -84,9 +86,12 @@ export default function HomePage() {
             className="mb-3"
             activeKey={key}
             onSelect={(k) => setKey(k as TABS)}
-            fill
           >
-            <Tab eventKey="planned" title={`Planifiés`}>
+            <Tab
+              eventKey="planned"
+              title={<Icon icon="calendar_check" iconSize={30} />}
+            >
+              <h3>Evènements à venir</h3>
               <SectionList
                 sections={sections}
                 keyExtractor={(it) => it.id}
@@ -104,13 +109,14 @@ export default function HomePage() {
             </Tab>
             <Tab
               eventKey="non-planned"
-              title={`Non planifiés (${draftSection?.data.length || 0})`}
+              title={<Icon icon="hourglass" iconSize={30} />}
             >
               {draftSection === undefined && (
                 <p>Aucun évènement en cours de planification</p>
               )}
               {draftSection !== undefined && (
                 <div>
+                  <h3>Evènements en cours de planification</h3>
                   {draftSection.data.map((it) => (
                     <div key={it.id} className="section-item">
                       <AgendaEventCard
@@ -123,7 +129,17 @@ export default function HomePage() {
                 </div>
               )}
             </Tab>
-            <Tab eventKey="waiting-for-players" title="En attente de joueurs">
+            <Tab
+              eventKey="waiting-for-players"
+              title={
+                <IconWithPill
+                  icon="emoji_people"
+                  size={30}
+                  value={`${waitingSections.length || 0}`}
+                />
+              }
+            >
+              <h3>En recherche de participant</h3>
               <SectionList
                 sections={waitingSections}
                 keyExtractor={(it) => it.id}
