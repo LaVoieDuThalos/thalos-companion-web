@@ -5,4 +5,5 @@ export const Globals = {
   ICS_CALENDAR_API: 'thalos-ics.perrinel.fr',
   ADD_TO_GOOGLE_AGENDA_URL: (myServerUrl: string) =>
     `https://www.google.com/calendar/render?cid=${myServerUrl}`,
+  DRAFT_ID: 'draft',
 };

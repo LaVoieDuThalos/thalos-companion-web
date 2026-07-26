@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import type { Activity } from '../model/Activity';
 import type { AgendaEvent } from '../model/AgendaEvent';
 import type { GameDay } from '../model/GameDay';
@@ -13,6 +14,7 @@ import {
   getWeekNumber,
   hourToMinutes,
   isEmpty,
+  isGameDay,
   isNotEmpty,
   isZero,
   minutesToHour,
@@ -192,8 +194,11 @@ describe('From Id tests', () => {
   });
 
   it('fromGameDayId', () => {
-    expect(fromGameDayId('2025-11-11')).toBeTruthy();
-    expect(fromGameDayId('2025-11-11')?.date.toLocaleDateString()).toBe(
+    const day = fromGameDayId('2025-11-11');
+    expect(day).toBeTruthy();
+
+    const date = day !== null && isGameDay(day) ? day.date : null;
+    expect(date?.toLocaleDateString()).toBe(
       new Date(2025, 10, 11).toLocaleDateString()
     );
     expect(fromGameDayId(undefined)).toBeNull();
