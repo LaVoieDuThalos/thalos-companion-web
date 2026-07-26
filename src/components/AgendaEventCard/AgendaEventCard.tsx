@@ -26,6 +26,7 @@ import { subscriptionService } from '../../services/SubscriptionService.ts';
 import AvailableSeats from './components/AvailableSeats/AvailableSeats.tsx';
 import { useCopyToClipboard } from '../../hooks/useCopyToClipboard.ts';
 import Icon from '../common/Icon.tsx';
+import { EVENEMENT } from '../../constants/Activities.ts';
 
 export type Options = {
   hideDate?: boolean;
@@ -122,7 +123,7 @@ export default function AgendaEventCard({
 
   return (
     <CustomCard
-      className="agenda-event-card"
+      className={`agenda-event-card ${event.activityId === EVENEMENT.id ? 'important-event' : ''}`}
       even={even}
       onClick={() => {
         if (!complete) {

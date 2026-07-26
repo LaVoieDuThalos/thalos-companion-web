@@ -109,7 +109,7 @@ export const AUBERGE_ESPAGNOLE = {
 export const EVENEMENT = {
   id: 'event',
   name: 'Evènement',
-  style: { color: 'white', backgroundColor: Colors.green },
+  style: { color: 'white', backgroundColor: Colors.red },
 };
 
 export const AUTRE_TYPE = {
