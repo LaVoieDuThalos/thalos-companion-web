@@ -92,7 +92,7 @@ export default function EventForm({
 
   const days = calendarService.buildDaysFromDate(
     new Date(),
-    60,
+    moreDays ? 120 : 90,
     moreDays,
     extraDays
   );
