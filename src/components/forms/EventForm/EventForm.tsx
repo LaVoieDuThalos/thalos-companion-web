@@ -82,8 +82,12 @@ export default function EventForm({
   const [moreDays, setMoreDays] = useState(false);
 
   let extraDays: GameDay[] = [];
-  if (formData.dayId !== undefined && formData.dayId !== HYPHEN_EMPTY_OPTION) {
-    extraDays = [fromGameDayId(formData.dayId)!];
+  if (
+    formData.dayId !== undefined &&
+    formData.dayId !== HYPHEN_EMPTY_OPTION &&
+    formData.dayId !== Globals.DRAFT_ID
+  ) {
+    extraDays = [fromGameDayId(formData.dayId)! as GameDay];
   }
 
   const days = calendarService.buildDaysFromDate(
@@ -348,6 +352,7 @@ export default function EventForm({
             })}
           </Form.Select>
           {formData.roomId !== HYPHEN_EMPTY_OPTION &&
+          formData.dayId !== Globals.DRAFT_ID &&
           !roomService.isActivityAllowedInRoom(
             formData.activityId,
             formData.dayId,
@@ -356,7 +361,7 @@ export default function EventForm({
             <Alert variant="warning">
               <Icon icon="warning" iconSize={20} /> Attention, cette activité
               n'est pas prioritaire dans cette salle cette semaine :{' '}
-              <RoomPriorities day={fromGameDayId(formData.dayId)!} />
+              <RoomPriorities day={fromGameDayId(formData.dayId)! as GameDay} />
             </Alert>
           ) : null}
           {state?.submitted && hasError(errors, 'roomIsEmpty') ? (

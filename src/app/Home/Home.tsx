@@ -13,6 +13,8 @@ import { useUser } from '../../hooks/useUser.ts';
 import { Tab, Tabs } from 'react-bootstrap';
 import { Globals } from '../../constants/Globals.ts';
 
+type TABS = 'planned' | 'non-planned' | 'waiting-for-players';
+
 export default function HomePage() {
   const appContext = useContext(AppContext);
 
@@ -23,7 +25,7 @@ export default function HomePage() {
     SectionListItem<AgendaEvent>[]
   >([]);
   const needARefresh = appContext.refreshs['home.events'];
-  const [key, setKey] = useState('planned');
+  const [key, setKey] = useState<TABS>('planned');
   const [draftSection, setDraftSection] = useState<
     SectionListItem<AgendaEvent> | undefined
   >(undefined);
@@ -81,7 +83,7 @@ export default function HomePage() {
             id="controlled-tab-example"
             className="mb-3"
             activeKey={key}
-            onSelect={(k) => setKey(k)}
+            onSelect={(k) => setKey(k as TABS)}
             fill
           >
             <Tab eventKey="planned" title={`Planifiés`}>
@@ -101,7 +103,7 @@ export default function HomePage() {
               ></SectionList>
             </Tab>
             <Tab
-              eventKey="non-plan"
+              eventKey="non-planned"
               title={`Non planifiés (${draftSection?.data.length || 0})`}
             >
               {draftSection === undefined && (
