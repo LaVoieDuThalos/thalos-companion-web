@@ -109,7 +109,16 @@ export default function HomePage() {
             </Tab>
             <Tab
               eventKey="non-planned"
-              title={<Icon icon="hourglass" iconSize={30} />}
+              title={
+                <IconWithPill
+                  icon="hourglass"
+                  size={30}
+                  value={`${draftSection?.data.length || 0}`}
+                  color={
+                    draftSection?.data.length || 0 > 0 ? 'primary' : 'secondary'
+                  }
+                />
+              }
             >
               {draftSection === undefined && (
                 <p>Aucun évènement en cours de planification</p>
@@ -136,6 +145,9 @@ export default function HomePage() {
                   icon="emoji_people"
                   size={30}
                   value={`${waitingSections.length || 0}`}
+                  color={
+                    waitingSections?.length || 0 > 0 ? 'primary' : 'secondary'
+                  }
                 />
               }
             >

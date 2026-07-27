@@ -5,7 +5,11 @@ import { Colors } from '../../constants/Colors';
 import { JUSQUA_LA_FERMETURE } from '../../constants/Durations';
 import type { EventCreationMode } from '../../constants/EventCreationWizard';
 import { MODE_AUTO_BY_REGISTRATION_DATE } from '../../constants/EventSubscriptionModes';
-import { AUTRE_SALLE, TOUTE_LA_SALLE } from '../../constants/Rooms';
+import {
+  AUTRE_SALLE,
+  ROOM_NON_DEFINIE,
+  TOUTE_LA_SALLE,
+} from '../../constants/Rooms';
 import { useAlert } from '../../hooks/useAlert';
 import { useUser } from '../../hooks/useUser';
 import type {
@@ -42,6 +46,7 @@ import View from '../common/View';
 import EventCreateWizard from '../EventCreateWizard/EventCreateWizard';
 import EventForm from '../forms/EventForm/EventForm';
 import { Globals } from '../../constants/Globals';
+import type { GameDay } from '../../model/GameDay';
 
 export type FormData = {
   id?: string;
@@ -84,11 +89,12 @@ export const HYPHEN_EMPTY_OPTION = '-';
 
 function isRoomAvailable(
   dayId: string,
+  start: string,
   roomId: string,
   requestedTables: number,
   availablesTables: TablesAvailables
 ): boolean {
-  if (dayId === Globals.DRAFT_ID) {
+  if (dayId === Globals.DRAFT_ID || start === Globals.DRAFT_ID) {
     return true;
   }
   const room = fromRoomId(roomId);
@@ -122,9 +128,11 @@ function validateForm(
     durationIsEmpty: isZero(formData.durationInMinutes),
     roomIsEmpty:
       formData.dayId !== Globals.DRAFT_ID &&
+      formData.start !== Globals.DRAFT_ID &&
       isEmpty(formData.roomId, [EMPTY_OPTION, HYPHEN_EMPTY_OPTION]),
     roomIsOccupied: !isRoomAvailable(
       formData.dayId,
+      formData.start,
       formData.roomId,
       formData.tables,
       availablesTables
@@ -149,6 +157,7 @@ function validateForm(
     tablesIsEmpty:
       isZero(formData.tables) &&
       formData.roomId !== AUTRE_SALLE.id &&
+      formData.roomId !== ROOM_NON_DEFINIE.id &&
       formData.activityId !== EVENEMENT.id,
     discordChannelIsInvalid: Validators.notStartsWith(
       formData.discordChannel,
@@ -218,9 +227,14 @@ export default function EventFormModal({
 
   const saveForm = (formData: FormData) => {
     setSaving(true);
+    const isDraft =
+      formData.dayId === Globals.DRAFT_ID ||
+      formData.start === Globals.DRAFT_ID;
     agendaService
       .saveEvent({
         ...formData,
+        roomId: isDraft ? ROOM_NON_DEFINIE.id : formData.roomId,
+        tables: isDraft ? 0 : formData.tables,
         withSubscriptions:
           formData.withSubscriptions !== undefined &&
           formData.withSubscriptions,
@@ -306,10 +320,13 @@ export default function EventFormModal({
   ];
 
   const updateAvailablesTablesByRooms = useCallback((_formData: FormData) => {
-    const gameDay = fromGameDayId(_formData.dayId);
-    if (gameDay && 'draft' in gameDay) {
+    if (
+      _formData.dayId === Globals.DRAFT_ID ||
+      _formData.start === Globals.DRAFT_ID
+    ) {
       return;
     }
+    const gameDay = fromGameDayId(_formData.dayId) as GameDay;
     const startTime = gameDay ? getStartTime(gameDay, _formData.start) : 0;
     const endTime = gameDay
       ? getEndTime(gameDay, _formData.start, _formData.durationInMinutes - 1)

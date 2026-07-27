@@ -54,6 +54,12 @@ export const CASTAGORA: Room = {
   week: 'A',
 };
 
+export const ROOM_NON_DEFINIE = {
+  id: '-',
+  name: 'Salle non définie',
+  capacity: 1,
+};
+
 export const ROOMS: Room[] = [
   GRANDE_SALLE,
   SALLE_JDR,
@@ -62,11 +68,7 @@ export const ROOMS: Room[] = [
   SALLE_DU_LAC,
   CASTAGORA,
   AUTRE_SALLE,
-  {
-    id: '-',
-    name: 'Non définie',
-    capacity: 1,
-  },
+  ROOM_NON_DEFINIE,
 ];
 
 export const TOUTE_LA_SALLE = 999;

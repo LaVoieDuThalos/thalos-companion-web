@@ -5,9 +5,15 @@ type Props = {
   icon: string;
   size: number;
   value: string;
+  color?: string;
 };
 
-export default function IconWithPill({ icon, size, value }: Props) {
+export default function IconWithPill({
+  icon,
+  size,
+  value,
+  color = 'primary',
+}: Props) {
   return (
     <>
       <div
@@ -18,7 +24,7 @@ export default function IconWithPill({ icon, size, value }: Props) {
         }}
       >
         <Icon icon={icon} iconSize={size} />
-        <Badge bg="primary" pill>
+        <Badge bg={color} pill>
           {value}
         </Badge>
       </div>
