@@ -120,7 +120,9 @@ function validateForm(
       HYPHEN_EMPTY_OPTION,
     ]),
     durationIsEmpty: isZero(formData.durationInMinutes),
-    roomIsEmpty: isEmpty(formData.roomId, [EMPTY_OPTION, HYPHEN_EMPTY_OPTION]),
+    roomIsEmpty:
+      formData.dayId !== Globals.DRAFT_ID &&
+      isEmpty(formData.roomId, [EMPTY_OPTION, HYPHEN_EMPTY_OPTION]),
     roomIsOccupied: !isRoomAvailable(
       formData.dayId,
       formData.roomId,
@@ -296,6 +298,8 @@ export default function EventFormModal({
         setErrors(validationErrors);
         if (isFormValid(validationErrors)) {
           saveForm(formData);
+        } else {
+          console.error('Errors', validationErrors);
         }
       },
     },

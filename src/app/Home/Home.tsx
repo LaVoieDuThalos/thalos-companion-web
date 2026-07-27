@@ -139,7 +139,7 @@ export default function HomePage() {
                 />
               }
             >
-              <h3>En recherche de participant</h3>
+              <h3>En recherche de participants/joueurs/bénévoles</h3>
               <SectionList
                 sections={waitingSections}
                 keyExtractor={(it) => it.id}

@@ -62,6 +62,11 @@ export const ROOMS: Room[] = [
   SALLE_DU_LAC,
   CASTAGORA,
   AUTRE_SALLE,
+  {
+    id: '-',
+    name: 'Non définie',
+    capacity: 1,
+  },
 ];
 
 export const TOUTE_LA_SALLE = 999;

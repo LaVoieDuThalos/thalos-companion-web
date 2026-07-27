@@ -324,7 +324,8 @@ export default function EventForm({
             <option>-</option>
             {ROOMS.filter(
               (room) =>
-                (room.id !== SALLE_DU_LAC.id ||
+                ((room.id !== SALLE_DU_LAC.id &&
+                  room.id != HYPHEN_EMPTY_OPTION) ||
                   formData.activityId === EVENEMENT.id) &&
                 (!room.virtual || hasRole(ROLE_BUREAU))
             ).map((r) => {
@@ -418,42 +419,43 @@ export default function EventForm({
       )}
 
       {/* Tables ------------------------------------------------------------- */}
-      {formData.roomId !== AUTRE_SALLE.id && (
-        <Form.Group className="mb-3" controlId="eventForm.TableNumberInput">
-          <Form.Label>Tables</Form.Label>
-          <Form.Select
-            size="lg"
-            disabled={disabled}
-            value={formData.tables}
-            onChange={(e) => updateForm('tables', e)}
-          >
-            <option>-</option>
-            {buildTables(
-              fromRoomId(formData.roomId),
-              availableTables[formData.roomId]
-            ).map((t) => (
-              <option
-                key={t}
-                value={t}
-                disabled={
-                  !!formData.roomId &&
-                  t > availableTables[formData.roomId] &&
-                  t != TOUTE_LA_SALLE
-                }
-              >
-                {t === TOUTE_LA_SALLE
-                  ? 'Toute la salle'
-                  : t === 1
-                    ? `1 table`
-                    : `${t} tables`}
-              </option>
-            ))}
-          </Form.Select>
-          {state?.submitted && hasError(errors, 'tablesIsEmpty') ? (
-            <FormError error="Le nombre de tables est obligatoire" />
-          ) : null}
-        </Form.Group>
-      )}
+      {formData.roomId !== AUTRE_SALLE.id &&
+        formData.roomId !== HYPHEN_EMPTY_OPTION && (
+          <Form.Group className="mb-3" controlId="eventForm.TableNumberInput">
+            <Form.Label>Tables</Form.Label>
+            <Form.Select
+              size="lg"
+              disabled={disabled}
+              value={formData.tables}
+              onChange={(e) => updateForm('tables', e)}
+            >
+              <option>-</option>
+              {buildTables(
+                fromRoomId(formData.roomId),
+                availableTables[formData.roomId]
+              ).map((t) => (
+                <option
+                  key={t}
+                  value={t}
+                  disabled={
+                    !!formData.roomId &&
+                    t > availableTables[formData.roomId] &&
+                    t != TOUTE_LA_SALLE
+                  }
+                >
+                  {t === TOUTE_LA_SALLE
+                    ? 'Toute la salle'
+                    : t === 1
+                      ? `1 table`
+                      : `${t} tables`}
+                </option>
+              ))}
+            </Form.Select>
+            {state?.submitted && hasError(errors, 'tablesIsEmpty') ? (
+              <FormError error="Le nombre de tables est obligatoire" />
+            ) : null}
+          </Form.Group>
+        )}
 
       <div className="inscriptions-section">
         {/* Inscriptions ------------------------------------------------------------- */}
