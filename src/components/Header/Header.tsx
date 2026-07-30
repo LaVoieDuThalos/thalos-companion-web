@@ -15,6 +15,7 @@ import CountingFormModal from '../modals/CountingFormModal/CountingFormModal';
 import EventFormModal from '../modals/EventFormModal';
 import SettingsFormModal from '../modals/SettingsFormModal';
 import './Header.scss';
+import NextOpenDateTime from './components/NextOpenDateTime/NextOpenDateTime';
 
 export default function Header() {
   const appContext = useContext(AppContext);
@@ -110,6 +111,8 @@ export default function Header() {
           onClick={() => handleShow()}
         ></IconButton>
       </Navbar>
+
+      <NextOpenDateTime open={false} />
 
       {eventFormModalVisible ? (
         <EventFormModal
