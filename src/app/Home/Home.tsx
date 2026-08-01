@@ -13,7 +13,7 @@ import { useUser } from '../../hooks/useUser.ts';
 import { Tab, Tabs } from 'react-bootstrap';
 import { Globals } from '../../constants/Globals.ts';
 import Icon from '../../components/common/Icon.tsx';
-import IconWithPill from '../../components/IconWithPill/IconWithPill.tsx';
+import IconWithPill from '../../components/common/IconWithPill/IconWithPill.tsx';
 
 type TABS = 'planned' | 'non-planned' | 'waiting-for-players';
 

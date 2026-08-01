@@ -15,12 +15,15 @@ import CountingFormModal from '../modals/CountingFormModal/CountingFormModal';
 import EventFormModal from '../modals/EventFormModal';
 import SettingsFormModal from '../modals/SettingsFormModal';
 import './Header.scss';
+import NextOpenDateTime from './components/NextOpenDateTime/NextOpenDateTime';
+import OpenCloseRoomConfigModal from '../modals/OpenCloseRoomConfigModal/OpenCloseRoomConfigModal';
 
 export default function Header() {
   const appContext = useContext(AppContext);
   const { user, setUser, hasRole } = useUser();
   const [eventFormModalVisible, setEventFormModalVisible] = useState(false);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+  const [openCloseModalVisible, setOpenCloseModalVisible] = useState(false);
   const [countingFormModalVisible, setCountingFormModalVisible] =
     useState(false);
 
@@ -34,9 +37,10 @@ export default function Header() {
     if (!user || !user.name) {
       setSettingsModalVisible(true);
     }
-  }, []);
+  }, [openCloseModalVisible]);
 
   const today = calendarService.now();
+  const nextGameDay = calendarService.nextGameDayFromNow();
 
   return (
     <>
@@ -111,6 +115,11 @@ export default function Header() {
         ></IconButton>
       </Navbar>
 
+      <NextOpenDateTime
+        clickable={hasRole(ROLE_OUVREUR)}
+        onClick={() => setOpenCloseModalVisible(true)}
+      />
+
       {eventFormModalVisible ? (
         <EventFormModal
           show={true}
@@ -138,6 +147,19 @@ export default function Header() {
             setSettingsModalVisible(false);
             appContext.refresh(`home.events`);
             appContext.refresh(`agenda`);
+          }}
+        />
+      ) : null}
+
+      {nextGameDay && hasRole(ROLE_OUVREUR) && openCloseModalVisible ? (
+        <OpenCloseRoomConfigModal
+          day={nextGameDay}
+          show={openCloseModalVisible}
+          onCancel={() => setOpenCloseModalVisible(false)}
+          onSuccess={() => {
+            appContext.refresh(`agenda.${nextGameDay.id}`);
+            appContext.refresh(`header.next-open-datetime`);
+            setOpenCloseModalVisible(false);
           }}
         />
       ) : null}

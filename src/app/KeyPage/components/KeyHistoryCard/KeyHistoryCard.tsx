@@ -1,7 +1,7 @@
 import CustomCard from '../../../../components/common/CustomCard/CustomCard.tsx';
 import Icon from '../../../../components/common/Icon.tsx';
 import type { RoomKeyHistory } from '../../../../model/RoomKey.ts';
-import { formatDate } from '../../../../utils/Utils.ts';
+import { formatDateTime } from '../../../../utils/Utils.ts';
 
 import './KeyHistoryCard.scss';
 
@@ -19,7 +19,7 @@ export default function KeyHistoryCard({ keyHistory }: Props) {
             key={entry.date}
             className={'entry' + (index % 2 === 0 ? ' odd' : ' even')}
           >
-            <span className="date">{formatDate(entry.date)}</span>
+            <span className="date">{formatDateTime(entry.date)}</span>
             <span className="from-name">{entry.from.name}</span>
             <span className="separator">
               <Icon icon="double_arrow" iconSize={16} />

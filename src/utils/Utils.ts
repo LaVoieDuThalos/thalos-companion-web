@@ -55,6 +55,13 @@ export function fromGameDayId(
   } as GameDay;
 }
 
+export function gameDayFromDate(date: Date): GameDay {
+  return {
+    id: formatDate(date),
+    date,
+  } as GameDay;
+}
+
 export function fromSubscriptionModeId(
   modeId: string
 ): EventSubscriptionMode | undefined {
@@ -81,7 +88,7 @@ export function printGameDay(gameDay: GameDay | GameDayDraft): string {
   }
 }
 
-export function formatDate(isoDate: string): string {
+export function formatDateTime(isoDate: string): string {
   const d = new Date(isoDate);
   return (
     d.toLocaleDateString() +
@@ -90,6 +97,10 @@ export function formatDate(isoDate: string): string {
     ':' +
     `${d.getMinutes()}`.padStart(2, '0')
   );
+}
+
+export function formatDate(date: Date): string {
+  return date.toJSON().slice(0, 10);
 }
 
 export function printDate(d: Date): string {

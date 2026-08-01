@@ -1,4 +1,5 @@
 import type { GameDay } from '../model/GameDay';
+import { formatDate } from '../utils/Utils';
 
 const [FRIDAY, SATURDAY] = [5, 6];
 
@@ -10,10 +11,15 @@ class CalendarService {
   }
 
   buildDayId(date: Date) {
-    return date.toJSON().slice(0, 10);
+    return formatDate(date);
   }
 
-  buildDaysFromDate(start: Date, limit = 31, allDays = false, extraDays: GameDay[] = []): GameDay[] {
+  buildDaysFromDate(
+    start: Date,
+    limit = 31,
+    allDays = false,
+    extraDays: GameDay[] = []
+  ): GameDay[] {
     const current = start;
     current.setHours(12);
     const result: GameDay[] = [];
@@ -28,10 +34,14 @@ class CalendarService {
       current.setDate(current.getDate() + 1);
     }
 
-    extraDays.filter(day => day !== undefined && result.findIndex(d => day.id === d.id) < 0)
-      .forEach(day => {
-      result.push(day);
-    })
+    extraDays
+      .filter(
+        (day) =>
+          day !== undefined && result.findIndex((d) => day.id === d.id) < 0
+      )
+      .forEach((day) => {
+        result.push(day);
+      });
 
     return result.sort((a, b) => a.id.localeCompare(b.id));
   }
@@ -60,9 +70,8 @@ class CalendarService {
     return this.gameDays.includes(date.getDay());
   }
 
-  nextGameDay(current: GameDay): GameDay {
+  nextGameDayFromDate(current: GameDay): GameDay {
     const date = new Date(current.id);
-    date.setDate(current.date.getDate() + 1);
     while (!this.gameDays.includes(date.getDay())) {
       date.setDate(date.getDate() + 1);
     }
@@ -70,6 +79,10 @@ class CalendarService {
       id: this.buildDayId(date),
       date: date,
     } as GameDay;
+  }
+
+  nextGameDayFromNow(): GameDay {
+    return this.nextGameDayFromDate(this.now());
   }
 
   nextFridayGameDay(): GameDay {

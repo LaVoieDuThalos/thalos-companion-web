@@ -64,7 +64,7 @@ export default function GameDayPage() {
   useEffect(() => {
     if (day) {
       setPreviousDay(calendarService.previousGameDay(day));
-      setNextDay(calendarService.nextGameDay(day));
+      setNextDay(calendarService.nextGameDayFromDate(day));
     }
   }, [day]);
 
