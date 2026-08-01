@@ -9,9 +9,15 @@ import {
 import type { Activity } from '../model/Activity';
 import type { GameDay } from '../model/GameDay';
 import type { OpenCloseRoom, Room } from '../model/Room';
-import { fromGameDayId, getWeekNumber, isGameDayDraft } from '../utils/Utils';
+import {
+  fromGameDayId,
+  gameDayFromDate,
+  getWeekNumber,
+  isGameDayDraft,
+} from '../utils/Utils';
+import { calendarService } from './CalendarService';
 
-class RoomService {
+export class RoomService {
   private api: ApiService;
   hours: string[] = [];
 
@@ -67,6 +73,15 @@ class RoomService {
     }
     const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day);
     return roomsChosen.map((r) => r.id).indexOf(roomId) >= 0;
+  }
+
+  async isRoomOpenFromDate(date: Date): Promise<boolean> {
+    if (!calendarService.isGameDay(date)) {
+      return Promise.resolve(false);
+    }
+
+    const config = await this.getOpenCloseConfig(gameDayFromDate(date).id);
+    return config.openAt.localeCompare(`${date.getHours()}h`) <= 0;
   }
 
   async getOpenCloseConfig(dayId: string): Promise<OpenCloseRoom> {

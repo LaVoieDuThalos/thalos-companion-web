@@ -9,8 +9,7 @@ import type { OpenCloseRoom } from '../../../../../../model/Room.ts';
 import { roomService } from '../../../../../../services/RoomService.ts';
 import { ROLE_OUVREUR } from '../../../../../../constants/Roles.ts';
 import { settingsService } from '../../../../../../services/SettingsService.ts';
-import OpenCloseRoomConfigModal
-  from '../../../../../../components/modals/OpenCloseRoomConfigModal/OpenCloseRoomConfigModal.tsx';
+import OpenCloseRoomConfigModal from '../../../../../../components/modals/OpenCloseRoomConfigModal/OpenCloseRoomConfigModal.tsx';
 import CustomCard from '../../../../../../components/common/CustomCard/CustomCard.tsx';
 import Label from '../../../../../../components/common/Label.tsx';
 import { Colors } from '../../../../../../constants/Colors.ts';
@@ -44,6 +43,7 @@ export default function GameDayPlanning({ day, events }: Props) {
           onCancel={() => setOpenCloseModalVisible(false)}
           onSuccess={() => {
             appContext.refresh(`agenda.${day.id}`);
+            appContext.refresh(`header.next-open-datetime`);
             setOpenCloseModalVisible(false);
           }}
         />
@@ -67,7 +67,10 @@ export default function GameDayPlanning({ day, events }: Props) {
               size={20}
               styles={{ fontWeight: 'bold', color: Colors.red }}
             >
-              {openClose?.openAt} {openClose?.validated ? '(confirmée)' : '? (pas encore confirmée)'}
+              {openClose?.openAt}{' '}
+              {openClose?.validated
+                ? '(confirmée)'
+                : '? (pas encore confirmée)'}
             </Label>
             {openClose?.opener &&
             settingsService.hasRole(user.user.preferences, ROLE_OUVREUR) ? (

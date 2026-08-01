@@ -1,5 +1,5 @@
 import { Badge } from 'react-bootstrap';
-import Icon from '../common/Icon';
+import Icon from '../Icon';
 
 type Props = {
   icon: string;
