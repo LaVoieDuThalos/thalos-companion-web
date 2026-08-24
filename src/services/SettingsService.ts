@@ -1,5 +1,5 @@
 import { API, type ApiService } from '../api/Api';
-import { EVENEMENT } from '../constants/Activities';
+import { AUTRE_FIGURINES, EVENEMENT } from '../constants/Activities';
 import { type Role } from '../constants/Roles';
 import { StorageKeys } from '../constants/StorageKeys';
 import type { User } from '../model/User';
@@ -40,21 +40,27 @@ class SettingsService {
     }
   }
 
-  activityVisible(prefs: User | UserPreferences | null, activityId: string): boolean {
+  activityVisible(
+    prefs: User | UserPreferences | null,
+    activityId: string
+  ): boolean {
     if (prefs === null) {
       return true;
     }
     const activity = fromActivityId(activityId);
-    if (activity?.id === EVENEMENT.id) {
+    if (activity?.id === EVENEMENT.id || activity?.id === AUTRE_FIGURINES.id) {
       return true;
     } else if (activity?.id !== EVENEMENT.id && !activity?.filterable) {
       return true;
     }
-    if('activities' in prefs) {
+    if ('activities' in prefs) {
       return !!prefs.activities && prefs.activities.indexOf(activityId) >= 0;
-    }else if('preferences' in prefs) {
-      return !!prefs.preferences?.activities && prefs.preferences.activities.indexOf(activityId) >= 0;
-    }else{
+    } else if ('preferences' in prefs) {
+      return (
+        !!prefs.preferences?.activities &&
+        prefs.preferences.activities.indexOf(activityId) >= 0
+      );
+    } else {
       return false;
     }
   }
@@ -63,11 +69,14 @@ class SettingsService {
     if (prefs === null || prefs === undefined) {
       return false;
     }
-    if('roles' in prefs) {
+    if ('roles' in prefs) {
       return !!prefs?.roles && prefs?.roles?.indexOf(role.id) >= 0;
-    }else if('preferences' in prefs) {
-      return !!prefs.preferences?.roles && prefs.preferences.roles?.indexOf(role.id) >= 0;
-    }else{
+    } else if ('preferences' in prefs) {
+      return (
+        !!prefs.preferences?.roles &&
+        prefs.preferences.roles?.indexOf(role.id) >= 0
+      );
+    } else {
       return false;
     }
   }

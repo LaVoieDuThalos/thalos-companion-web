@@ -38,6 +38,16 @@ export const WARHAMMER_40K = {
   style: { color: 'white', backgroundColor: Colors.purple },
 };
 
+export const AUTRE_FIGURINES = {
+  id: 'misc-figurines',
+  name: 'Autre jeu de figurines',
+  filterable: true,
+  countable: true,
+  figurines: true,
+  referent: false,
+  style: { color: 'white', backgroundColor: Colors.purple },
+};
+
 export const AOS = {
   id: 'aos',
   name: 'Age Of Sigmar',
@@ -132,5 +142,6 @@ export const ACTIVITIES: Activity[] = [
   REUNION,
   AUBERGE_ESPAGNOLE,
   EVENEMENT,
+  AUTRE_FIGURINES,
   AUTRE_TYPE,
 ];
