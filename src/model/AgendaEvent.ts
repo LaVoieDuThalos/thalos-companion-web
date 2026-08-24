@@ -21,6 +21,8 @@ export type EventSubscription = {
 
 export type EventSubscriptionModes = 'auto' | 'manual';
 
+export type EventPrivacy = 'internal' | 'internal-expanded' | 'public';
+
 export interface AgendaEvent {
   id: string;
   title: string;
@@ -47,6 +49,7 @@ export interface AgendaEvent {
   withSubscriptions?: boolean;
   maxSubscriptions?: number;
   subscriptionMode?: EventSubscriptionModes;
+  privacy?: EventPrivacy;
 }
 
 export interface AgendaEventDraft extends Omit<AgendaEvent, 'day' | 'room'> {

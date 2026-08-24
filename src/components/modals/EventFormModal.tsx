@@ -5,42 +5,16 @@ import { Colors } from '../../constants/Colors';
 import { JUSQUA_LA_FERMETURE } from '../../constants/Durations';
 import type { EventCreationMode } from '../../constants/EventCreationWizard';
 import { MODE_AUTO_BY_REGISTRATION_DATE } from '../../constants/EventSubscriptionModes';
-import {
-  AUTRE_SALLE,
-  ROOM_NON_DEFINIE,
-  TOUTE_LA_SALLE,
-} from '../../constants/Rooms';
+import { AUTRE_SALLE, ROOM_NON_DEFINIE, TOUTE_LA_SALLE, } from '../../constants/Rooms';
 import { useAlert } from '../../hooks/useAlert';
 import { useUser } from '../../hooks/useUser';
-import type {
-  AgendaEvent,
-  EventSubscription,
-  LastModification,
-} from '../../model/AgendaEvent';
+import type { AgendaEvent, EventSubscription, LastModification, } from '../../model/AgendaEvent';
 import { agendaService } from '../../services/AgendaService';
-import {
-  bookingService,
-  type TablesAvailables,
-} from '../../services/BookingService';
-import {
-  type FormState,
-  isFormValid,
-  type ValidationErrors,
-  Validators,
-} from '../../utils/FormUtils';
-import {
-  fromGameDayId,
-  fromRoomId,
-  getEndTime,
-  getStartTime,
-  isEmpty,
-  isZero,
-} from '../../utils/Utils';
+import { bookingService, type TablesAvailables, } from '../../services/BookingService';
+import { type FormState, isFormValid, type ValidationErrors, Validators, } from '../../utils/FormUtils';
+import { fromGameDayId, fromRoomId, getEndTime, getStartTime, isEmpty, isZero, } from '../../utils/Utils';
 import ActivityIndicator from '../common/ActivityIndicator';
-import type {
-  ModalAction,
-  ModalPageProps,
-} from '../common/ModalPage/ModalPage';
+import type { ModalAction, ModalPageProps, } from '../common/ModalPage/ModalPage';
 import ModalPage from '../common/ModalPage/ModalPage';
 import View from '../common/View';
 import EventCreateWizard from '../EventCreateWizard/EventCreateWizard';
@@ -71,6 +45,7 @@ export type FormData = {
   maxSubscriptions?: number;
   subscriptions?: EventSubscription[];
   subscriptionMode?: string;
+  privacy?: string;
 };
 
 type Props = ModalPageProps & {
@@ -200,6 +175,7 @@ export default function EventFormModal({
       description: event ? event.description : '',
       discordChannel: event ? event.discordChannel : '',
       img: event ? event.img : '',
+      privacy: event ? event.privacy : '',
       maxSubscriptions: 0,
       ...event,
     }) satisfies FormData;

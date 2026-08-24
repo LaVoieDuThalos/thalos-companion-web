@@ -135,12 +135,35 @@ export default function AgendaEventCard({
     >
       {event.activity ? (
         <Row style={{ justifyContent: 'space-between' }}>
-          <Tag
-            color={event.activity.style.backgroundColor}
-            textColor={event.activity.style.color}
-          >
-            <span style={styles.activityName}>{event.activity.name}</span>
-          </Tag>
+          {event.activityId !== EVENEMENT.id && (
+            <Tag
+              color={event.activity.style.backgroundColor}
+              textColor={event.activity.style.color}
+            >
+              <span style={styles.activityName}>{event.activity.name}</span>
+            </Tag>
+          )}
+
+          {event.activityId === EVENEMENT.id && (
+            <Tag color={EVENEMENT.style.backgroundColor} textColor="white">
+              {event.privacy === undefined && (
+                <span style={styles.activityName}>Evènement</span>
+              )}
+              {event.privacy === 'internal' && (
+                <span style={styles.activityName}>Evènement interne</span>
+              )}
+              {event.privacy === 'internal-expanded' && (
+                <span style={styles.activityName}>
+                  Evènement ouvert aux proches
+                </span>
+              )}
+              {event.privacy === 'public' && (
+                <span style={styles.activityName}>
+                  Evènement ouvert au public
+                </span>
+              )}
+            </Tag>
+          )}
 
           {complete && (
             <div style={{ display: 'flex', gap: 5 }}>
