@@ -43,6 +43,7 @@ export const mapAgendaEventToDto = (
     endTime: json.endTime,
     discordChannel: json.discordChannel,
     img: json.img,
+    privacy: json.privacy,
     withSubscriptions: json.withSubscriptions,
     maxSubscriptions: json.maxSubscriptions,
     subscriptionMode: json.subscriptionMode,

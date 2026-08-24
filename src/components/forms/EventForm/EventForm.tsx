@@ -287,6 +287,30 @@ export default function EventForm({
         ) : null}
       </Form.Group>
 
+      {/* Evenement ouvert au public ? ------------------------------------------------------------- */}
+      {formData.activityId === EVENEMENT.id && (
+        <Form.Group>
+          <Form.Label>Ouvert au public</Form.Label>
+          <Form.Select
+            size="lg"
+            disabled={disabled}
+            value={formData.privacy}
+            onChange={(e) => updateForm('privacy', e)}
+          >
+            <option key="internal" value="internal">
+              Evènement interne (seuls les membres sont conviés)
+            </option>
+            <option key="internal-expanded" value="internal-expanded">
+              Evènement interne élargi (les membres et leurs proches sont
+              conviés)
+            </option>
+            <option key="public" value="public">
+              Evènement public (Ouvert à tout le monde)
+            </option>
+          </Form.Select>
+        </Form.Group>
+      )}
+
       {/* Game Master ------------------------------------------------------------- */}
       {formData.activityId === JDR.id && (
         <Form.Group className="mb-3" controlId="eventForm.GameMasterInput">
