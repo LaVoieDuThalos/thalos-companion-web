@@ -15,11 +15,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-getDocs(collection(db, 'users')).then((result) => {
-  result.docs
-    .map((doc) => doc.data())
-    .forEach((doc) => {
-      console.log(`${doc.id} - ${doc.name} - ${JSON.stringify(doc.preferences.activities)} - ${doc.preferences.roles}`);
-    });
-    console.log('Terminé')
-}).then(() => process.exit());
+getDocs(collection(db, 'users'))
+  .then((result) => {
+    result.docs
+      .map((doc) => doc.data())
+      .sort((a, b) => `${a.name}`.localeCompare(`${b.name}`))
+      .forEach((doc) => {
+        console.log(
+          `${doc.id} - ${doc.name} - ${doc.preferences !== undefined ? JSON.stringify(doc.preferences.activities) : null} - ${doc.preferences !== undefined ? doc.preferences.roles : null}`
+        );
+      });
+    console.log('Terminé');
+  })
+  .then(() => process.exit());

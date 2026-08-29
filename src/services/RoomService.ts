@@ -1,20 +1,10 @@
 import { API, type ApiService } from '../api/Api';
 import { ACTIVITIES, AOS, EVENEMENT, JDR } from '../constants/Activities';
-import {
-  AUTRE_SALLE,
-  ROOMS,
-  SALLE_ANNEXE,
-  SALLE_JDR,
-} from '../constants/Rooms';
+import { AUTRE_SALLE, ROOMS, SALLE_ANNEXE, SALLE_JDR, } from '../constants/Rooms';
 import type { Activity } from '../model/Activity';
 import type { GameDay } from '../model/GameDay';
 import type { OpenCloseRoom, Room } from '../model/Room';
-import {
-  fromGameDayId,
-  gameDayFromDate,
-  getWeekNumber,
-  isGameDayDraft,
-} from '../utils/Utils';
+import { fromGameDayId, gameDayFromDate, getWeekNumber, isGameDayDraft, } from '../utils/Utils';
 import { calendarService } from './CalendarService';
 
 export class RoomService {
@@ -81,7 +71,11 @@ export class RoomService {
     }
 
     const config = await this.getOpenCloseConfig(gameDayFromDate(date).id);
-    return config.openAt.localeCompare(`${date.getHours()}h`) <= 0;
+    return (
+      config.openAt
+        .padStart(3, '0')
+        .localeCompare(`${date.getHours()}h`.padStart(3, '0')) <= 0
+    );
   }
 
   async getOpenCloseConfig(dayId: string): Promise<OpenCloseRoom> {
