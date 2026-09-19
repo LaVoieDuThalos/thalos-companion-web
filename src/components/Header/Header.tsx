@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Button, Image, Navbar, Offcanvas } from 'react-bootstrap';
+import { Image, Navbar } from 'react-bootstrap';
 import { matchPath, useLocation, useNavigate } from 'react-router';
 import { Colors } from '../../constants/Colors';
 import { Globals } from '../../constants/Globals';
@@ -9,7 +9,6 @@ import { useUser } from '../../hooks/useUser';
 import type { User } from '../../model/User';
 import { calendarService } from '../../services/CalendarService';
 import { printGameDay } from '../../utils/Utils';
-import Icon from '../common/Icon';
 import IconButton from '../common/IconButton/IconButton';
 import CountingFormModal from '../modals/CountingFormModal/CountingFormModal';
 import EventFormModal from '../modals/EventFormModal';
@@ -17,6 +16,7 @@ import SettingsFormModal from '../modals/SettingsFormModal';
 import './Header.scss';
 import NextOpenDateTime from './components/NextOpenDateTime/NextOpenDateTime';
 import OpenCloseRoomConfigModal from '../modals/OpenCloseRoomConfigModal/OpenCloseRoomConfigModal';
+import SideMainMenu from './components/SideMainMenu/SideMainMenu.tsx';
 
 export default function Header() {
   const appContext = useContext(AppContext);
@@ -28,7 +28,6 @@ export default function Header() {
     useState(false);
 
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const location = useLocation();
   const navigate = useNavigate();
@@ -44,59 +43,40 @@ export default function Header() {
 
   return (
     <>
-      <Offcanvas show={show} onHide={handleClose} placement="end">
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Bonjour {user?.name || ''},</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
-          >
-            <Button
-              color={Colors.red2}
-              variant="primary"
-              size="lg"
-              onClick={() => {
-                setEventFormModalVisible(true);
-                setShow(false);
-              }}
-              style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
-            >
-              <Icon icon="add" iconSize={30} />
-              Créer un événement
-            </Button>
-
-            <Button
-              color={Colors.white}
-              variant="secondary"
-              style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
-              onClick={() => {
-                setSettingsModalVisible(true);
-                setShow(false);
-              }}
-            >
-              <Icon icon="settings" iconSize={30} />
-              Préférences
-            </Button>
-
-            {(hasRole(ROLE_BUREAU) || hasRole(ROLE_OUVREUR)) &&
-              calendarService.isGameDay(today.date) && (
-                <Button
-                  color={Colors.red2}
-                  variant="secondary"
-                  onClick={() => {
-                    setCountingFormModalVisible(true);
-                    setShow(false);
-                  }}
-                  style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
-                >
-                  <Icon icon="123" iconSize={30} />
-                  Saisir le comptage : {printGameDay(today)}
-                </Button>
-              )}
-          </div>
-        </Offcanvas.Body>
-      </Offcanvas>
+      <SideMainMenu
+        show={show}
+        onHide={() => setShow(false)}
+        onClickItem={(item) => {
+          setEventFormModalVisible(false);
+          setOpenCloseModalVisible(false);
+          setSettingsModalVisible(false);
+          switch (item) {
+            case 'home':
+              navigate('/');
+              break;
+            case 'agenda':
+              navigate('/agenda');
+              break;
+            case 'keys':
+              navigate('/keys');
+              break;
+            case 'info':
+              navigate('/about');
+              break;
+            case 'new-event':
+              setEventFormModalVisible(true);
+              break;
+            case 'settings':
+              setSettingsModalVisible(true);
+              break;
+            case 'counting':
+              setCountingFormModalVisible(true);
+              break;
+            default:
+          }
+          setShow(false);
+        }}
+      />
 
       <Navbar expand="lg" className="justify-content-between">
         <Navbar.Brand href={Globals.BASE_URL + '/'} style={{}}>
