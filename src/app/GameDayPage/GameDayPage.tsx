@@ -11,9 +11,6 @@ import type { GameDay } from '../../model/GameDay';
 import { agendaService } from '../../services/AgendaService';
 import { calendarService } from '../../services/CalendarService';
 import { isPassed, printGameDay } from '../../utils/Utils';
-
-import { Alert } from 'react-bootstrap';
-import RoomPriorities from '../../components/RoomPriorities/RoomPriorities';
 import View from '../../components/common/View.tsx';
 import './GameDayPage.scss';
 import CountingsCard from './components/CountingsCard/CountingsCard.tsx';
@@ -104,9 +101,6 @@ export default function GameDayPage() {
           onClick={() => goNextDay()}
         />
       </div>
-
-      {/* Occupation des activités */}
-      <Alert variant="info">{day ? <RoomPriorities day={day} /> : null}</Alert>
 
       {/* Comptages */}
       {day &&

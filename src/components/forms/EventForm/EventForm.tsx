@@ -25,13 +25,11 @@ import { useUser } from '../../../hooks/useUser';
 import type { GameDay } from '../../../model/GameDay.ts';
 import type { Room } from '../../../model/Room';
 import type { TablesAvailables } from '../../../services/BookingService';
-import { roomService } from '../../../services/RoomService';
 import { settingsService } from '../../../services/SettingsService';
 import FormError from '../../common/FormError/FormError';
 import Icon from '../../common/Icon';
 import NumberInput from '../../common/NumberInput/NumberInput';
 import RichEditor from '../../common/RichEditor/RichEditor';
-import RoomPriorities from '../../RoomPriorities/RoomPriorities';
 import './EventForm.scss';
 
 type Event = { target: { value: string } };
@@ -367,39 +365,26 @@ export default function EventForm({
                   <option
                     key={r.id}
                     value={r.id}
-                    disabled={tables === 0 && !r.virtual}
+                    disabled={(tables === 0 && !r.virtual) || r.closed}
                     data-room-occupied={tables === 0}
                   >
                     {r.name} - (
-                    {tables === undefined ||
-                    tables === TOUTE_LA_SALLE ||
-                    r.id === AUTRE_SALLE.id
-                      ? 'Disponible'
-                      : tables === 0
-                        ? 'Complet'
-                        : tables === r.capacity
-                          ? 'Disponible'
-                          : `Reste ${tables} / ${r.capacity} tables`}
+                    {r.closed
+                      ? 'Fermée'
+                      : tables === undefined ||
+                          tables === TOUTE_LA_SALLE ||
+                          r.id === AUTRE_SALLE.id
+                        ? 'Disponible'
+                        : tables === 0
+                          ? 'Complet'
+                          : tables === r.capacity
+                            ? 'Disponible'
+                            : `Reste ${tables} / ${r.capacity} tables`}
                     )
                   </option>
                 );
               })}
             </Form.Select>
-            {formData.roomId !== HYPHEN_EMPTY_OPTION &&
-            formData.dayId !== Globals.DRAFT_ID &&
-            !roomService.isActivityAllowedInRoom(
-              formData.activityId,
-              formData.dayId,
-              formData.roomId
-            ) ? (
-              <Alert variant="warning">
-                <Icon icon="warning" iconSize={20} /> Attention, cette activité
-                n'est pas prioritaire dans cette salle cette semaine :{' '}
-                <RoomPriorities
-                  day={fromGameDayId(formData.dayId)! as GameDay}
-                />
-              </Alert>
-            ) : null}
             {state?.submitted && hasError(errors, 'roomIsEmpty') ? (
               <FormError error="La salle est obligatoire" />
             ) : null}

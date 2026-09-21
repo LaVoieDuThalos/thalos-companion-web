@@ -1,11 +1,9 @@
 import { API, type ApiService } from '../api/Api';
-import { ACTIVITIES, AOS, EVENEMENT, JDR } from '../constants/Activities';
-import { AUTRE_SALLE, ROOMS, SALLE_ANNEXE, SALLE_JDR, } from '../constants/Rooms';
-import type { Activity } from '../model/Activity';
-import type { GameDay } from '../model/GameDay';
 import type { OpenCloseRoom, Room } from '../model/Room';
-import { fromGameDayId, gameDayFromDate, getWeekNumber, isGameDayDraft, } from '../utils/Utils';
+import { fromActivityId, gameDayFromDate } from '../utils/Utils';
 import { calendarService } from './CalendarService';
+import { CASTAGORA, FORUM, SALLE_JDR_CASTAGORA } from '../constants/Rooms.ts';
+import { JDR } from '../constants/Activities.ts';
 
 export class RoomService {
   private api: ApiService;
@@ -19,50 +17,14 @@ export class RoomService {
     }
   }
 
-  getActivitiesPriorityOfDay(day: GameDay): Activity[] {
-    return getWeekNumber(day.date) % 2 === 0
-      ? ACTIVITIES.filter((act) => act.figurines)
-      : ACTIVITIES.filter((act) => !act.figurines);
-  }
-
-  chooseMeARoomForActivityAndDay(activityId: string, day: GameDay): Room {
-    const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day);
-    // Cas particulier pour AoS qui se joue dans la salle annexe qd les figurines ont la grande salle
-    if (activityId === AOS.id && roomsChosen.indexOf(SALLE_ANNEXE) >= 0) {
-      return SALLE_ANNEXE;
+  chooseMeARoomForActivityAndDay(activityId: string): Room {
+    const activity = fromActivityId(activityId);
+    if (activity && activity.figurines) {
+      return FORUM;
+    } else if (activity?.id === JDR.id) {
+      return SALLE_JDR_CASTAGORA;
     }
-    return roomsChosen[0];
-  }
-
-  getPrioritiesRoomsForActivity(activityId: string, day: GameDay): Room[] {
-    const activitiesInRoomsA = this.getActivitiesPriorityOfDay(day);
-    const roomsA = ROOMS.filter((r) => r.week === 'A');
-    const roomsB = ROOMS.filter((r) => r.week === 'B');
-    const activityFoundInRoomsA =
-      activitiesInRoomsA.findIndex((act) => act.id === activityId) >= 0;
-    return activityFoundInRoomsA ? roomsA : roomsB;
-  }
-
-  isActivityAllowedInRoom(
-    activityId: string,
-    dayId: string,
-    roomId: string
-  ): boolean {
-    const day = fromGameDayId(dayId);
-    if (!day) {
-      return false;
-    }
-    if (activityId === JDR.id && roomId === SALLE_JDR.id) {
-      return true;
-    }
-    if (roomId === AUTRE_SALLE.id || activityId === EVENEMENT.id) {
-      return true;
-    }
-    if (isGameDayDraft(day)) {
-      return true;
-    }
-    const roomsChosen = this.getPrioritiesRoomsForActivity(activityId, day);
-    return roomsChosen.map((r) => r.id).indexOf(roomId) >= 0;
+    return CASTAGORA;
   }
 
   async isRoomOpenFromDate(date: Date): Promise<boolean> {

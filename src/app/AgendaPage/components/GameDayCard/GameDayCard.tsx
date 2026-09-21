@@ -7,7 +7,6 @@ import type { AgendaEvent } from '../../../../model/AgendaEvent.ts';
 import CustomCard from '../../../../components/common/CustomCard/CustomCard.tsx';
 import Icon from '../../../../components/common/Icon.tsx';
 import { printGameDay } from '../../../../utils/Utils.ts';
-import RoomPriorities from '../../../../components/RoomPriorities/RoomPriorities.tsx';
 import type { OpenCloseRoom } from '../../../../model/Room.ts';
 import { Colors } from '../../../../constants/Colors.ts';
 import Label from '../../../../components/common/Label.tsx';
@@ -31,15 +30,18 @@ export default function GameDayCard({ day, events, openClose }: Props) {
           <Icon icon="today" iconSize={22} color={'gray'} />
           <span className="game-day">{printGameDay(day)}</span>
         </div>
-        {openClose ? <div className="open-close-room-infos">
-          <Label
-            icon="schedule"
-            size={20}
-            styles={{ fontWeight: 'bold', color: Colors.red }}
-          >{openClose.openAt}</Label></div> : null}
+        {openClose ? (
+          <div className="open-close-room-infos">
+            <Label
+              icon="schedule"
+              size={20}
+              styles={{ fontWeight: 'bold', color: Colors.red }}
+            >
+              {openClose.openAt}
+            </Label>
+          </div>
+        ) : null}
       </div>
-
-      <RoomPriorities day={day} />
 
       <div className="events">
         {!events || events.length === 0 ? (

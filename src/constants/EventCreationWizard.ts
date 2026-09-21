@@ -1,15 +1,9 @@
 import { calendarService } from '../services/CalendarService';
 import { roomService } from '../services/RoomService';
-import {
-  AOS,
-  AUBERGE_ESPAGNOLE,
-  BLOODBOWL,
-  JDR,
-  WARHAMMER_40K,
-} from './Activities';
+import { AOS, AUBERGE_ESPAGNOLE, BLOODBOWL, JDR, WARHAMMER_40K, } from './Activities';
 import { JUSQUA_LA_FERMETURE } from './Durations';
 import { MODE_AUTO_BY_REGISTRATION_DATE } from './EventSubscriptionModes';
-import { ALGECO, TOUTE_LA_SALLE } from './Rooms';
+import { CUISINE, SALLE_JDR_CASTAGORA, TOUTE_LA_SALLE } from './Rooms';
 
 type InitFormData = { [key: string]: unknown };
 
@@ -30,12 +24,7 @@ export const CREATION_MODES: EventCreationMode[] = [
     formDataFn: () => {
       const day = calendarService.nextFridayGameDay();
       const activityId = 'w40k';
-      const roomChosen = roomService.chooseMeARoomForActivityAndDay(
-        activityId,
-        day
-      );
-      const tables = roomChosen.id === ALGECO.id ? 6 : TOUTE_LA_SALLE;
-      const maxSubscriptions = roomChosen.id === ALGECO.id ? 3 : 5;
+      const roomChosen = roomService.chooseMeARoomForActivityAndDay(activityId);
       return {
         title: 'Rencontres 40k',
         activityId: activityId,
@@ -43,9 +32,9 @@ export const CREATION_MODES: EventCreationMode[] = [
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
-        tables,
+        tables: 6,
         withSubscriptions: true,
-        maxSubscriptions: maxSubscriptions,
+        maxSubscriptions: 6,
         subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
@@ -58,12 +47,7 @@ export const CREATION_MODES: EventCreationMode[] = [
     formDataFn: () => {
       const day = calendarService.nextSaturdayGameDay();
       const activityId = 'w40k';
-      const roomChosen = roomService.chooseMeARoomForActivityAndDay(
-        activityId,
-        day
-      );
-      const tables = roomChosen.id === ALGECO.id ? 6 : TOUTE_LA_SALLE;
-      const maxSubscriptions = roomChosen.id === ALGECO.id ? 3 : 5;
+      const roomChosen = roomService.chooseMeARoomForActivityAndDay(activityId);
       return {
         title: 'Rencontres 40k',
         activityId: activityId,
@@ -71,9 +55,9 @@ export const CREATION_MODES: EventCreationMode[] = [
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
-        tables,
+        tables: 6,
         withSubscriptions: true,
-        maxSubscriptions: maxSubscriptions,
+        maxSubscriptions: 6,
         subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
@@ -86,10 +70,7 @@ export const CREATION_MODES: EventCreationMode[] = [
     formDataFn: () => {
       const day = calendarService.nextFridayGameDay();
       const activityId = AOS.id;
-      const roomChosen = roomService.chooseMeARoomForActivityAndDay(
-        activityId,
-        day
-      );
+      const roomChosen = roomService.chooseMeARoomForActivityAndDay(activityId);
       return {
         title: 'Rencontres AoS',
         activityId: activityId,
@@ -112,10 +93,7 @@ export const CREATION_MODES: EventCreationMode[] = [
     formDataFn: () => {
       const day = calendarService.nextSaturdayGameDay();
       const activityId = AOS.id;
-      const roomChosen = roomService.chooseMeARoomForActivityAndDay(
-        activityId,
-        day
-      );
+      const roomChosen = roomService.chooseMeARoomForActivityAndDay(activityId);
       return {
         title: 'Rencontres AoS',
         activityId: activityId,
@@ -139,10 +117,7 @@ export const CREATION_MODES: EventCreationMode[] = [
     formDataFn: () => {
       const day = calendarService.nextFridayGameDay();
       const activityId = BLOODBOWL.id;
-      const roomChosen = roomService.chooseMeARoomForActivityAndDay(
-        activityId,
-        day
-      );
+      const roomChosen = roomService.chooseMeARoomForActivityAndDay(activityId);
       return {
         title: 'Rencontre Blood bowl',
         activityId: BLOODBOWL.id,
@@ -165,10 +140,7 @@ export const CREATION_MODES: EventCreationMode[] = [
     formDataFn: () => {
       const day = calendarService.nextSaturdayGameDay();
       const activityId = BLOODBOWL.id;
-      const roomChosen = roomService.chooseMeARoomForActivityAndDay(
-        activityId,
-        day
-      );
+      const roomChosen = roomService.chooseMeARoomForActivityAndDay(activityId);
       return {
         title: 'Rencontres AoS',
         activityId: activityId,
@@ -191,7 +163,7 @@ export const CREATION_MODES: EventCreationMode[] = [
     formDataFn: () => {
       return {
         activityId: 'jdr',
-        roomId: 'jdr',
+        roomId: SALLE_JDR_CASTAGORA.id,
         start: '20h',
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
         tables: TOUTE_LA_SALLE,
@@ -221,7 +193,7 @@ export const CREATION_MODES: EventCreationMode[] = [
       return {
         title: 'Auberge Espagnole',
         activityId: 'ae',
-        roomId: 'main',
+        roomId: CUISINE.id,
         start: '19h',
         durationInMinutes: 60,
         tables: TOUTE_LA_SALLE,
