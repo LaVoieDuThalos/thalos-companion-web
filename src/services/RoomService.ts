@@ -2,7 +2,7 @@ import { API, type ApiService } from '../api/Api';
 import type { OpenCloseRoom, Room } from '../model/Room';
 import { fromActivityId, gameDayFromDate } from '../utils/Utils';
 import { calendarService } from './CalendarService';
-import { CASTAGORA, FORUM, SALLE_JDR_CASTAGORA } from '../constants/Rooms.ts';
+import { CASTAGORA, SALLE_JDR_CASTAGORA } from '../constants/Rooms.ts';
 import { JDR } from '../constants/Activities.ts';
 
 export class RoomService {
@@ -20,7 +20,7 @@ export class RoomService {
   chooseMeARoomForActivityAndDay(activityId: string): Room {
     const activity = fromActivityId(activityId);
     if (activity && activity.figurines) {
-      return FORUM;
+      return CASTAGORA;
     } else if (activity?.id === JDR.id) {
       return SALLE_JDR_CASTAGORA;
     }

@@ -68,7 +68,7 @@ export default function OpenCloseRoomConfigModal({
       onClick: () => {
         setLoading(true);
         roomService
-          .saveOpenCloseConfig({...model, validated: true} as OpenCloseRoom)
+          .saveOpenCloseConfig({ ...model, validated: true } as OpenCloseRoom)
           .then(() => {
             onSuccess();
             setLoading(false);
@@ -86,19 +86,25 @@ export default function OpenCloseRoomConfigModal({
       setModel((prev) => ({
         ...prev,
         opener: { id: userId, name: user?.name || '' },
-        closer: prev.closer ?? { id: userId, name: user?.name || '' },
       }));
     });
   };
 
   const onCloserChange = (userId: string) => {
+    if (userId === '-') {
+      setModel((prev) => ({
+        ...prev,
+        closer: { id: '-', name: '' },
+      }));
+      return;
+    }
     userService.getUserById(userId).then((user) => {
       if (user === null) {
         throw new Error('User not found : id=' + userId);
       }
       setModel((prev) => ({
         ...prev,
-        closer: { id: userId, name: user?.name || '' },
+        closer: { id: userId, name: user?.name || '?' },
       }));
     });
   };
@@ -149,21 +155,27 @@ export default function OpenCloseRoomConfigModal({
             >
               <option>-</option>
               <optgroup label="Ouvreurs/Ouvreuses">
-                {users.filter(u => u.preferences?.roles?.includes(ROLE_OUVREUR.id)).map(usr => (
-                  <option key={usr.id} value={usr.id}>
-                    {usr.name}
-                  </option>
-                ))}
+                {users
+                  .filter((u) =>
+                    u.preferences?.roles?.includes(ROLE_OUVREUR.id)
+                  )
+                  .map((usr) => (
+                    <option key={usr.id} value={usr.id}>
+                      {usr.name}
+                    </option>
+                  ))}
               </optgroup>
               <optgroup label="Autres utilisateurs">
                 {users
-                .filter(u => !u.preferences?.roles?.includes(ROLE_OUVREUR.id)).map((usr) => (
-                <option key={usr.id} value={usr.id}>
-                  {usr.name}
-                </option>
-              ))}
+                  .filter(
+                    (u) => !u.preferences?.roles?.includes(ROLE_OUVREUR.id)
+                  )
+                  .map((usr) => (
+                    <option key={usr.id} value={usr.id}>
+                      {usr.name}
+                    </option>
+                  ))}
               </optgroup>
-
             </Form.Select>
           </Form.Group>
         </CustomCard>

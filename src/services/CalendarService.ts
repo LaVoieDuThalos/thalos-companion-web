@@ -1,7 +1,7 @@
 import type { GameDay } from '../model/GameDay';
 import { formatDate } from '../utils/Utils';
 
-const [FRIDAY, SATURDAY] = [5, 6];
+export const [FRIDAY, SATURDAY] = [5, 6];
 
 class CalendarService {
   private gameDays: number[];
