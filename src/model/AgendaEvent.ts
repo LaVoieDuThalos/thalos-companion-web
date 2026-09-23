@@ -10,11 +10,14 @@ export type LastModification = {
 
 export type EventSubscriptionStatus = 'validated' | 'cancelled' | 'waiting';
 
+export type EventSubscriptionData = { name?: string; withTable40k?: boolean };
+
 export type EventSubscription = {
   id: string;
   eventId: string;
   user: Partial<User>;
   name?: string;
+  withTable40k?: boolean;
   subscribedAt: string;
   status?: EventSubscriptionStatus;
 };

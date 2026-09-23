@@ -33,7 +33,6 @@ export default function EventSubscriptionCard({
   return (
     <CustomCard>
       <div className="subscription-details">
-
         <div className="user">
           <Icon
             icon={
@@ -46,8 +45,17 @@ export default function EventSubscriptionCard({
             color={sub.status === 'validated' ? Colors.green : Colors.blue}
             iconSize={40}
           />
-          <div style={{display: 'flex', flexDirection: 'column'}}>
-            <span className="name">{sub.name ?? sub.user.name}</span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span className="name">
+              {sub.name ?? sub.user.name}{' '}
+              {sub.withTable40k ? (
+                <>
+                  <span title="J'ai besoin d'une table de l'association">
+                    <Icon icon="table_restaurant" color={'red'} iconSize={20} />
+                  </span>
+                </>
+              ) : null}
+            </span>
             {currentUserIsTheEventCreator && (
               <div className="subscribed-at">
                 Inscrit(e) le: {subcribedAtDate.toLocaleDateString()} à{' '}

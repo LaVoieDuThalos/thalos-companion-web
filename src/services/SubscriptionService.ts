@@ -1,5 +1,9 @@
 import { API, type ApiService } from '../api/Api';
-import type { AgendaEvent, EventSubscription } from '../model/AgendaEvent';
+import type {
+  AgendaEvent,
+  EventSubscription,
+  EventSubscriptionData,
+} from '../model/AgendaEvent';
 import type { User } from '../model/User';
 import { uuid } from '../utils/Utils';
 
@@ -30,7 +34,11 @@ export class SubscriptionService {
     return this.api.findAllSubscriptionsOfEvent(event.id);
   }
 
-  async subscribe(user: User, subscriptionName: string, event: AgendaEvent): Promise<EventSubscription> {
+  async subscribe(
+    user: User,
+    subscriptionData: EventSubscriptionData,
+    event: AgendaEvent
+  ): Promise<EventSubscription> {
     const subs = await this.findAllSubscriptionsOfEvent(event);
     if (this.alreadySubscribed(user.id, subs)) {
       return Promise.reject('Already subscribed !');
@@ -50,7 +58,8 @@ export class SubscriptionService {
               id: user.id,
               name: user.name,
             },
-            name: subscriptionName,
+            name: subscriptionData.name,
+            withTable40k: subscriptionData.withTable40k,
             eventId: event.id,
             subscribedAt: new Date().toISOString(),
             status: status,

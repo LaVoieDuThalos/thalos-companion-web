@@ -1,6 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import './NextOpenDateTime.scss';
-import { calendarService, SATURDAY, } from '../../../../services/CalendarService';
+import {
+  calendarService,
+  SATURDAY,
+} from '../../../../services/CalendarService';
 import { roomService } from '../../../../services/RoomService';
 import type { OpenCloseRoom } from '../../../../model/Room';
 import { DaysOfWeek } from '../../../../constants/Months';

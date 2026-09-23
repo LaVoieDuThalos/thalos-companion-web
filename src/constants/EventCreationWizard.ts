@@ -1,12 +1,6 @@
 import { calendarService } from '../services/CalendarService';
 import { roomService } from '../services/RoomService';
-import {
-  AOS,
-  AUBERGE_ESPAGNOLE,
-  BLOODBOWL,
-  JDR,
-  WARHAMMER_40K,
-} from './Activities';
+import { AOS, AUBERGE_ESPAGNOLE, BLOODBOWL, JDR, WARHAMMER_40K, } from './Activities';
 import { JUSQUA_LA_FERMETURE } from './Durations';
 import { MODE_AUTO_BY_REGISTRATION_DATE } from './EventSubscriptionModes';
 import { CUISINE, SALLE_JDR_CASTAGORA, TOUTE_LA_SALLE } from './Rooms';
@@ -38,7 +32,7 @@ export const CREATION_MODES: EventCreationMode[] = [
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
-        tables: 12,
+        tables: TOUTE_LA_SALLE,
         withSubscriptions: true,
         maxSubscriptions: 6,
         subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
@@ -61,7 +55,7 @@ export const CREATION_MODES: EventCreationMode[] = [
         start: '20h',
         roomId: roomChosen.id,
         durationInMinutes: JUSQUA_LA_FERMETURE.valueInMinutes,
-        tables: 12,
+        tables: TOUTE_LA_SALLE,
         withSubscriptions: true,
         maxSubscriptions: 6,
         subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,

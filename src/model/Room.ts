@@ -1,5 +1,4 @@
 export interface Room {
-  closed: boolean;
   id: string;
   name: string;
   capacity?: number;

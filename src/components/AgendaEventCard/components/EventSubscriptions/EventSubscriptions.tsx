@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Alert} from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import { Colors } from '../../../../constants/Colors.ts';
 import {
   MODE_AUTO_BY_REGISTRATION_DATE,
@@ -9,6 +9,7 @@ import { useUser } from '../../../../hooks/useUser.ts';
 import type {
   AgendaEvent,
   EventSubscription,
+  EventSubscriptionData,
 } from '../../../../model/AgendaEvent.ts';
 import { subscriptionService } from '../../../../services/SubscriptionService.ts';
 import CustomCard from '../../../common/CustomCard/CustomCard.tsx';
@@ -17,7 +18,10 @@ import EventSubscriptionCard from './components/EventSubscriptionCard/EventSubsc
 import './EventSubscriptions.scss';
 import IconButton from '../../../common/IconButton/IconButton.tsx';
 import Row from '../../../common/Row.tsx';
-import { AlertActions, AlertContext } from '../../../../contexts/AlertsContext.tsx';
+import {
+  AlertActions,
+  AlertContext,
+} from '../../../../contexts/AlertsContext.tsx';
 import EventSubscriptionModal from '../../../modals/EventSubscriptionModal.tsx';
 
 type Props = {
@@ -41,14 +45,13 @@ export default function EventSubscriptions({ event }: Props) {
     });
   }, [event, refresh]);
 
-  const subscribe = (subName: string) => {
+  const subscribe = (results: EventSubscriptionData) => {
     setShowSubscriptionModal(false);
-    subscriptionService.subscribe(user,subName, event).then(() => {
+    subscriptionService.subscribe(user, results, event).then(() => {
       callRefresh();
     });
   };
   const unsubscribe = (subId: string) => {
-
     Alerts.dialog(
       'Désinscription',
       `Souhaitez-vous vous désinscrire de cette évènement ?`,
@@ -68,7 +71,7 @@ export default function EventSubscriptions({ event }: Props) {
   const updateSubscription = (sub: EventSubscription, status: string) => {
     subscriptionService.updateSubscriptionStatus(sub, status).then(() => {
       callRefresh();
-    })
+    });
   };
 
   const userSubscription = subscriptionService.findSubscriptionOfUser(
@@ -86,10 +89,15 @@ export default function EventSubscriptions({ event }: Props) {
 
   return (
     <div className="event-subscriptions">
-      {showSubscriptionModal && <EventSubscriptionModal name={user.name} show={true} event={event}
-                                                        onCancel={() => setShowSubscriptionModal(false)}
-                                                        onSuccess={subscribe}
-      />}
+      {showSubscriptionModal && (
+        <EventSubscriptionModal
+          name={user.name}
+          show={true}
+          event={event}
+          onCancel={() => setShowSubscriptionModal(false)}
+          onSuccess={subscribe}
+        />
+      )}
       <hr />
       <p className="subscriptions-title">
         Participants{' '}
@@ -102,12 +110,23 @@ export default function EventSubscriptions({ event }: Props) {
         )}{' '}
         :
       </p>
-      <Row style={{justifyItems: 'center', justifyContent: 'center'}}>
-        {!showValidatedListInfos ? <IconButton variant="light" icon="help" iconSize={20} onClick={() => setShowValidatedListInfos(true)} /> : null}
+      <Row style={{ justifyItems: 'center', justifyContent: 'center' }}>
+        {!showValidatedListInfos ? (
+          <IconButton
+            variant="light"
+            icon="help"
+            iconSize={20}
+            onClick={() => setShowValidatedListInfos(true)}
+          />
+        ) : null}
       </Row>
 
       {showValidatedListInfos && (
-        <Alert variant="info" dismissible onClose={() => setShowValidatedListInfos(false)}>
+        <Alert
+          variant="info"
+          dismissible
+          onClose={() => setShowValidatedListInfos(false)}
+        >
           La participation à cet évènement est sur inscription avec un nombre de{' '}
           <strong>{event.maxSubscriptions}</strong> participants maximum.
           <br />
@@ -143,7 +162,10 @@ export default function EventSubscriptions({ event }: Props) {
         ))}
         {!userSubscription && !eventComplete && waitingList.length === 0 && (
           <div className="empty-seat" key={'emtpysit'}>
-            <CustomCard clickable={!userSubscription} onClick={() => setShowSubscriptionModal(true)}>
+            <CustomCard
+              clickable={!userSubscription}
+              onClick={() => setShowSubscriptionModal(true)}
+            >
               <Icon icon="person_add" iconSize={50} color={Colors.gray} />
               {event.subscriptionMode === MODE_MANUAL.id || !eventComplete ? (
                 <>S'inscrire</>
@@ -160,11 +182,22 @@ export default function EventSubscriptions({ event }: Props) {
           <p className="subscriptions-title">
             Liste d'attente ({waitingList.length})
           </p>
-          <Row style={{justifyItems: 'center', justifyContent: 'center'}}>
-          {!showWaitingListInfos ? <IconButton variant="light" onClick={() => setShowWaitingListInfos(true)} icon="help" iconSize={20} /> : null}
+          <Row style={{ justifyItems: 'center', justifyContent: 'center' }}>
+            {!showWaitingListInfos ? (
+              <IconButton
+                variant="light"
+                onClick={() => setShowWaitingListInfos(true)}
+                icon="help"
+                iconSize={20}
+              />
+            ) : null}
           </Row>
-          {showWaitingListInfos &&
-            <Alert variant="warning" dismissible onClose={() => setShowWaitingListInfos(false)}>
+          {showWaitingListInfos && (
+            <Alert
+              variant="warning"
+              dismissible
+              onClose={() => setShowWaitingListInfos(false)}
+            >
               {event.subscriptionMode === MODE_AUTO_BY_REGISTRATION_DATE.id ? (
                 <span>
                   Cet évènement est complet mais vous pouvez tout de même vous y
@@ -177,7 +210,7 @@ export default function EventSubscriptions({ event }: Props) {
                 </span>
               )}
             </Alert>
-          }
+          )}
 
           {waitingList.map((sub) => (
             <div key={sub.id} className="subscription">
@@ -193,7 +226,10 @@ export default function EventSubscriptions({ event }: Props) {
           ))}
           {!userSubscription && (
             <div className="empty-seat" key={'emtpysit'}>
-              <CustomCard clickable={!userSubscription} onClick={() => setShowSubscriptionModal(true)}>
+              <CustomCard
+                clickable={!userSubscription}
+                onClick={() => setShowSubscriptionModal(true)}
+              >
                 <Icon icon="person_add" iconSize={50} color={Colors.gray} />
                 S'inscrire sur liste d'attente
               </CustomCard>
