@@ -8,6 +8,8 @@ import { printGameDay } from '../../../../utils/Utils.ts';
 import './SideMainMenu.scss';
 import type { CSSProperties } from 'react';
 import { settingsService } from '../../../../services/SettingsService.ts';
+import IconButton from '../../../common/IconButton/IconButton.tsx';
+import { applicationService } from '../../../../services/ApplicationService.ts';
 
 type Props = {
   show?: boolean;
@@ -24,6 +26,11 @@ const MenuItemStyles: CSSProperties = {
 export default function SideMainMenu({ show, onHide, onClickItem }: Props) {
   const { user, hasRole } = useUser();
   const today = calendarService.now();
+
+  const version = {
+    version: import.meta.env.VITE_APP_VERSION,
+    date: import.meta.env.VITE_APP_VERSION_DATE,
+  };
 
   const isOuvreur =
     user &&
@@ -121,6 +128,15 @@ export default function SideMainMenu({ show, onHide, onClickItem }: Props) {
             <Icon icon="info" iconSize={30} />
             Informations
           </Button>
+        </div>
+        <div className="infos-version">
+          Version: {version.version} - {version.date}
+          <IconButton
+            icon="refresh"
+            variant="secondary"
+            iconSize={20}
+            onClick={() => applicationService.reloadApplication()}
+          />
         </div>
       </Offcanvas.Body>
     </Offcanvas>
