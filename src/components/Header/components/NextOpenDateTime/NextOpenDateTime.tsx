@@ -73,7 +73,7 @@ export default function NextOpenDateTime({ onClick, clickable }: Props) {
               </strong>
               à <strong>{fridayOpenCloseRoom?.openAt}</strong> (
               {fridayOpenCloseRoom?.validated ? (
-                <strong>{`par ${fridayOpenCloseRoom?.opener?.name}`}</strong>
+                <strong>{`confirmée`}</strong>
               ) : (
                 'non confirmé'
               )}
@@ -90,7 +90,7 @@ export default function NextOpenDateTime({ onClick, clickable }: Props) {
             </strong>
             à <strong>{saturdayOpenCloseRoom?.openAt}</strong> (
             {saturdayOpenCloseRoom?.validated ? (
-              <strong>{`par ${saturdayOpenCloseRoom?.opener?.name}`}</strong>
+              <strong>{`confirmée`}</strong>
             ) : (
               'non confirmé'
             )}
