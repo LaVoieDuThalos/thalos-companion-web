@@ -3,7 +3,7 @@ import {
   getDocs,
   getFirestore,
   writeBatch,
-} from '@firebase/firestore';
+} from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {

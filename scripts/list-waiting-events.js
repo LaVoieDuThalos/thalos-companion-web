@@ -4,7 +4,7 @@ import {
   getFirestore,
   query,
   where,
-} from '@firebase/firestore';
+} from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {

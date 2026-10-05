@@ -1,6 +1,5 @@
 import {
   addDoc,
-  and,
   collection,
   deleteDoc,
   doc,
@@ -11,7 +10,7 @@ import {
   query,
   setDoc,
   where,
-} from '@firebase/firestore';
+} from 'firebase/firestore';
 import type { AgendaEvent, EventSubscription } from '../model/AgendaEvent';
 import type { DayCounts } from '../model/Counting';
 import type { OpenCloseRoom } from '../model/Room';
@@ -145,10 +144,8 @@ class FirestoreApi implements ApiService {
 
     const q = query(
       collection(FirebaseDb, Collections.EVENTS),
-      and(
-        where(FieldNames.DAY_ID, '>=', `${year}-${monthStr}-01`),
-        where(FieldNames.DAY_ID, '<=', `${year}-${monthStr}-31`)
-      )
+      where(FieldNames.DAY_ID, '>=', `${year}-${monthStr}-01`),
+      where(FieldNames.DAY_ID, '<=', `${year}-${monthStr}-31`)
     );
     const results = await getDocs(q);
     return results.docs.map((doc) => mapDtoToAgendaEvent(doc.id, doc.data()));
@@ -307,10 +304,8 @@ class FirestoreApi implements ApiService {
 
     const q = query(
       collection(FirebaseDb, Collections.DAYS),
-      and(
-        where(FieldNames.DAY_ID, '>=', `${year}-${monthStr}-01`),
-        where(FieldNames.DAY_ID, '<=', `${year}-${monthStr}-31`)
-      )
+      where(FieldNames.DAY_ID, '>=', `${year}-${monthStr}-01`),
+      where(FieldNames.DAY_ID, '<=', `${year}-${monthStr}-31`)
     );
     const results = await getDocs(q);
     return results.docs.map((doc) => doc.data() as OpenCloseRoom);

@@ -1,7 +1,6 @@
-@import '../../../scss/custom.scss';
+@use '../../../scss/custom' as *;
 
 button.icon-button {
   @include flex-horizontal;
   gap: 3px;
 }
-

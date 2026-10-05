@@ -1,4 +1,4 @@
-@import '../../../scss/variables.scss';
+@use '../../../scss/variables' as *;
 
 .form-error {
   font-size: small;

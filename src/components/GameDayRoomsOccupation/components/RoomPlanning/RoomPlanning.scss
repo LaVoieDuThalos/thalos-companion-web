@@ -1,4 +1,4 @@
-@import '../../../../scss/variables.scss';
+@use '../../../../scss/variables' as *;
 
 .planning-container {
   background-color: whitesmoke;

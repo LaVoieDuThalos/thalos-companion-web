@@ -28,6 +28,8 @@ import { useCopyToClipboard } from '../../hooks/useCopyToClipboard.ts';
 import Icon from '../common/Icon.tsx';
 import { EVENEMENT } from '../../constants/Activities.ts';
 
+import CalendarFormatSelectModal from '../modals/CalendarFormatSelectModal/CalendarFormatSelectModal.tsx';
+
 export type Options = {
   hideDate?: boolean;
 };
@@ -102,9 +104,11 @@ export default function AgendaEventCard({
     }
   }, []);
 
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
+
   const roomName =
     event.room !== undefined && event.roomId !== AUTRE_SALLE.id
-      ? event.room.name
+      ? event.room?.name
       : event.otherRoomName +
         (event.otherRoomAddress ? ' - ' + event.otherRoomAddress : '');
 
@@ -167,6 +171,19 @@ export default function AgendaEventCard({
 
           {complete && (
             <div style={{ display: 'flex', gap: 5 }}>
+              <CalendarFormatSelectModal
+                event={event}
+                show={showCalendarModal}
+                onHide={() => setShowCalendarModal(false)}
+              />
+              <IconButton
+                icon={'event'}
+                onClick={() => setShowCalendarModal(true)}
+                iconSize={20}
+                title={'Ajouter au calendrier'}
+                color={'info'}
+                variant={'light'}
+              />
               <IconButton
                 icon={'content_copy'}
                 onClick={() => duplicateEvent()}

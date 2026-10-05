@@ -1,5 +1,5 @@
-@import '../../../../scss/variables.scss';
-@import '../../../../scss/custom.scss';
+@use '../../../../scss/variables' as *;
+@use '../../../../scss/custom' as *;
 
 .next-open-datetime {
   padding-left: 10px;

@@ -1,5 +1,5 @@
-@import '../../scss/variables.scss';
-@import '../../scss/custom.scss';
+@use '../../scss/variables' as *;
+@use '../../scss/custom' as *;
 
 nav.navbar {
   background-color: $primary;

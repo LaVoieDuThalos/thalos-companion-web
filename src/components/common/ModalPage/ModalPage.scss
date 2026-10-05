@@ -1,4 +1,4 @@
-@import '../../../scss/custom.scss';
+@use '../../../scss/custom' as *;
 
 .modal-footer {
   flex-direction: row;
