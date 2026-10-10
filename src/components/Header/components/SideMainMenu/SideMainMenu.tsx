@@ -140,7 +140,7 @@ export default function SideMainMenu({ show, onHide, onClickItem }: Props) {
           </Button>
         </div>
         <div className="infos-version">
-          Version: {version.version} - {version.date}
+          Version: {version.date} (build {version.version})
           <IconButton
             icon="refresh"
             variant="secondary"
