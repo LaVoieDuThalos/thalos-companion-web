@@ -19,6 +19,8 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
+        env:
+            VITE_APP_VERSION: ${{ github.ref_name }}
         steps:
             - uses: actions/checkout@v4
             - name: Use Node.js 22.x
@@ -27,6 +29,8 @@ jobs:
                   node-version: 22.x
                   cache: "npm"
             - run: npm ci
+            - name: Set build date
+              run: echo "VITE_APP_VERSION_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
             - run: npm run lint
             - run: npm run build
             - name: Archive build
