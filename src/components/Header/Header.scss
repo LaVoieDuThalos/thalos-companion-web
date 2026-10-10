@@ -2,7 +2,9 @@
 @use '../../scss/custom' as *;
 
 nav.navbar {
-  background-color: $primary;
+  background: $primary;
+  background: linear-gradient(145deg, rgba(170, 0, 0, 1) 0%, rgba(170, 0, 0, 0.78) 50%, rgba(170, 0, 0, 1) 100%);
+
   padding-left: 10px;
   padding-right: 10px;
   /*-webkit-box-shadow: 2px 7px 4px -5px $black;

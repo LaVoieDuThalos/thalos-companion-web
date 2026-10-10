@@ -40,6 +40,7 @@ export default function HomePage() {
     agendaService
       .findAllEvents()
       .then((events) => {
+        console.log('EVENTS', events);
         const eventsByDate = events
           .filter(
             (e) =>
