@@ -17,6 +17,7 @@ import './Header.scss';
 import NextOpenDateTime from './components/NextOpenDateTime/NextOpenDateTime';
 import OpenCloseRoomConfigModal from '../modals/OpenCloseRoomConfigModal/OpenCloseRoomConfigModal';
 import SideMainMenu from './components/SideMainMenu/SideMainMenu.tsx';
+import OpenCloseChecklistsModal from '../modals/OpenCloseChecklistsModal/OpenCloseChecklistsModal.tsx';
 
 export default function Header() {
   const appContext = useContext(AppContext);
@@ -25,6 +26,8 @@ export default function Header() {
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [openCloseModalVisible, setOpenCloseModalVisible] = useState(false);
   const [countingFormModalVisible, setCountingFormModalVisible] =
+    useState(false);
+  const [openCloseChecklistsModalVisible, setOpenCloseChecklistsModalVisible] =
     useState(false);
 
   const [show, setShow] = useState(false);
@@ -71,6 +74,9 @@ export default function Header() {
               break;
             case 'counting':
               setCountingFormModalVisible(true);
+              break;
+            case 'open-close-procedure':
+              setOpenCloseChecklistsModalVisible(true);
               break;
             default:
           }
@@ -154,6 +160,13 @@ export default function Header() {
           onSuccess={() => {
             setCountingFormModalVisible(false);
           }}
+        />
+      ) : null}
+
+      {openCloseChecklistsModalVisible ? (
+        <OpenCloseChecklistsModal
+          show={openCloseChecklistsModalVisible}
+          onHide={() => setOpenCloseChecklistsModalVisible(false)}
         />
       ) : null}
     </>

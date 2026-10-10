@@ -97,14 +97,24 @@ export default function SideMainMenu({ show, onHide, onClickItem }: Props) {
         <hr />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {isOuvreur && (
-            <Button
-              variant="secondary"
-              style={MenuItemStyles}
-              onClick={() => onClickItem('keys')}
-            >
-              <Icon icon="key" iconSize={30} />
-              Badges
-            </Button>
+            <>
+              <Button
+                variant="secondary"
+                style={MenuItemStyles}
+                onClick={() => onClickItem('keys')}
+              >
+                <Icon icon="key" iconSize={30} />
+                Badges
+              </Button>
+              <Button
+                variant="secondary"
+                style={MenuItemStyles}
+                onClick={() => onClickItem('open-close-procedure')}
+              >
+                <Icon icon="check_box" iconSize={30} />
+                Procédure d'ouverture/fermeture
+              </Button>
+            </>
           )}
 
           <hr />
