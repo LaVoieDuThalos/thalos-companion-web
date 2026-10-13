@@ -114,10 +114,10 @@ export default function SideMainMenu({ show, onHide, onClickItem }: Props) {
                 <Icon icon="check_box" iconSize={30} />
                 Procédure d'ouverture/fermeture
               </Button>
+              <hr />
             </>
           )}
 
-          <hr />
           <Button
             color={Colors.white}
             variant="secondary"
