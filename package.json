@@ -19,10 +19,10 @@
     "list-users": "node --env-file=.env scripts/list-users.js"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-react": "^11.0.0",
+    "@ckeditor/ckeditor5-react": "^12.0.0",
     "bootstrap": "^5.3.6",
     "calendar-link": "^2.11.6",
-    "ckeditor5": "^47.2.0",
+    "ckeditor5": "^49.0.0",
     "firebase": "^12.19.0",
     "gh-pages": "^6.3.0",
     "react": "^19.2.1",
