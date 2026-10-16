@@ -1,11 +1,12 @@
 .card.important-event {
   background: #aa0000;
   background: linear-gradient(
-    180deg,
-    rgba(170, 0, 0, 0.21) 0%,
-    rgba(255, 255, 255, 0.26) 21%
+                  180deg,
+                  rgba(170, 0, 0, 0.21) 0%,
+                  rgba(255, 255, 255, 0.26) 21%
   );
 }
+
 .agenda-event-card {
   border-left-width: 10px !important;
   padding-top: 5px !important;
@@ -52,5 +53,16 @@
 
   .title {
     font-size: 22px;
+  }
+
+  .event-img {
+    max-width: 50%;
+    margin: auto;
+  }
+
+  @media (max-width: 600px) {
+    .event-img {
+      max-width: 100%;
+    }
   }
 }
