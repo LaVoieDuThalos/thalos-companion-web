@@ -1,6 +1,6 @@
 import { Button, Image } from 'react-bootstrap';
 import ModalPage from '../../common/ModalPage/ModalPage';
-import { google, ics, type CalendarEvent } from 'calendar-link';
+import { type CalendarEvent, google, ics } from 'calendar-link';
 import type { AgendaEvent } from '../../../model/AgendaEvent';
 
 type Props = {
@@ -19,7 +19,10 @@ type CalendarFormat = {
 function mapEventToCalendarEvent(event: AgendaEvent): CalendarEvent {
   let eventDuration = event.durationInMinutes || 0;
   const startTime =
-    (event.startTime || 0) + new Date().getTimezoneOffset() * 60 * 1000;
+    (event.startTime || 0) +
+    new Date(event.startTime || new Date().getTime()).getTimezoneOffset() *
+      60 *
+      1000;
 
   if (eventDuration === 999) {
     const hh = new Date(startTime).getHours();
