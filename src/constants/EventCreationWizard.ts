@@ -1,9 +1,16 @@
 import { calendarService } from '../services/CalendarService';
 import { roomService } from '../services/RoomService';
-import { AOS, AUBERGE_ESPAGNOLE, BLOODBOWL, JDR, WARHAMMER_40K, } from './Activities';
+import {
+  AUBERGE_ESPAGNOLE,
+  EVENEMENT_CASTAGORA,
+  JDR,
+  JDS_ACTIVITY,
+  PEINTURE_DE_FIGURINES,
+  WARHAMMER_40K,
+} from './Activities';
 import { JUSQUA_LA_FERMETURE } from './Durations';
 import { MODE_AUTO_BY_REGISTRATION_DATE } from './EventSubscriptionModes';
-import { CUISINE, SALLE_JDR_CASTAGORA, TOUTE_LA_SALLE } from './Rooms';
+import { CASTAGORA, CUISINE, TOUTE_LA_SALLE } from './Rooms';
 
 type InitFormData = { [key: string]: unknown };
 
@@ -62,7 +69,7 @@ export const CREATION_MODES: EventCreationMode[] = [
       };
     },
   },
-  {
+  /* {
     id: 'aosNextFriday',
     label: 'Rencontre AoS Vendredi prochain',
     color: AOS.style.color,
@@ -154,8 +161,22 @@ export const CREATION_MODES: EventCreationMode[] = [
         subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
     },
-  },
+  },*/
   {
+    id: 'bigJDS',
+    label: 'Jeu de société (Avec inscriptions)',
+    color: JDS_ACTIVITY.style.color,
+    backgroundColor: JDS_ACTIVITY.style.backgroundColor,
+    formDataFn: () => {
+      return {
+        activityId: JDS_ACTIVITY.id,
+        withSubscriptions: true,
+        maxSubscriptions: 4,
+        subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
+      };
+    },
+  },
+  /*{
     id: 'jdr',
     label: 'Jeu de rôle standard',
     color: JDR.style.color,
@@ -169,16 +190,34 @@ export const CREATION_MODES: EventCreationMode[] = [
         tables: TOUTE_LA_SALLE,
       };
     },
-  },
+  },*/
   {
     id: 'bigJdr',
-    label: 'Grand jeu de rôle (Avec inscriptions)',
+    label: 'Jeu de rôle (Avec inscriptions)',
     color: JDR.style.color,
     backgroundColor: JDR.style.backgroundColor,
     formDataFn: () => {
       return {
         activityId: 'jdr',
         withSubscriptions: true,
+        maxSubscriptions: 4,
+        subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
+      };
+    },
+  },
+  {
+    id: 'peinture',
+    label: 'Atelier Peinture',
+    color: PEINTURE_DE_FIGURINES.style.color,
+    backgroundColor: PEINTURE_DE_FIGURINES.style.backgroundColor,
+    formDataFn: () => {
+      return {
+        title: 'Atelier Peinture',
+        activityId: PEINTURE_DE_FIGURINES.id,
+        roomId: CUISINE.id,
+        tables: TOUTE_LA_SALLE,
+        description:
+          "Offrir un moment convivial permettant aux participants de peindre leurs figurines en groupe, d'échanger des astuces et de partager leur passion, sans initiation ni accompagnement pédagogique structuré.",
         maxSubscriptions: 4,
         subscriptionMode: MODE_AUTO_BY_REGISTRATION_DATE.id,
       };
@@ -198,6 +237,22 @@ export const CREATION_MODES: EventCreationMode[] = [
         durationInMinutes: 60,
         tables: TOUTE_LA_SALLE,
         description: 'Venez avec quelque chose à partager !',
+      };
+    },
+  },
+  {
+    id: 'eventCastagora',
+    label: 'Evènement à Castagora (Aucune salle disponible)',
+    color: EVENEMENT_CASTAGORA.style.color,
+    backgroundColor: EVENEMENT_CASTAGORA.style.backgroundColor,
+    formDataFn: () => {
+      return {
+        title: 'Evènement à Castagora (Aucune salle disponible !)',
+        activityId: EVENEMENT_CASTAGORA.id,
+        roomId: CASTAGORA.id,
+        tables: TOUTE_LA_SALLE,
+        description:
+          'Un évènement dans la programmation de Castagora occupe toutes les salles.',
       };
     },
   },

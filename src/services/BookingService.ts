@@ -1,7 +1,8 @@
-import { ROOMS, TOUTE_LA_SALLE } from '../constants/Rooms';
+import { CASTAGORA, ROOMS, TOUTE_LA_SALLE } from '../constants/Rooms';
 import type { AgendaEvent } from '../model/AgendaEvent';
 import { eventIsInTimeSlot } from '../utils/Utils';
 import { agendaService, type AgendaService } from './AgendaService';
+import { EVENEMENT_CASTAGORA } from '../constants/Activities.ts';
 
 export type RoomsOccupation = {
   [key: string]: number;
@@ -46,7 +47,8 @@ export class BookingService {
       dayId,
       startTime,
       endTime,
-      excludeEventIds
+      excludeEventIds,
+      rooms
     );
     return rooms
       .map((room) => {
@@ -77,12 +79,24 @@ export class BookingService {
     dayId: string,
     startTime = 0,
     endTime = 0,
-    excludeEventIds: string[] = []
+    excludeEventIds: string[] = [],
+    rooms = ROOMS
   ): Promise<RoomsOccupation> {
     const events = await this.agendaService.findEventsOfDay(
       dayId,
       excludeEventIds
     );
+
+    // Check if Castagora is occupied by others
+    const occupationByCastagora = this.findCastagoraEvents(
+      events,
+      startTime,
+      endTime,
+      rooms
+    );
+    if (occupationByCastagora !== null) {
+      return Promise.resolve(occupationByCastagora);
+    }
 
     const eventsByRoom = this.groupEventsByRoomForInterval(
       events,
@@ -112,7 +126,24 @@ export class BookingService {
       }, {} as RoomsOccupation);
   }
 
-  groupEventsByRoomForInterval(
+  getAllIntervals(
+    start: number,
+    end: number,
+    rangeInMinutes = 30
+  ): TimeInterval[] {
+    const intervalSize = rangeInMinutes * 60 * 1000;
+    const intervals = [];
+    const intervalCount = (end - start) / intervalSize;
+
+    for (let i = 0; i < Math.ceil(intervalCount); i++) {
+      const intervalStart = start + i * intervalSize;
+      const intervalEnd = intervalStart + intervalSize;
+      intervals.push([intervalStart, intervalEnd] as TimeInterval);
+    }
+    return intervals;
+  }
+
+  private groupEventsByRoomForInterval(
     events: AgendaEvent[],
     startTime: number,
     endTime: number
@@ -133,21 +164,27 @@ export class BookingService {
       }, {});
   }
 
-  getAllIntervals(
-    start: number,
-    end: number,
-    rangeInMinutes = 30
-  ): TimeInterval[] {
-    const intervalSize = rangeInMinutes * 60 * 1000;
-    const intervals = [];
-    const intervalCount = (end - start) / intervalSize;
-
-    for (let i = 0; i < Math.ceil(intervalCount); i++) {
-      const intervalStart = start + i * intervalSize;
-      const intervalEnd = intervalStart + intervalSize;
-      intervals.push([intervalStart, intervalEnd] as TimeInterval);
+  private findCastagoraEvents(
+    events: AgendaEvent[],
+    startTime: number,
+    endTime: number,
+    rooms = ROOMS
+  ): RoomsOccupation | null {
+    const eventsCastagora = events.filter(
+      (e) =>
+        e.activityId === EVENEMENT_CASTAGORA.id &&
+        e.roomId === CASTAGORA.id &&
+        eventIsInTimeSlot(e, startTime, endTime)
+    );
+    if (eventsCastagora.length > 0) {
+      let occupations = {};
+      for (const r of rooms) {
+        occupations = { ...occupations, [r.id]: TOUTE_LA_SALLE };
+      }
+      return occupations;
+    } else {
+      return null;
     }
-    return intervals;
   }
 }
 

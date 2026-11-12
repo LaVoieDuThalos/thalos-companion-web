@@ -122,6 +122,12 @@ export const EVENEMENT = {
   style: { color: 'white', backgroundColor: Colors.red },
 };
 
+export const EVENEMENT_CASTAGORA = {
+  id: 'castagora',
+  name: 'Evènement Castagora',
+  style: { color: 'white', backgroundColor: Colors.gray },
+};
+
 export const AUTRE_TYPE = {
   id: 'autre',
   name: 'Autre',
@@ -142,6 +148,7 @@ export const ACTIVITIES: Activity[] = [
   REUNION,
   AUBERGE_ESPAGNOLE,
   EVENEMENT,
+  EVENEMENT_CASTAGORA,
   AUTRE_FIGURINES,
   AUTRE_TYPE,
 ];
