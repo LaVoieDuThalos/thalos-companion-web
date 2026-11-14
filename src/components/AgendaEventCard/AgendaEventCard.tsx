@@ -26,7 +26,7 @@ import { subscriptionService } from '../../services/SubscriptionService.ts';
 import AvailableSeats from './components/AvailableSeats/AvailableSeats.tsx';
 import { useCopyToClipboard } from '../../hooks/useCopyToClipboard.ts';
 import Icon from '../common/Icon.tsx';
-import { EVENEMENT } from '../../constants/Activities.ts';
+import { EVENEMENT, EVENEMENT_CASTAGORA } from '../../constants/Activities.ts';
 
 import CalendarFormatSelectModal from '../modals/CalendarFormatSelectModal/CalendarFormatSelectModal.tsx';
 
@@ -127,7 +127,7 @@ export default function AgendaEventCard({
 
   return (
     <CustomCard
-      className={`agenda-event-card ${event.activityId === EVENEMENT.id ? 'important-event' : ''}`}
+      className={`agenda-event-card ${event.activityId === EVENEMENT.id ? 'important-event' : event.activityId === EVENEMENT_CASTAGORA.id ? 'evenement-castagora' : ''}`}
       even={even}
       onClick={() => {
         if (!complete) {

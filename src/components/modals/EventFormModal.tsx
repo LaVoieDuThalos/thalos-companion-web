@@ -207,7 +207,9 @@ export default function EventFormModal({
     }) satisfies FormData;
 
   const [formData, setFormData] = useState<FormData>(emptyForm());
-
+  const [formFieldUpdated, setFormFieldUpdated] = useState<string | undefined>(
+    undefined
+  );
   const [formState, setFormState] = useState<FormState>({ submitted: false });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [saving, setSaving] = useState(false);
@@ -287,7 +289,11 @@ export default function EventFormModal({
   useEffect(() => {
     if (formState.submitted) {
       setErrors(validateForm(formData, availablesTables));
-    } else {
+    }
+    if (
+      formFieldUpdated === undefined ||
+      ['dayId', 'start', 'durationInMinutes'].includes(formFieldUpdated)
+    ) {
       updateAvailablesTablesByRooms(formData);
     }
   }, [formData, formState.submitted]);
@@ -328,6 +334,7 @@ export default function EventFormModal({
     ) {
       return;
     }
+
     const gameDay = fromGameDayId(_formData.dayId) as GameDay;
     const startTime = gameDay ? getStartTime(gameDay, _formData.start) : 0;
     const endTime = gameDay
@@ -395,7 +402,10 @@ export default function EventFormModal({
               availableTables={availablesTables}
               errors={errors}
               state={formState}
-              onChange={setFormData}
+              onChange={(formData, field) => {
+                setFormData(formData);
+                setFormFieldUpdated(field);
+              }}
               disabled={saving}
             />
           )}
