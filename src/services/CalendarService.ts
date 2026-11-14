@@ -72,6 +72,7 @@ class CalendarService {
 
   nextGameDayFromDate(current: GameDay): GameDay {
     const date = new Date(current.id);
+    date.setDate(current.date.getDate() + 1);
     while (!this.gameDays.includes(date.getDay())) {
       date.setDate(date.getDate() + 1);
     }
