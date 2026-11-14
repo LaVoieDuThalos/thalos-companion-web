@@ -70,7 +70,7 @@ export default function OpenCloseChecklistsModal({ ...props }: Props) {
         </div>
 
         <a
-          href="https://drive.google.com/file/d/1X1mP4Oqc6VmG34wrb7MwWhL67G5dkqm-/view?usp=sharing"
+          href="https://drive.google.com/file/d/1KFPnIOF2RIICHcpTB0fnwfyxshn-rLJg/view?usp=drive_link"
           target="_blank"
         >
           Consulter la procédure complète

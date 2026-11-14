@@ -114,6 +114,16 @@ const CLOSING_PROCEDURE: Procedure = {
       completed: false,
     },
     {
+      label: 'Vérifier derrière le bar',
+      description: (
+        <>
+          Laver les éventuels verres sales, les essuyer et les ranger dans le
+          placard “Thalos” derrière le bar.
+        </>
+      ),
+      completed: false,
+    },
+    {
       label: 'Ranger les jeux',
       description: (
         <>Ranger tous les jeux et autres matériels dans l’espace de stockage.</>
@@ -194,7 +204,22 @@ const CLOSING_PROCEDURE: Procedure = {
     {
       label: "Enclencher l'alarme",
       description: (
-        <>Dans le sas : Enclenche l’alarme en activant le code + Select</>
+        <>
+          Dans le sas :
+          <ul>
+            <li>Enclenche l’alarme en activant le code</li>
+            <li>
+              Affichage : 3 ISOLEES {'=>'} appuyer sur le bouton sous le mot
+              "SELECT"
+            </li>
+            <li>
+              Affichage : MES TOTALE ? {'=>'} Appuyer une seconde fois sur le
+              bouton sous le mot “SELECT”
+            </li>
+            <li>Un message s’affiche avec un décompte de 30 secondes</li>
+            <li>Sortir</li>
+          </ul>
+        </>
       ),
       completed: false,
     },
