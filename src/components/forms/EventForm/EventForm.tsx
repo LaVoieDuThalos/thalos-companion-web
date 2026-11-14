@@ -1,20 +1,11 @@
 import { Alert, Button, Form, Image } from 'react-bootstrap';
 import { ACTIVITIES, EVENEMENT, JDR } from '../../../constants/Activities';
 import { Durations } from '../../../constants/Durations';
-import {
-  AUTRE_SALLE,
-  ROOM_NON_DEFINIE,
-  ROOMS,
-  SALLE_DU_LAC,
-  TOUTE_LA_SALLE,
-} from '../../../constants/Rooms';
+import { AUTRE_SALLE, ROOM_NON_DEFINIE, ROOMS, SALLE_DU_LAC, TOUTE_LA_SALLE, } from '../../../constants/Rooms';
 import { calendarService } from '../../../services/CalendarService';
 import { type CustomFormProps, hasError } from '../../../utils/FormUtils';
 import { fromGameDayId, fromRoomId, printGameDay } from '../../../utils/Utils';
-import {
-  type FormData,
-  HYPHEN_EMPTY_OPTION,
-} from '../../modals/EventFormModal';
+import { type FormData, HYPHEN_EMPTY_OPTION, } from '../../modals/EventFormModal';
 
 import { useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -131,7 +122,7 @@ export default function EventForm({
             ? event.target.value === 'true'
             : event.target.value,
     };
-    onChange(newFormData);
+    onChange(newFormData, field);
   };
 
   return (

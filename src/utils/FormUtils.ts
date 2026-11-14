@@ -7,7 +7,7 @@ export type FormState = {
 export type CustomFormProps<TFormData> = {
   errors?: ValidationErrors;
   state?: FormState;
-  onChange: (formData: TFormData) => void;
+  onChange: (formData: TFormData, field: string | undefined) => void;
   formData: TFormData;
   disabled?: boolean;
 };
@@ -16,7 +16,7 @@ export function hasError(
   errors: ValidationErrors | undefined,
   error: string
 ): boolean {
-  return !!errors && errors && !!errors[error];
+  return !!errors && errors && errors[error];
 }
 
 export function isFormValid(errors: ValidationErrors): boolean {

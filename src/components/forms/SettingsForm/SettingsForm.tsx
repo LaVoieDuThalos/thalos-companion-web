@@ -52,10 +52,13 @@ export function SettingsForm({ disabled, ...props }: CustomFormProps<User>) {
           disabled={disabled}
           value={props.formData?.name || ''}
           onChange={(e) =>
-            props.onChange({
-              ...props.formData,
-              name: e.target.value,
-            })
+            props.onChange(
+              {
+                ...props.formData,
+                name: e.target.value,
+              },
+              e.target.value
+            )
           }
         />
         {props.state?.submitted && hasError(props.errors, 'nameIsEmpty') ? (
@@ -84,10 +87,13 @@ export function SettingsForm({ disabled, ...props }: CustomFormProps<User>) {
             informations="Sélectionner ci-dessous les activités que vous soutaitez voir sur la page d'accueil."
             value={props.formData.preferences?.activities || []}
             onChange={(activities) => {
-              props.onChange({
-                ...props.formData,
-                preferences: { ...props.formData.preferences, activities },
-              });
+              props.onChange(
+                {
+                  ...props.formData,
+                  preferences: { ...props.formData.preferences, activities },
+                },
+                'activities'
+              );
             }}
             options={[...activities].map((act) => ({
               value: act.id,
@@ -103,10 +109,13 @@ export function SettingsForm({ disabled, ...props }: CustomFormProps<User>) {
             informations="Certaines fonctionnalités de l'application sont accessibles avec des rôles particuliers. Sélectionnez ci-dessous les vôtres."
             value={props.formData.preferences?.roles || []}
             onChange={(roles) => {
-              props.onChange({
-                ...props.formData,
-                preferences: { ...props.formData.preferences, roles },
-              });
+              props.onChange(
+                {
+                  ...props.formData,
+                  preferences: { ...props.formData.preferences, roles },
+                },
+                'roles'
+              );
             }}
             options={ROLES.map((r) => ({
               value: r.id,
