@@ -51,10 +51,10 @@ export default function EventSubscriptions({ event }: Props) {
       callRefresh();
     });
   };
-  const unsubscribe = (subId: string) => {
+  const unsubscribe = (subId: string, username: string) => {
     Alerts.dialog(
       'Désinscription',
-      `Souhaitez-vous vous désinscrire de cette évènement ?`,
+      `Souhaitez-vous désinscrire ${username} de cette évènement ?`,
       [
         AlertActions.CANCEL(),
         AlertActions.OK(
@@ -91,9 +91,10 @@ export default function EventSubscriptions({ event }: Props) {
     <div className="event-subscriptions">
       {showSubscriptionModal && (
         <EventSubscriptionModal
-          name={user.name}
+          name={!userSubscription ? user.name : ''}
           show={true}
           event={event}
+          currentUserSubscribed={!!userSubscription}
           onCancel={() => setShowSubscriptionModal(false)}
           onSuccess={subscribe}
         />
@@ -160,10 +161,10 @@ export default function EventSubscriptions({ event }: Props) {
             />
           </div>
         ))}
-        {!userSubscription && !eventComplete && waitingList.length === 0 && (
+        {!eventComplete && waitingList.length === 0 && (
           <div className="empty-seat" key={'emtpysit'}>
             <CustomCard
-              clickable={!userSubscription}
+              clickable={true}
               onClick={() => setShowSubscriptionModal(true)}
             >
               <Icon icon="person_add" iconSize={50} color={Colors.gray} />
@@ -224,17 +225,17 @@ export default function EventSubscriptions({ event }: Props) {
               />
             </div>
           ))}
-          {!userSubscription && (
+          {
             <div className="empty-seat" key={'emtpysit'}>
               <CustomCard
-                clickable={!userSubscription}
+                clickable={true}
                 onClick={() => setShowSubscriptionModal(true)}
               >
                 <Icon icon="person_add" iconSize={50} color={Colors.gray} />
                 S'inscrire sur liste d'attente
               </CustomCard>
             </div>
-          )}
+          }
         </div>
       )}
     </div>

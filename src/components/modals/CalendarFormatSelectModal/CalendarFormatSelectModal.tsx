@@ -45,7 +45,6 @@ export default function CalendarFormatSelectModal({
   ...props
 }: Props) {
   const calendarEvent = mapEventToCalendarEvent(event);
-  console.log(calendarEvent);
   const availableFormats: CalendarFormat[] = [
     {
       name: 'Google Calendar',
