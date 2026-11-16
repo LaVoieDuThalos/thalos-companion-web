@@ -12,6 +12,7 @@ type Props = ModalProps & {
   event: AgendaEvent;
   name?: string;
   withTable40k?: boolean;
+  currentUserSubscribed?: boolean;
   onSuccess?: (r: FormResult) => void;
   onCancel?: () => void;
 };
@@ -20,6 +21,7 @@ export default function EventSubscriptionModal({
   name,
   withTable40k,
   event,
+  currentUserSubscribed,
   onCancel,
   onSuccess,
   ...props
@@ -65,11 +67,16 @@ export default function EventSubscriptionModal({
       }}
     >
       <Form.Group className="mb-3" controlId="eventForm.NameInput">
-        <Form.Label>Votre nom ou pseudo :</Form.Label>
         <Alert variant="light">
           Nom qui doit être affiché sur l'inscription.{' '}
           <i>Exemple pour une rencontre figurines : Nom1 VS Nom2</i>
         </Alert>
+        {currentUserSubscribed && (
+          <Alert variant="warning">
+            Attention : Vous vous êtes déjà inscrit sur cet évènement !
+          </Alert>
+        )}
+        <Form.Label>Nom ou pseudo :</Form.Label>
         <Form.Control
           type="title"
           placeholder=""

@@ -1,10 +1,7 @@
 import { Button } from 'react-bootstrap';
 import { Colors } from '../../../../../../constants/Colors.ts';
 import { useUser } from '../../../../../../hooks/useUser.ts';
-import type {
-  AgendaEvent,
-  EventSubscription,
-} from '../../../../../../model/AgendaEvent.ts';
+import type { AgendaEvent, EventSubscription, } from '../../../../../../model/AgendaEvent.ts';
 import CustomCard from '../../../../../common/CustomCard/CustomCard.tsx';
 import Icon from '../../../../../common/Icon.tsx';
 
@@ -14,7 +11,7 @@ type EventSubscriptionProps = {
   event: AgendaEvent;
   sub: EventSubscription;
   userSubscription?: EventSubscription;
-  onUnsubscribe: (subId: string) => void;
+  onUnsubscribe: (subId: string, username: string) => void;
   onUpdateSubscription: (sub: EventSubscription, status: string) => void;
 };
 
@@ -66,8 +63,9 @@ export default function EventSubscriptionCard({
         </div>
 
         <div className="buttons">
-          {userSubscription && sub.id === userSubscription.id && (
-            <Button onClick={() => onUnsubscribe(userSubscription.id)}>
+          {(sub.user.id === user.id ||
+            (userSubscription && sub.id === userSubscription.id)) && (
+            <Button onClick={() => onUnsubscribe(sub.id, sub.name || '')}>
               <Icon icon="person_cancel" iconSize={30} color={Colors.red2} />
             </Button>
           )}

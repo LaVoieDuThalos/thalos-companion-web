@@ -39,38 +39,31 @@ export class SubscriptionService {
     subscriptionData: EventSubscriptionData,
     event: AgendaEvent
   ): Promise<EventSubscription> {
-    const subs = await this.findAllSubscriptionsOfEvent(event);
-    if (this.alreadySubscribed(user.id, subs)) {
-      return Promise.reject('Already subscribed !');
-    } else {
-      return this.findAllSubscriptionsOfEvent(event)
-        .then((subs_1) => {
-          let status = 'waiting';
-          const eventComplete =
-            event.maxSubscriptions !== undefined &&
-            subs_1.length >= event.maxSubscriptions;
-          if (event.subscriptionMode === 'auto' && !eventComplete) {
-            status = 'validated';
-          }
-          return {
-            id: uuid(),
-            user: {
-              id: user.id,
-              name: user.name,
-            },
-            name: subscriptionData.name,
-            withTable40k: subscriptionData.withTable40k,
-            eventId: event.id,
-            subscribedAt: new Date().toISOString(),
-            status: status,
-          } as EventSubscription;
-        })
-        .then((subscription_1) =>
-          this.api
-            .subscribeUserToEvent(subscription_1)
-            .then(() => subscription_1)
-        );
-    }
+    return this.findAllSubscriptionsOfEvent(event)
+      .then((subs_1) => {
+        let status = 'waiting';
+        const eventComplete =
+          event.maxSubscriptions !== undefined &&
+          subs_1.length >= event.maxSubscriptions;
+        if (event.subscriptionMode === 'auto' && !eventComplete) {
+          status = 'validated';
+        }
+        return {
+          id: uuid(),
+          user: {
+            id: user.id,
+            name: user.name,
+          },
+          name: subscriptionData.name,
+          withTable40k: subscriptionData.withTable40k,
+          eventId: event.id,
+          subscribedAt: new Date().toISOString(),
+          status: status,
+        } as EventSubscription;
+      })
+      .then((subscription_1) =>
+        this.api.subscribeUserToEvent(subscription_1).then(() => subscription_1)
+      );
   }
 
   unsubscribe(subscriptionId: string): Promise<void> {
